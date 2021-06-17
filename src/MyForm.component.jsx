@@ -11,6 +11,8 @@ import {
   DatePicker,
 } from "antd";
 
+const { RangePicker } = DatePicker;
+
 const COUNTRIES = [
   { name: "China", value: "china" },
   { name: "U.S.A", value: "usa" },
@@ -42,6 +44,7 @@ export default class MyForm extends Component {
       isSwitched: false,
       foods: [],
       date: null,
+      range: []
     };
 
     this.handleNameChange = this.handleNameChange.bind(this);
@@ -51,6 +54,7 @@ export default class MyForm extends Component {
     this.handleSwitch = this.handleSwitch.bind(this);
     this.handleCheckbox = this.handleCheckbox.bind(this);
     this.handleDate = this.handleDate.bind(this);
+    this.handleRange = this.handleRange.bind(this);
   }
 
   handleNameChange(e) {
@@ -81,6 +85,10 @@ export default class MyForm extends Component {
     this.setState({ date: value });
   }
 
+  handleRange(values) {
+    this.setState({range: values});
+  }
+
   handleReset() {
     console.log("reset");
   }
@@ -90,7 +98,7 @@ export default class MyForm extends Component {
   }
 
   render() {
-    const { name, country, colors, race, isSwitched, foods, date } = this.state;
+    const { name, country, colors, race, isSwitched, foods, date, range } = this.state;
     return (
       <div style={{ display: "flex", justifyContent: "center" }}>
         <Col span={12}>
@@ -170,6 +178,9 @@ export default class MyForm extends Component {
             <Form.Item label="Date">
               <DatePicker onChange={this.handleDate} value={date}/>
             </Form.Item>
+            <Form.Item label="Date Range">
+              <RangePicker onChange={this.handleRange} value={range}/>
+            </Form.Item>
             <Form.Item
               wrapperCol={{
                 span: 12,
@@ -179,9 +190,6 @@ export default class MyForm extends Component {
               <Button
                 type="primary"
                 htmlType="submit"
-                onClick={() => {
-                  console.log("test");
-                }}
               >
                 Submit
               </Button>
