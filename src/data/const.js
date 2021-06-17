@@ -1,22 +1,22 @@
 
 const COUNTRIES = [
-  { name: "China", value: "china" },
-  { name: "U.S.A", value: "usa" },
+  { key:0, name: "China", value: "china" },
+  { key:1, name: "U.S.A", value: "usa" },
 ];
 const COLORS = [
-  { name: "Red", value: "red" },
-  { name: "Green", value: "green" },
-  { name: "Blue", value: "blue" },
+  { key:0, name: "Red", value: "red" },
+  { key:1, name: "Green", value: "green" },
+  { key:2, name: "Blue", value: "blue" },
 ];
 const RACES = [
-  { name: "Asian", value: "asian" },
-  { name: "African", value: "african" },
-  { name: "Caucasian", value: "caucasian" },
+  { key:0,name: "Asian", value: "asian" },
+  { key:1, name: "African", value: "african" },
+  { key:2, name: "Caucasian", value: "caucasian" },
 ];
 const FOODS = [
-  { name: "Rice", value: "rice" },
-  { name: "Noodle", value: "noodle" },
-  { name: "Meat", value: "meat" },
+  { key:0, name: "Rice", value: "rice" },
+  { key:1, name: "Noodle", value: "noodle" },
+  { key:2, name: "Meat", value: "meat" },
 ];
 const INITIAL_VALUE = {
   name: "",

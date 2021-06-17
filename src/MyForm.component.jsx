@@ -11,7 +11,7 @@ import {
   DatePicker,
   TimePicker,
 } from "antd";
-import {COUNTRIES, COLORS, RACES, FOODS, INITIAL_VALUE} from './data/const';
+import { COUNTRIES, COLORS, RACES, FOODS, INITIAL_VALUE } from "./data/const";
 
 const { RangePicker } = DatePicker;
 
@@ -20,52 +20,19 @@ export default class MyForm extends Component {
     super(props);
     this.state = INITIAL_VALUE;
 
-    this.handleNameChange = this.handleNameChange.bind(this);
-    this.handleSingleSelect = this.handleSingleSelect.bind(this);
-    this.handleMultipleSelect = this.handleMultipleSelect.bind(this);
-    this.handleRadio = this.handleRadio.bind(this);
-    this.handleSwitch = this.handleSwitch.bind(this);
-    this.handleCheckbox = this.handleCheckbox.bind(this);
-    this.handleDate = this.handleDate.bind(this);
-    this.handleRange = this.handleRange.bind(this);
-    this.handleTime = this.handleTime.bind(this);
+    this.handleValueChange = this.handleValueChange.bind(this);
+    // this.handleSwitch = this.handleSwitch.bind(this);
     this.handleReset = this.handleReset.bind(this);
   }
 
-  handleNameChange(e) {
-    this.setState({ name: e.target.value });
-  }
+  componentDidMount() {}
 
-  handleSingleSelect(value) {
-    this.setState({ country: value });
-  }
+  // handleSwitch(e) {
+  //   this.setState((curState) => ({ isSwitched: !curState.isSwitched }));
+  // }
 
-  handleMultipleSelect(values) {
-    this.setState({ colors: values });
-  }
-
-  handleRadio(e) {
-    this.setState({ race: e.target.value });
-  }
-
-  handleSwitch(e) {
-    this.setState((curState) => ({ isSwitched: !curState.isSwitched }));
-  }
-
-  handleCheckbox(values) {
-    this.setState({ foods: values });
-  }
-
-  handleDate(value) {
-    this.setState({ date: value });
-  }
-
-  handleRange(values) {
-    this.setState({ range: values });
-  }
-
-  handleTime(value) {
-    this.setState({ time: value });
+  handleValueChange(value, field) {
+    this.setState({ [field]: value });
   }
 
   handleReset() {
@@ -97,27 +64,21 @@ export default class MyForm extends Component {
               <Input
                 placeholder="Please enter your name"
                 value={name}
-                onChange={this.handleNameChange}
+                onChange={(e) => {
+                  this.handleValueChange(e.target.value, "name");
+                }}
               />
             </Form.Item>
-            <Form.Item
-              name="country"
-              label="Country"
-              hasFeedback
-              rules={[
-                {
-                  required: true,
-                  message: "Please select your country!",
-                },
-              ]}
-            >
+            <Form.Item name="country" label="Country">
               <Select
                 placeholder="Please select a country"
-                onChange={this.handleSingleSelect}
+                onChange={(country) => {
+                  this.handleValueChange(country, "country");
+                }}
                 value={country}
               >
                 {COUNTRIES.map((country) => (
-                  <Select.Option key={country.value} value={country.value}>
+                  <Select.Option key={country.key} value={country.value}>
                     {country.name}
                   </Select.Option>
                 ))}
@@ -127,33 +88,50 @@ export default class MyForm extends Component {
               <Select
                 mode="multiple"
                 placeholder="Please select favourite colors"
-                onChange={this.handleMultipleSelect}
+                onChange={(colors) => {
+                  this.handleValueChange(colors, "colors");
+                }}
                 value={colors}
               >
                 {COLORS.map((color) => (
-                  <Select.Option key={color.value} value={color.value}>
+                  <Select.Option key={color.key} value={color.value}>
                     {color.name}
                   </Select.Option>
                 ))}
               </Select>
             </Form.Item>
             <Form.Item name="race" label="Race">
-              <Radio.Group onChange={this.handleRadio} value={race}>
+              <Radio.Group
+                onChange={(e) => {
+                  this.handleValueChange(e.target.value, "race");
+                }}
+                value={race}
+              >
                 {RACES.map((race) => (
-                  <Radio key={race.value} value={race.value}>
+                  <Radio key={race.key} value={race.value}>
                     {race.name}
                   </Radio>
                 ))}
               </Radio.Group>
             </Form.Item>
             <Form.Item name="switch" label="Switch" valuePropName="checked">
-              <Switch checked={isSwitched} onChange={this.handleSwitch} />
+              <Switch
+                checked={isSwitched}
+                onChange={(bool) => {
+                  this.handleValueChange(bool, "isSwitched");
+                }}
+              />
             </Form.Item>
             <Form.Item name="food" label="Food">
-              <Checkbox.Group value={foods} onChange={this.handleCheckbox}>
+              <Checkbox.Group
+                value={foods}
+                onChange={(foods) => {
+                  this.handleValueChange(foods, "foods");
+                }}
+              >
                 {FOODS.map((food) => (
                   <Checkbox
-                    key={food.value}
+                    key={food.key}
                     value={food.value}
                     style={{
                       lineHeight: "32px",
@@ -165,13 +143,22 @@ export default class MyForm extends Component {
               </Checkbox.Group>
             </Form.Item>
             <Form.Item label="Date">
-              <DatePicker onChange={this.handleDate} value={date} />
+              <DatePicker
+                onChange={(date) => this.handleValueChange(date, "date")}
+                value={date}
+              />
             </Form.Item>
             <Form.Item label="Date Range">
-              <RangePicker onChange={this.handleRange} value={range} />
+              <RangePicker
+                onChange={(range) => this.handleValueChange(range, "range")}
+                value={range}
+              />
             </Form.Item>
             <Form.Item label="Time">
-              <TimePicker onChange={this.handleTime} value={time} />
+              <TimePicker
+                onChange={(time) => this.handleValueChange(time, "time")}
+                value={time}
+              />
             </Form.Item>
             <Form.Item
               wrapperCol={{
@@ -179,10 +166,16 @@ export default class MyForm extends Component {
                 offset: 6,
               }}
             >
-              <Button type="primary" htmlType="submit" style={{marginRight:'10px'}}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                style={{ marginRight: "10px" }}
+              >
                 Submit
               </Button>
-              <Button htmlType="button" onClick={this.handleReset}>Reset</Button>
+              <Button htmlType="button" onClick={this.handleReset}>
+                Reset
+              </Button>
             </Form.Item>
           </Form>
         </Col>
