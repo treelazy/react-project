@@ -12,6 +12,7 @@ import {
   TimePicker,
 } from "antd";
 import { COUNTRIES, COLORS, RACES, FOODS, INITIAL_VALUE } from "./data/const";
+import {formatDate} from "./helper";
 
 const { RangePicker } = DatePicker;
 
@@ -21,15 +22,19 @@ export default class MyForm extends Component {
     this.state = INITIAL_VALUE;
 
     this.handleValueChange = this.handleValueChange.bind(this);
-    // this.handleSwitch = this.handleSwitch.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
     this.handleReset = this.handleReset.bind(this);
   }
 
-  componentDidMount() {}
-
-  // handleSwitch(e) {
-  //   this.setState((curState) => ({ isSwitched: !curState.isSwitched }));
-  // }
+  componentDidMount() {
+    const storageData = {};
+    const fields = Object.keys(INITIAL_VALUE);
+    fields.forEach(
+      (field) => (storageData[field] = JSON.parse(localStorage.getItem(field)))
+    );
+    formatDate(storageData);
+    this.setState(storageData);
+  }
 
   handleValueChange(value, field) {
     this.setState({ [field]: value });
@@ -39,8 +44,12 @@ export default class MyForm extends Component {
     this.setState(INITIAL_VALUE);
   }
 
-  handleSubmit() {
-    console.log("submit");
+  handleSubmit(e) {
+    e.preventDefault();
+    const fields = Object.keys(INITIAL_VALUE);
+    fields.forEach((field) => {
+      localStorage.setItem(field, JSON.stringify(this.state[field]));
+    });
   }
 
   render() {
@@ -91,7 +100,7 @@ export default class MyForm extends Component {
                 onChange={(colors) => {
                   this.handleValueChange(colors, "colors");
                 }}
-                value={colors}
+                value={colors ?? []}
               >
                 {COLORS.map((color) => (
                   <Select.Option key={color.key} value={color.value}>
@@ -168,14 +177,12 @@ export default class MyForm extends Component {
             >
               <Button
                 type="primary"
-                htmlType="submit"
                 style={{ marginRight: "10px" }}
+                onClick={this.handleSubmit}
               >
                 Submit
               </Button>
-              <Button htmlType="button" onClick={this.handleReset}>
-                Reset
-              </Button>
+              <Button onClick={this.handleReset}>Reset</Button>
             </Form.Item>
           </Form>
         </Col>
