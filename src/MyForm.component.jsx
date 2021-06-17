@@ -9,6 +9,7 @@ import {
   Checkbox,
   Select,
   DatePicker,
+  TimePicker,
 } from "antd";
 
 const { RangePicker } = DatePicker;
@@ -44,7 +45,8 @@ export default class MyForm extends Component {
       isSwitched: false,
       foods: [],
       date: null,
-      range: []
+      range: [],
+      time: null,
     };
 
     this.handleNameChange = this.handleNameChange.bind(this);
@@ -55,6 +57,7 @@ export default class MyForm extends Component {
     this.handleCheckbox = this.handleCheckbox.bind(this);
     this.handleDate = this.handleDate.bind(this);
     this.handleRange = this.handleRange.bind(this);
+    this.handleTime = this.handleTime.bind(this);
   }
 
   handleNameChange(e) {
@@ -86,7 +89,11 @@ export default class MyForm extends Component {
   }
 
   handleRange(values) {
-    this.setState({range: values});
+    this.setState({ range: values });
+  }
+
+  handleTime(value) {
+    this.setState({ time: value });
   }
 
   handleReset() {
@@ -98,7 +105,17 @@ export default class MyForm extends Component {
   }
 
   render() {
-    const { name, country, colors, race, isSwitched, foods, date, range } = this.state;
+    const {
+      name,
+      country,
+      colors,
+      race,
+      isSwitched,
+      foods,
+      date,
+      range,
+      time,
+    } = this.state;
     return (
       <div style={{ display: "flex", justifyContent: "center" }}>
         <Col span={12}>
@@ -176,10 +193,13 @@ export default class MyForm extends Component {
               </Checkbox.Group>
             </Form.Item>
             <Form.Item label="Date">
-              <DatePicker onChange={this.handleDate} value={date}/>
+              <DatePicker onChange={this.handleDate} value={date} />
             </Form.Item>
             <Form.Item label="Date Range">
-              <RangePicker onChange={this.handleRange} value={range}/>
+              <RangePicker onChange={this.handleRange} value={range} />
+            </Form.Item>
+            <Form.Item label="Time">
+              <TimePicker onChange={this.handleTime} value={time} />
             </Form.Item>
             <Form.Item
               wrapperCol={{
@@ -187,10 +207,7 @@ export default class MyForm extends Component {
                 offset: 6,
               }}
             >
-              <Button
-                type="primary"
-                htmlType="submit"
-              >
+              <Button type="primary" htmlType="submit">
                 Submit
               </Button>
               <Button htmlType="button">Reset</Button>
