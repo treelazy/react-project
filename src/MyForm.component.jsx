@@ -33,21 +33,22 @@ const FOODS = [
   { name: "Noodle", value: "noodle" },
   { name: "Meat", value: "meat" },
 ];
+const INITIAL_VALUE = {
+  name: "",
+  country: "",
+  colors: [],
+  race: "",
+  isSwitched: false,
+  foods: [],
+  date: null,
+  range: [],
+  time: null,
+};
 
 export default class MyForm extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      name: "",
-      country: "",
-      colors: [],
-      race: "",
-      isSwitched: false,
-      foods: [],
-      date: null,
-      range: [],
-      time: null,
-    };
+    this.state = INITIAL_VALUE;
 
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleSingleSelect = this.handleSingleSelect.bind(this);
@@ -58,6 +59,7 @@ export default class MyForm extends Component {
     this.handleDate = this.handleDate.bind(this);
     this.handleRange = this.handleRange.bind(this);
     this.handleTime = this.handleTime.bind(this);
+    this.handleReset = this.handleReset.bind(this);
   }
 
   handleNameChange(e) {
@@ -97,7 +99,7 @@ export default class MyForm extends Component {
   }
 
   handleReset() {
-    console.log("reset");
+    this.setState(INITIAL_VALUE);
   }
 
   handleSubmit() {
@@ -210,7 +212,7 @@ export default class MyForm extends Component {
               <Button type="primary" htmlType="submit">
                 Submit
               </Button>
-              <Button htmlType="button">Reset</Button>
+              <Button htmlType="button" onClick={this.handleReset}>Reset</Button>
             </Form.Item>
           </Form>
         </Col>
