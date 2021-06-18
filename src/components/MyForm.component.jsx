@@ -11,9 +11,9 @@ import {
   DatePicker,
   TimePicker,
 } from "antd";
-import { COUNTRIES, COLORS, RACES, FOODS } from "./data/const";
+import { COUNTRIES, COLORS, RACES, FOODS } from "../data/const";
 import moment from "moment";
-import { INITIAL_VALUE } from "./data/const";
+import { INITIAL_VALUE } from "../data/const";
 
 const { RangePicker } = DatePicker;
 
