@@ -12,7 +12,7 @@ import {
   TimePicker,
 } from "antd";
 import { COUNTRIES, COLORS, RACES, FOODS, INITIAL_VALUE } from "./data/const";
-import {formatDate} from "./helper";
+import { formatDate } from "./helper";
 
 const { RangePicker } = DatePicker;
 
@@ -65,8 +65,24 @@ export default class MyForm extends Component {
       time,
     } = this.state;
     return (
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <Col span={12}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          paddingTop: "2rem",
+          paddingBottom: "2rem",
+          height: "100vh",
+          backgroundColor: "rgba(118, 118, 118, 0.5)",
+        }}
+      >
+        <Col
+          span={9}
+          style={{
+            paddingTop: "1.5rem",
+            backgroundColor: "white",
+            borderRadius: "1rem"
+          }}
+        >
           <Form labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
             <h1 style={{ textAlign: "center" }}>MyForm</h1>
             <Form.Item label="Name">
@@ -126,8 +142,8 @@ export default class MyForm extends Component {
             <Form.Item name="switch" label="Switch" valuePropName="checked">
               <Switch
                 checked={isSwitched}
-                onChange={(bool) => {
-                  this.handleValueChange(bool, "isSwitched");
+                onClick={() => {
+                  this.handleValueChange(!isSwitched, "isSwitched");
                 }}
               />
             </Form.Item>
