@@ -10,6 +10,7 @@ import {
   Select,
   DatePicker,
   TimePicker,
+  Space
 } from "antd";
 import { COUNTRIES, COLORS, RACES, FOODS } from "../data/const";
 import moment from "moment";
