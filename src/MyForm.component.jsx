@@ -13,78 +13,43 @@ import {
 } from "antd";
 import { COUNTRIES, COLORS, RACES, FOODS } from "./data/const";
 import moment from "moment";
+import { INITIAL_VALUE } from "./data/const";
 
 const { RangePicker } = DatePicker;
 
 export default function MyForm() {
-  const [name, setName] = useState("");
-  const [country, setCountry] = useState("");
-  const [colors, setColors] = useState([]);
-  const [race, setRace] = useState("");
-  const [isSwitched, setIsSwitched] = useState(false);
-  const [foods, setFoods] = useState([]);
-  const [date, setDate] = useState(null);
-  const [range, setRange] = useState([]);
-  const [time, setTime] = useState(null);
-  const setField = {
-    name: setName,
-    country: setCountry,
-    colors: setColors,
-    race: setRace,
-    isSwitched: setIsSwitched,
-    foods: setFoods,
-    date: setDate,
-    range: setRange,
-    time: setTime,
-  };
-  const state = {
-    name,
-    country,
-    colors,
-    race,
-    isSwitched,
-    foods,
-    date,
-    range,
-    time,
-  };
+  const [state, setState] = useState(INITIAL_VALUE);
 
+  // fetch data from localStorage into form
   useEffect(() => {
-    const fields = Object.keys(setField);
-    fields.forEach(
-      (field) => {
-        let data = JSON.parse(localStorage.getItem(field));
+    const newState = {};
+    const fields = Object.keys(INITIAL_VALUE);
+    fields.forEach((field) => {
+      let data = JSON.parse(localStorage.getItem(field));
 
-        // format moment data for specific input
-        if (field === 'date' || field === 'time') {
-          data = data ? moment(data) : null;
-        } else if (field === 'range') {
-          data = data.length ? [moment(data[0]), moment(data[1])] : [];
-        }
-        setField[field](data);
+      // format moment data for specific input
+      if (field === "date" || field === "time") {
+        data = data ? moment(data) : null;
+      } else if (field === "range") {
+        data = data.length ? [moment(data[0]), moment(data[1])] : [];
       }
-    );
+      newState[field] = data;
+    });
+
+    setState(newState);
   }, []);
 
   function handleValueChange(value, field) {
-    setField[field](value);
+    setState({...state, [field]: value});
   }
 
   function handleReset() {
-    setName("");
-    setCountry("");
-    setColors([]);
-    setRace("");
-    setIsSwitched(false);
-    setFoods([]);
-    setDate(null);
-    setRange([]);
-    setTime(null);
+    setState(INITIAL_VALUE);
   }
 
   function handleSubmit(e) {
     e.preventDefault();
-    const fields = Object.keys(setField);
+    const fields = Object.keys(INITIAL_VALUE);
     fields.forEach((field) => {
       localStorage.setItem(field, JSON.stringify(state[field]));
     });
@@ -114,7 +79,7 @@ export default function MyForm() {
           <Form.Item label="Name">
             <Input
               placeholder="Please enter your name"
-              value={name}
+              value={state.name}
               onChange={(e) => {
                 handleValueChange(e.target.value, "name");
               }}
@@ -126,7 +91,7 @@ export default function MyForm() {
               onChange={(country) => {
                 handleValueChange(country, "country");
               }}
-              value={country}
+              value={state.country}
             >
               {COUNTRIES.map((country) => (
                 <Select.Option key={country.key} value={country.value}>
@@ -142,7 +107,7 @@ export default function MyForm() {
               onChange={(colors) => {
                 handleValueChange(colors, "colors");
               }}
-              value={colors ?? []}
+              value={state.colors ?? []}
             >
               {COLORS.map((color) => (
                 <Select.Option key={color.key} value={color.value}>
@@ -156,7 +121,7 @@ export default function MyForm() {
               onChange={(e) => {
                 handleValueChange(e.target.value, "race");
               }}
-              value={race}
+              value={state.race}
             >
               {RACES.map((race) => (
                 <Radio key={race.key} value={race.value}>
@@ -167,15 +132,15 @@ export default function MyForm() {
           </Form.Item>
           <Form.Item name="switch" label="Switch" valuePropName="checked">
             <Switch
-              checked={isSwitched}
+              checked={state.isSwitched}
               onClick={() => {
-                handleValueChange(!isSwitched, "isSwitched");
+                handleValueChange(!state.isSwitched, "isSwitched");
               }}
             />
           </Form.Item>
           <Form.Item name="food" label="Food">
             <Checkbox.Group
-              value={foods}
+              value={state.foods}
               onChange={(foods) => {
                 handleValueChange(foods, "foods");
               }}
@@ -196,19 +161,19 @@ export default function MyForm() {
           <Form.Item label="Date">
             <DatePicker
               onChange={(date) => handleValueChange(date, "date")}
-              value={date}
+              value={state.date}
             />
           </Form.Item>
           <Form.Item label="Date Range">
             <RangePicker
               onChange={(range) => handleValueChange(range, "range")}
-              value={range}
+              value={state.range}
             />
           </Form.Item>
           <Form.Item label="Time">
             <TimePicker
               onChange={(time) => handleValueChange(time, "time")}
-              value={time}
+              value={state.time}
             />
           </Form.Item>
           <Form.Item
