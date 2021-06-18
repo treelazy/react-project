@@ -1,63 +1,63 @@
 import React from "react";
-import { Table, Divider, Tag, Col, Row } from 'antd';
-import data from '../data/dummy';
+import { Table, Tag, Col } from "antd";
 
 const columns = [
   {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    render: text => <a>{text}</a>,
+    title: "Name",
+    dataIndex: "name",
+    key: "name",
   },
   {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
+    title: "Country",
+    dataIndex: "country",
+    key: "country",
   },
   {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
-  },
-  {
-    title: 'Tags',
-    key: 'tags',
-    dataIndex: 'tags',
-    render: tags => (
+    title: "Colors",
+    dataIndex: "colors",
+    key: "colors",
+    render: (colors) => (
       <span>
-        {tags.map(tag => {
-          let color = tag.length > 5 ? 'geekblue' : 'green';
-          if (tag === 'loser') {
-            color = 'volcano';
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
+        {colors.map((color) => (
+          <Tag key={color}>{color}</Tag>
+        ))}
       </span>
     ),
   },
   {
-    title: 'Action',
-    key: 'action',
-    render: (text, record) => (
+    title: "Race",
+    key: "race",
+    dataIndex: "race",
+  },
+  {
+    title: "Switch",
+    key: "isSwitched",
+    dataIndex: "isSwitched",
+    render: (bool) => <span>{bool.toString()}</span>,
+  },
+  {
+    title: "Food",
+    key: "foods",
+    dataIndex: "foods",
+    render: (foods) => (
       <span>
-        <a>Invite {record.name}</a>
-        <Divider type="vertical" />
-        <a>Delete</a>
+        {foods.map((food) => (
+          <Tag key={food}>{food}</Tag>
+        ))}
       </span>
     ),
   },
+  { title: "Date", key: "date", dataIndex: "date" },
+  { title: "Range", key: "range", dataIndex: "range" },
+  { title: "Time", key: "time", dataIndex: "time" },
 ];
 
-
-
-export default function MyTable() {
-  return <div style={{justifyContent: 'center', display: 'flex'}}>
-    <Col span={18}>
-      <Table columns={columns} dataSource={data} />
-    </Col>
-  </div>;
+export default function MyTable({ data }) {
+  return (
+    <div style={{ justifyContent: "center", display: "flex" }}>
+      <Col span={18} style={{ backgroundColor: "white"}}>
+        <Table columns={columns} dataSource={data} />
+      </Col>
+    </div>
+  );
 }

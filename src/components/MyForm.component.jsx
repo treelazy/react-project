@@ -10,38 +10,18 @@ import {
   Select,
   DatePicker,
   TimePicker,
-  Space
 } from "antd";
 import { COUNTRIES, COLORS, RACES, FOODS } from "../data/const";
-import moment from "moment";
+import uniqid from "uniqid";
 import { INITIAL_VALUE } from "../data/const";
 
 const { RangePicker } = DatePicker;
 
-export default function MyForm() {
+export default function MyForm({ onSubmit }) {
   const [state, setState] = useState(INITIAL_VALUE);
 
-  // fetch data from localStorage into form
-  useEffect(() => {
-    const newState = {};
-    const fields = Object.keys(INITIAL_VALUE);
-    fields.forEach((field) => {
-      let data = JSON.parse(localStorage.getItem(field));
-
-      // format moment data for specific input
-      if (field === "date" || field === "time") {
-        data = data ? moment(data) : null;
-      } else if (field === "range") {
-        data = data.length ? [moment(data[0]), moment(data[1])] : [];
-      }
-      newState[field] = data;
-    });
-
-    setState(newState);
-  }, []);
-
   function handleValueChange(value, field) {
-    setState({...state, [field]: value});
+    setState({ ...state, [field]: value });
   }
 
   function handleReset() {
@@ -49,11 +29,18 @@ export default function MyForm() {
   }
 
   function handleSubmit(e) {
+    const { date, range, time } = state;
     e.preventDefault();
-    const fields = Object.keys(INITIAL_VALUE);
-    fields.forEach((field) => {
-      localStorage.setItem(field, JSON.stringify(state[field]));
+    onSubmit({
+      ...state,
+      key: uniqid(),
+      date: date ? date.format("YYYY-MM-DD") : "",
+      range: range.length
+        ? `${range[0].format("YYYY-MM-DD")} ~ ${range[1].format("YYYY-MM-DD")}`
+        : "",
+      time: time ? time.format('HH:mm:ss') : '',
     });
+    setState(INITIAL_VALUE);
   }
 
   return (
@@ -64,7 +51,6 @@ export default function MyForm() {
         paddingTop: "2rem",
         paddingBottom: "2rem",
         height: "100vh",
-        backgroundColor: "rgba(118, 118, 118, 0.5)",
       }}
     >
       <Col
