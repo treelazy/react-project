@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Col,
   Form,
@@ -11,21 +11,21 @@ import {
   DatePicker,
   TimePicker,
 } from "antd";
-import { COUNTRIES, COLORS, RACES, FOODS, INITIAL_VALUE } from "./data/const";
-import { formatDate } from "./helper";
+import { COUNTRIES, COLORS, RACES, FOODS } from "./data/const";
+import moment from "moment";
 
 const { RangePicker } = DatePicker;
 
 export default function MyForm() {
-  const [ name, setName ] = useState("");
-  const [ country, setCountry ] = useState("");
-  const [ colors, setColors ] = useState([]);
-  const [ race, setRace ] = useState("");
-  const [ isSwitched, setIsSwitched ] = useState(false);
-  const [ foods, setFoods ] = useState([]);
-  const [ date, setDate ] = useState(null);
-  const [ range, setRange ] = useState([]);
-  const [ time, setTime ] = useState(null);
+  const [name, setName] = useState("");
+  const [country, setCountry] = useState("");
+  const [colors, setColors] = useState([]);
+  const [race, setRace] = useState("");
+  const [isSwitched, setIsSwitched] = useState(false);
+  const [foods, setFoods] = useState([]);
+  const [date, setDate] = useState(null);
+  const [range, setRange] = useState([]);
+  const [time, setTime] = useState(null);
   const setField = {
     name: setName,
     country: setCountry,
@@ -37,31 +37,57 @@ export default function MyForm() {
     range: setRange,
     time: setTime,
   };
+  const state = {
+    name,
+    country,
+    colors,
+    race,
+    isSwitched,
+    foods,
+    date,
+    range,
+    time,
+  };
 
-  // componentDidMount() {
-  //   const storageData = {};
-  //   const fields = Object.keys(INITIAL_VALUE);
-  //   fields.forEach(
-  //     (field) => (storageData[field] = JSON.parse(localStorage.getItem(field)))
-  //   );
-  //   formatDate(storageData);
-  //   this.setState(storageData);
-  // }
+  useEffect(() => {
+    const fields = Object.keys(setField);
+    fields.forEach(
+      (field) => {
+        let data = JSON.parse(localStorage.getItem(field));
+
+        // format moment data for specific input
+        if (field === 'date' || field === 'time') {
+          data = data ? moment(data) : null;
+        } else if (field === 'range') {
+          data = data.length ? [moment(data[0]), moment(data[1])] : [];
+        }
+        setField[field](data);
+      }
+    );
+  }, []);
 
   function handleValueChange(value, field) {
     setField[field](value);
   }
 
   function handleReset() {
-    // this.setState(INITIAL_VALUE);
+    setName("");
+    setCountry("");
+    setColors([]);
+    setRace("");
+    setIsSwitched(false);
+    setFoods([]);
+    setDate(null);
+    setRange([]);
+    setTime(null);
   }
 
   function handleSubmit(e) {
-    // e.preventDefault();
-    // const fields = Object.keys(INITIAL_VALUE);
-    // fields.forEach((field) => {
-    //   localStorage.setItem(field, JSON.stringify(this.state[field]));
-    // });
+    e.preventDefault();
+    const fields = Object.keys(setField);
+    fields.forEach((field) => {
+      localStorage.setItem(field, JSON.stringify(state[field]));
+    });
   }
 
   return (
