@@ -1,18 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import { Form, DatePicker, TimePicker } from "antd";
 import moment from "moment";
 
-export default function DateTimePicker({ value, onChange }) {
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-  const [startTime, setStartTime] = useState(null);
-  const [endTime, setEndTime] = useState(null);
+const inlineStyle = { display: "inline-block" };
 
-  // this state is an old version, not in used anymore
-  const [data, setData] = useState([
-    { date: null, time: null },
-    { date: null, time: null },
-  ]);
+export default function DateTimePicker({ value, onChange }) {
+  const { startDate, endDate, startTime, endTime } = value;
 
   function disabledStartDate(current) {
     if (endDate == null) {
@@ -31,45 +24,57 @@ export default function DateTimePicker({ value, onChange }) {
   }
 
   function handleStartDateChange(newDate) {
-    setStartDate(newDate);
-    setStartTime(moment());
+    //when datePicker is selected, set timePicker to current time
+    onChange({ ...value, startDate: newDate, startTime: moment() });
   }
 
   function handleEndDateChange(newDate) {
-    setEndDate(newDate);
-    setEndTime(moment());
+    //when datePicker is selected, set timePicker to current time
+    onChange({ ...value, endDate: newDate, endTime: moment() });
   }
 
   function handleStartTimeChange(newTime) {
+    // when timePicker is cleared, set time value to 00:00:00
     if (newTime == null) {
       newTime = moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
     }
-
-    setStartTime(newTime);
+    onChange({ ...value, startTime: newTime });
   }
 
   function handleEndTimeChange(newTime) {
+    // when timePicker is cleared, set time value to 00:00:00
     if (newTime == null) {
       newTime = moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
     }
 
-    setEndTime(newTime);
+    onChange({ ...value, endTime: newTime });
   }
 
   return (
     <Form.Item>
       <DatePicker
+        style={inlineStyle}
         disabledDate={disabledStartDate}
         value={startDate}
         onChange={handleStartDateChange}
       />
-      <TimePicker value={startTime} onChange={handleStartTimeChange} />
+      <TimePicker
+        style={inlineStyle}
+        value={startTime}
+        onChange={handleStartTimeChange}
+      />
+      ~
       <DatePicker
+        style={inlineStyle}
         disabledDate={disabledEndDate}
         value={endDate}
         onChange={handleEndDateChange}
       />
-      <TimePicker value={endTime} onChange={handleEndTimeChange} />
+      <TimePicker
+        style={inlineStyle}
+        value={endTime}
+        onChange={handleEndTimeChange}
+      />
     </Form.Item>
   );
 }

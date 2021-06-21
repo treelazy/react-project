@@ -30,7 +30,12 @@ export default function MyForm({ onSubmit }) {
   }
 
   function handleSubmit(e) {
-    const { date, range, time } = state;
+    const {
+      date,
+      range,
+      time,
+      dateTime: { startDate, endDate, startTime, endTime },
+    } = state;
     e.preventDefault();
 
     // format data before saving into prarent's state
@@ -42,6 +47,9 @@ export default function MyForm({ onSubmit }) {
         ? `${range[0].format("YYYY-MM-DD")} ~ ${range[1].format("YYYY-MM-DD")}`
         : "",
       time: time ? time.format("HH:mm:ss") : "",
+      dateTime: `${startDate.format("YYYY-MM-DD")} ${startTime.format(
+        "HH:mm:ss"
+      )} ~ ${endDate.format("YYYY-MM-DD")} ${endTime.format("HH:mm:ss")}`,
     });
     setState(INITIAL_VALUE);
   }
@@ -57,7 +65,7 @@ export default function MyForm({ onSubmit }) {
       }}
     >
       <Col
-        span={9}
+        span={14}
         style={{
           paddingTop: "1.5rem",
           backgroundColor: "white",
@@ -167,7 +175,10 @@ export default function MyForm({ onSubmit }) {
             />
           </Form.Item>
           <Form.Item label="Date and Time">
-            <DateTimePicker />
+            <DateTimePicker
+              value={state.dateTime}
+              onChange={(dateTime) => handleValueChange(dateTime, "dateTime")}
+            />
           </Form.Item>
           <Form.Item
             wrapperCol={{
