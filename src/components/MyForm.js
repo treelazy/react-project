@@ -14,7 +14,7 @@ import {
 import { COUNTRIES, COLORS, RACES, FOODS } from "../data/const";
 import uniqid from "uniqid";
 import { INITIAL_VALUE } from "../data/const";
-import DateTimePicker from "./DateTimePicker.component";
+import DateTimePicker from "./DateTimePicker";
 
 const { RangePicker } = DatePicker;
 

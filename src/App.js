@@ -1,7 +1,7 @@
 import "./App.css";
 import { useState } from "react";
-import MyForm from "./components/MyForm.component";
-import MyTable from "./components/MyTable.component";
+import MyForm from "./components/MyForm";
+import MyTable from "./components/MyTable";
 
 function App() {
   const [data, setData] = useState([]);
