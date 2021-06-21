@@ -14,6 +14,7 @@ import {
 import { COUNTRIES, COLORS, RACES, FOODS } from "../data/const";
 import uniqid from "uniqid";
 import { INITIAL_VALUE } from "../data/const";
+import DateTimePicker from "./DateTimePicker";
 
 const { RangePicker } = DatePicker;
 
@@ -29,8 +30,15 @@ export default function MyForm({ onSubmit }) {
   }
 
   function handleSubmit(e) {
-    const { date, range, time } = state;
+    const {
+      date,
+      range,
+      time,
+      dateTime: { startDate, endDate, startTime, endTime },
+    } = state;
     e.preventDefault();
+
+    // format data before saving into prarent's state(which will be displayed in the table)
     onSubmit({
       ...state,
       key: uniqid(),
@@ -38,7 +46,10 @@ export default function MyForm({ onSubmit }) {
       range: range.length
         ? `${range[0].format("YYYY-MM-DD")} ~ ${range[1].format("YYYY-MM-DD")}`
         : "",
-      time: time ? time.format('HH:mm:ss') : '',
+      time: time ? time.format("HH:mm:ss") : "",
+      dateTime: `${startDate.format("YYYY-MM-DD")} ${startTime.format(
+        "HH:mm:ss"
+      )} ~ ${endDate.format("YYYY-MM-DD")} ${endTime.format("HH:mm:ss")}`,
     });
     setState(INITIAL_VALUE);
   }
@@ -54,7 +65,7 @@ export default function MyForm({ onSubmit }) {
       }}
     >
       <Col
-        span={9}
+        span={14}
         style={{
           paddingTop: "1.5rem",
           backgroundColor: "white",
@@ -63,7 +74,7 @@ export default function MyForm({ onSubmit }) {
       >
         <Form labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
           <h1 style={{ textAlign: "center" }}>MyForm</h1>
-          <Form.Item label="Name">
+          <Form.Item label="Name" wrapperCol={{ span: 9 }}>
             <Input
               placeholder="Please enter your name"
               value={state.name}
@@ -72,7 +83,7 @@ export default function MyForm({ onSubmit }) {
               }}
             />
           </Form.Item>
-          <Form.Item name="country" label="Country">
+          <Form.Item name="country" label="Country" wrapperCol={{ span: 9 }}>
             <Select
               placeholder="Please select a country"
               onChange={(country) => {
@@ -87,7 +98,7 @@ export default function MyForm({ onSubmit }) {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item name="color" label="Color">
+          <Form.Item name="color" label="Color" wrapperCol={{ span: 9 }}>
             <Select
               mode="multiple"
               placeholder="Please select favourite colors"
@@ -161,6 +172,12 @@ export default function MyForm({ onSubmit }) {
             <TimePicker
               onChange={(time) => handleValueChange(time, "time")}
               value={state.time}
+            />
+          </Form.Item>
+          <Form.Item label="Date and Time">
+            <DateTimePicker
+              value={state.dateTime}
+              onChange={(dateTime) => handleValueChange(dateTime, "dateTime")}
             />
           </Form.Item>
           <Form.Item

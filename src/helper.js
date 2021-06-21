@@ -1,5 +1,6 @@
 import moment from "moment";
 
+// this is used for formatting data from localStorage into React State
 function formatDate(storageData) {
   storageData["date"] = storageData["date"]
     ? moment(storageData["date"])
