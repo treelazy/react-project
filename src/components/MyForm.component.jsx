@@ -14,6 +14,7 @@ import {
 import { COUNTRIES, COLORS, RACES, FOODS } from "../data/const";
 import uniqid from "uniqid";
 import { INITIAL_VALUE } from "../data/const";
+import DateTimePicker from "./DateTimePicker.component";
 
 const { RangePicker } = DatePicker;
 
@@ -31,6 +32,8 @@ export default function MyForm({ onSubmit }) {
   function handleSubmit(e) {
     const { date, range, time } = state;
     e.preventDefault();
+
+    // format data before saving into prarent's state
     onSubmit({
       ...state,
       key: uniqid(),
@@ -38,7 +41,7 @@ export default function MyForm({ onSubmit }) {
       range: range.length
         ? `${range[0].format("YYYY-MM-DD")} ~ ${range[1].format("YYYY-MM-DD")}`
         : "",
-      time: time ? time.format('HH:mm:ss') : '',
+      time: time ? time.format("HH:mm:ss") : "",
     });
     setState(INITIAL_VALUE);
   }
@@ -162,6 +165,9 @@ export default function MyForm({ onSubmit }) {
               onChange={(time) => handleValueChange(time, "time")}
               value={state.time}
             />
+          </Form.Item>
+          <Form.Item label="Date and Time">
+            <DateTimePicker />
           </Form.Item>
           <Form.Item
             wrapperCol={{

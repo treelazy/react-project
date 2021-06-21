@@ -12,6 +12,7 @@ function App() {
   return (
     <div style={{ backgroundColor: "rgba(118, 118, 118, 0.5)" }}>
       <MyForm onSubmit={saveData} />
+
       <MyTable data={data} />
     </div>
   );
