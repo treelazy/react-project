@@ -7,9 +7,15 @@ function formatDate(storageData) {
   storageData["time"] = storageData["time"]
     ? moment(storageData["time"])
     : null;
-  storageData["range"] = storageData["range"].length
-    ? [moment(storageData["range"][0]), moment(storageData["range"][1])]
-    : [];
+
+  if (storageData["range"] == null || !storageData["range"].length) {
+    storageData["range"] = [];
+  } else {
+    storageData["range"] = [
+      moment(storageData["range"][0]),
+      moment(storageData["range"][1]),
+    ];
+  }
 }
 
 export { formatDate };
