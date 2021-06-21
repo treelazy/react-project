@@ -38,7 +38,7 @@ export default function MyForm({ onSubmit }) {
     } = state;
     e.preventDefault();
 
-    // format data before saving into prarent's state
+    // format data before saving into prarent's state(which will be displayed in the table)
     onSubmit({
       ...state,
       key: uniqid(),
@@ -74,7 +74,7 @@ export default function MyForm({ onSubmit }) {
       >
         <Form labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
           <h1 style={{ textAlign: "center" }}>MyForm</h1>
-          <Form.Item label="Name">
+          <Form.Item label="Name" wrapperCol={{ span: 9 }}>
             <Input
               placeholder="Please enter your name"
               value={state.name}
@@ -83,7 +83,7 @@ export default function MyForm({ onSubmit }) {
               }}
             />
           </Form.Item>
-          <Form.Item name="country" label="Country">
+          <Form.Item name="country" label="Country" wrapperCol={{ span: 9 }}>
             <Select
               placeholder="Please select a country"
               onChange={(country) => {
@@ -98,7 +98,7 @@ export default function MyForm({ onSubmit }) {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item name="color" label="Color">
+          <Form.Item name="color" label="Color" wrapperCol={{ span: 9 }}>
             <Select
               mode="multiple"
               placeholder="Please select favourite colors"

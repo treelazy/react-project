@@ -2,7 +2,8 @@ import React from "react";
 import { Form, DatePicker, TimePicker } from "antd";
 import moment from "moment";
 
-const inlineStyle = { display: "inline-block" };
+const inline = { display: "inline-block" };
+const pushRight = { marginRight: "0.25rem" };
 
 export default function DateTimePicker({ value, onChange }) {
   const { startDate, endDate, startTime, endTime } = value;
@@ -53,25 +54,25 @@ export default function DateTimePicker({ value, onChange }) {
   return (
     <Form.Item>
       <DatePicker
-        style={inlineStyle}
+        style={{ ...inline, ...pushRight }}
         disabledDate={disabledStartDate}
         value={startDate}
         onChange={handleStartDateChange}
       />
       <TimePicker
-        style={inlineStyle}
+        style={{ ...inline }}
         value={startTime}
         onChange={handleStartTimeChange}
       />
-      ~
+      {` ~ `}
       <DatePicker
-        style={inlineStyle}
+        style={{ ...inline, ...pushRight }}
         disabledDate={disabledEndDate}
         value={endDate}
         onChange={handleEndDateChange}
       />
       <TimePicker
-        style={inlineStyle}
+        style={{ ...inline }}
         value={endTime}
         onChange={handleEndTimeChange}
       />
