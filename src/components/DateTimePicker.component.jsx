@@ -2,17 +2,33 @@ import React, { useState } from "react";
 import { Form, DatePicker, TimePicker } from "antd";
 import moment from "moment";
 
-export default function DateTimePicker() {
+export default function DateTimePicker({ value, onChange }) {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
 
-  // this state is deprecated
+  // this state is an old version, not in used anymore
   const [data, setData] = useState([
     { date: null, time: null },
     { date: null, time: null },
   ]);
+
+  function disabledStartDate(current) {
+    if (endDate == null) {
+      return false;
+    } else {
+      return current > endDate;
+    }
+  }
+
+  function disabledEndDate(current) {
+    if (startDate == null) {
+      return false;
+    } else {
+      return current < startDate;
+    }
+  }
 
   function handleStartDateChange(newDate) {
     setStartDate(newDate);
@@ -42,9 +58,17 @@ export default function DateTimePicker() {
 
   return (
     <Form.Item>
-      <DatePicker value={startDate} onChange={handleStartDateChange} />
+      <DatePicker
+        disabledDate={disabledStartDate}
+        value={startDate}
+        onChange={handleStartDateChange}
+      />
       <TimePicker value={startTime} onChange={handleStartTimeChange} />
-      <DatePicker value={endDate} onChange={handleEndDateChange} />
+      <DatePicker
+        disabledDate={disabledEndDate}
+        value={endDate}
+        onChange={handleEndDateChange}
+      />
       <TimePicker value={endTime} onChange={handleEndTimeChange} />
     </Form.Item>
   );
