@@ -1,5 +1,6 @@
 # react-project
 
-- ant design練習用表單
-- 表單Submit後會新增至Table
-- 表單Reset後會清空欄位
+- ant design 樣式
+- Fomik 驗證
+- 表單 Submit 後會新增至 Table
+- 表單 Reset 後會清空欄位
