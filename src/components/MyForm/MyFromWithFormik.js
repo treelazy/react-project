@@ -3,7 +3,7 @@ import React from "react";
 import { Formik } from "formik";
 import { INITIAL_VALUE, INITIAL_VALUE_DEV } from "../../data/const";
 import { formatBeforeSaved } from "../../helper";
-import MyForm from "./MyForm";
+import MyFormWithModal from "./MyFormWithModal";
 
 export default function MyFormWithFormik({
   values,
@@ -53,7 +53,11 @@ export default function MyFormWithFormik({
         resetForm();
       }}
     >
-      <MyForm visible={visible} onCancel={onCancel} isEditMode={isEditMode} />
+      <MyFormWithModal
+        visible={visible}
+        onCancel={onCancel}
+        isEditMode={isEditMode}
+      />
     </Formik>
   );
 }

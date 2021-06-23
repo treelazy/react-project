@@ -66,12 +66,23 @@ function App() {
   }
 
   function handleDeleteMany() {
-    setData(
-      data.filter(
-        (record) => !selectedRecordKeys.some((key) => key === record.key)
-      )
-    );
-    setSelectedRecordKeys([]);
+    Modal.confirm({
+      title: "Confirm",
+      content: (
+        <span>
+          You sure you want to delete{" "}
+          <b>IDs:{`${selectedRecordKeys.toString()}`}</b>?
+        </span>
+      ),
+      onOk: () => {
+        setData(
+          data.filter(
+            (record) => !selectedRecordKeys.some((key) => key === record.key)
+          )
+        );
+        setSelectedRecordKeys([]);
+      },
+    });
   }
 
   function handleRowSelection(keys) {
