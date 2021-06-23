@@ -36,10 +36,11 @@ export default function MyFormWithFormik(props) {
       }}
       onSubmit={(values, { resetForm }) => {
         props.onSubmit(formatBeforeSaved(values));
+        props.onCancel();
         resetForm();
       }}
     >
-      <MyForm />
+      <MyForm visible={props.visible} onCancel={props.onCancel} />
     </Formik>
   );
 }
