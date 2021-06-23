@@ -4,7 +4,7 @@ import { useFormikContext } from "formik";
 import { COUNTRIES, COLORS, RACES, FOODS } from "../../data/const";
 import DateTimePicker from "../DateTimePicker";
 
-export default function MyForm({ visible, onCancel }) {
+export default function MyForm({ visible, onCancel, isEditMode }) {
   const {
     values,
     setFieldValue,
@@ -41,7 +41,9 @@ export default function MyForm({ visible, onCancel }) {
           }}
         >
           <Form labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
-            <h1 style={{ textAlign: "center" }}>MyForm</h1>
+            <h1 style={{ textAlign: "center", marginBottom: "1rem" }}>
+              {isEditMode ? "Edit a Record" : "Create a New Record"}
+            </h1>
             <Form.Item
               label="Name"
               name="name"

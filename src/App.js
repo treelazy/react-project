@@ -1,6 +1,6 @@
 import "./App.css";
 import { useState } from "react";
-import { Button, Modal, Row, Col } from "antd";
+import { Button, Modal, Row, Col, Typography, Icon } from "antd";
 import MyFormWithFormik from "./components/MyForm/MyFromWithFormik";
 import MyTable from "./components/MyTable";
 import { serial } from "./helper";
@@ -53,7 +53,6 @@ function App() {
   function handleDelete(key) {
     Modal.confirm({
       title: "Confirm",
-      // icon: <ExclamationCircleOutlined />,
       content: (
         <span>
           You sure you want to delete <b>ID:{`${key}`}</b>?
@@ -66,9 +65,10 @@ function App() {
   }
 
   return (
-    <div
-      style={{ backgroundColor: "rgba(118, 118, 118, 0.5)", height: "100vh" }}
-    >
+    <div style={{ paddingTop: "32px", height: "100vh" }}>
+      <Row type="flex" justify="center">
+        <Typography.Title>Table List</Typography.Title>
+      </Row>
       <MyFormWithFormik
         onInsert={insertData}
         onEdit={editData}
@@ -77,14 +77,13 @@ function App() {
         values={selectedRecord}
         isEditMode={isEditMode}
       />
-
       <Row type="flex" justify="center">
         <Col
           span={18}
           style={{
             backgroundColor: "white",
             padding: "1rem",
-            border: "1px solid rgb(176,176,176)",
+            border: "1px solid rgb(200, 200, 200)",
             borderRadius: "3px",
           }}
         >
@@ -97,8 +96,10 @@ function App() {
         </Col>
       </Row>
       <Row type="flex" justify="center">
-        <Col>
-          <Button onClick={showModal}>New Record</Button>
+        <Col style={{ marginTop: "2rem" }}>
+          <Button type="primary" icon="form" onClick={showModal}>
+            New Record
+          </Button>
         </Col>
       </Row>
     </div>
