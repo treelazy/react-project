@@ -61,11 +61,10 @@ export default function MyForm({ onSubmit }) {
         justifyContent: "center",
         paddingTop: "2rem",
         paddingBottom: "2rem",
-        height: "100vh",
       }}
     >
       <Col
-        span={14}
+        span={18}
         style={{
           paddingTop: "1.5rem",
           backgroundColor: "white",
