@@ -17,7 +17,7 @@ export default function MyFormWithFormik({
   return (
     <Formik
       enableReinitialize
-      initialValues={isEditMode ? values : INITIAL_VALUE}
+      initialValues={isEditMode ? values || INITIAL_VALUE : INITIAL_VALUE}
       validateOnBlur
       validate={(values) => {
         const errors = {};

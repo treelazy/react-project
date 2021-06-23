@@ -28,7 +28,11 @@ export default function MyFormWitModal({ visible, onCancel, isEditMode }) {
             </Button>
           </Col>
           <Col span={13}>
-            {isEditMode ? null : <Button onClick={resetForm}>Reset</Button>}
+            {isEditMode ? null : (
+              <Button onClick={() => resetForm({ values: INITIAL_VALUE })}>
+                Reset
+              </Button>
+            )}
             <Button onClick={handleCancel}>Cancel</Button>
             <Button type="primary" onClick={submitForm}>
               Submit

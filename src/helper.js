@@ -1,4 +1,18 @@
 import moment from "moment";
+import { notification } from "antd";
+
+const openNotification = (type, title, message, delay) => {
+  delay = delay || 300;
+  setTimeout(
+    () =>
+      notification[type]({
+        duration: 3,
+        message: title,
+        description: message,
+      }),
+    delay
+  );
+};
 
 // this is used for formatting data from localStorage into React State
 function formatDate(storageData) {
@@ -44,4 +58,4 @@ const serial = {
   },
 };
 
-export { formatDate, formatBeforeSaved, serial };
+export { formatDate, formatBeforeSaved, serial, openNotification };

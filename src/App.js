@@ -1,9 +1,9 @@
 import "./App.css";
 import { useState } from "react";
-import { Button, Modal, Row, Col, Typography, Icon } from "antd";
+import { Button, Modal, Row, Col, Typography } from "antd";
 import MyFormWithFormik from "./components/MyForm/MyFromWithFormik";
 import MyTable from "./components/MyTable";
-import { serial } from "./helper";
+import { serial, openNotification } from "./helper";
 
 function App() {
   const [data, setData] = useState([]);
@@ -16,6 +16,11 @@ function App() {
     console.log("INSERT", data, newRecord);
     newRecord.key = serial.generate();
     setData([...data, newRecord]);
+    openNotification(
+      "success",
+      "New Record Added",
+      "You have successfully added a new record."
+    );
   }
 
   function editData(record) {
@@ -27,6 +32,11 @@ function App() {
     const newData = [...data.slice(0, index), record, ...data.slice(index + 1)];
     console.log("EDIT", newData);
     setData(newData);
+    openNotification(
+      "success",
+      "Record Updated",
+      "You have successfully updated a new record."
+    );
   }
 
   function showModal({ isEditMode }) {
@@ -36,6 +46,7 @@ function App() {
 
   function handleCancel() {
     setIsVisible(false);
+    setSelectedRecord(null);
   }
 
   function handleEdit(key) {
@@ -61,6 +72,11 @@ function App() {
       ),
       onOk: () => {
         setData(data.filter((record) => record.key !== key));
+        openNotification(
+          "warning",
+          "Record Deleted",
+          "You have successfully deleted a record."
+        );
       },
     });
   }
@@ -81,6 +97,11 @@ function App() {
           )
         );
         setSelectedRecordKeys([]);
+        openNotification(
+          "warning",
+          "Records Deleted",
+          "You have successfully deleted multiple records."
+        );
       },
     });
   }
