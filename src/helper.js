@@ -36,11 +36,13 @@ function formatBeforeSaved(values) {
       ? `${range[0].format("YYYY-MM-DD")} ~ ${range[1].format("YYYY-MM-DD")}`
       : "",
     time: time ? time.format("HH:mm:ss") : "",
-    dateTime:
-      startDate && startTime && endDate && endTime
-        ? `${startDate.format("YYYY-MM-DD")} ${startTime.format(
-            "HH:mm:ss"
-          )} ~ ${endDate.format("YYYY-MM-DD")} ${endTime.format("HH:mm:ss")}`
+    start:
+      startDate && startTime
+        ? `${startDate.format("YYYY-MM-DD")} ${startTime.format("HH:mm:ss")}`
+        : "",
+    end:
+      endDate && endTime
+        ? `${endDate.format("YYYY-MM-DD")} ${endTime.format("HH:mm:ss")}`
         : "",
   };
 }

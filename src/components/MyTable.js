@@ -47,7 +47,8 @@ const columns = [
       </span>
     ),
   },
-  { title: "Date and Time", key: "dateTime", dataIndex: "dateTime" },
+  { title: "Start", key: "start", dataIndex: "start" },
+  { title: "End", key: "end", dataIndex: "end" },
 ];
 
 export default function MyTable({ data }) {
