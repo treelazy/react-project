@@ -10,9 +10,10 @@ function App() {
     setData([...data, newRecord]);
   }
   return (
-    <div style={{ backgroundColor: "rgba(118, 118, 118, 0.5)" }}>
+    <div
+      style={{ backgroundColor: "rgba(118, 118, 118, 0.5)", height: "100vh" }}
+    >
       <MyForm onSubmit={saveData} />
-
       <MyTable data={data} />
     </div>
   );
