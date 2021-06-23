@@ -1,14 +1,19 @@
 import React from "react";
 
 import { Formik } from "formik";
-import { INITIAL_VALUE } from "../../data/const";
+import { INITIAL_VALUE, INITIAL_VALUE_DEV } from "../../data/const";
 import { formatBeforeSaved } from "../../helper";
 import MyForm from "./MyForm";
 
-export default function MyFormWithFormik(props) {
+export default function MyFormWithFormik({
+  values,
+  onCancel,
+  visible,
+  ...props
+}) {
   return (
     <Formik
-      initialValues={INITIAL_VALUE}
+      initialValues={values || INITIAL_VALUE_DEV}
       validateOnBlur
       validate={(values) => {
         const errors = {};
@@ -36,11 +41,11 @@ export default function MyFormWithFormik(props) {
       }}
       onSubmit={(values, { resetForm }) => {
         props.onSubmit(formatBeforeSaved(values));
-        props.onCancel();
+        onCancel();
         resetForm();
       }}
     >
-      <MyForm visible={props.visible} onCancel={props.onCancel} />
+      <MyForm visible={visible} onCancel={onCancel} />
     </Formik>
   );
 }

@@ -1,12 +1,13 @@
 import "./App.css";
 import { useState } from "react";
-import { Button } from "antd";
+import { Button, Modal } from "antd";
 import MyFormWithFormik from "./components/MyForm/MyFromWithFormik";
 import MyTable from "./components/MyTable";
 
 function App() {
   const [data, setData] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
+  const [selectedRecord, setSelectedRecord] = useState(null);
 
   function saveData(newRecord) {
     console.log(newRecord);
@@ -21,10 +22,38 @@ function App() {
     setIsVisible(false);
   }
 
-  function handleEdit() {}
+  function handleEdit(key) {
+    const tableRecord = data.find((record) => record.key === key);
+    const formikData = {
+      name: "henry",
+      country: "usa",
+      colors: ["red", "blue"],
+      race: "african",
+      isSwitched: false,
+      foods: ["rice", "meat"],
+      dateTime: {
+        // startDate: moment(),
+        // endDate: moment(),
+        // startTime: moment(),
+        // endTime: moment(),
+      },
+    };
+    showModal();
+  }
 
   function handleDelete(key) {
-    setData(data.filter((record) => record.key !== key));
+    Modal.confirm({
+      title: "Confirm",
+      // icon: <ExclamationCircleOutlined />,
+      content: (
+        <span>
+          You sure you want to delete <b>ID:{`${key}`}</b>?
+        </span>
+      ),
+      onOk: () => {
+        setData(data.filter((record) => record.key !== key));
+      },
+    });
   }
 
   return (
@@ -35,10 +64,15 @@ function App() {
         onSubmit={saveData}
         visible={isVisible}
         onCancel={handleCancel}
+        value={selectedRecord}
       />
-
       <Button onClick={showModal}>New Record</Button>
-      <MyTable data={data} onDelete={handleDelete} onEdit={handleEdit} />
+      <MyTable
+        data={data}
+        onDelete={handleDelete}
+        onEdit={handleEdit}
+        isLastOne={data.length === 1}
+      />
     </div>
   );
 }

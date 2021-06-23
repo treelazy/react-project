@@ -23,19 +23,11 @@ function formatDate(storageData) {
 // format data before saving into App's state(which will be displayed in the table)
 function formatBeforeSaved(values) {
   const {
-    date,
-    range,
-    time,
     dateTime: { startDate, endDate, startTime, endTime },
   } = values;
   return {
     ...values,
     key: uniqid(),
-    date: date ? date.format("YYYY-MM-DD") : "",
-    range: range.length
-      ? `${range[0].format("YYYY-MM-DD")} ~ ${range[1].format("YYYY-MM-DD")}`
-      : "",
-    time: time ? time.format("HH:mm:ss") : "",
     start:
       startDate && startTime
         ? `${startDate.format("YYYY-MM-DD")} ${startTime.format("HH:mm:ss")}`

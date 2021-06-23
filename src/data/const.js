@@ -1,3 +1,5 @@
+import moment from "moment";
+
 const COUNTRIES = [
   { key: 0, name: "China", value: "china" },
   { key: 1, name: "U.S.A", value: "usa" },
@@ -30,4 +32,20 @@ const INITIAL_VALUE = {
   dateTime: { startDate: null, endDate: null, startTime: null, endTime: null },
 };
 
-export { COUNTRIES, COLORS, RACES, FOODS, INITIAL_VALUE };
+// this is used for developing/testing
+const INITIAL_VALUE_DEV = {
+  name: "henry",
+  country: "usa",
+  colors: ["red", "blue"],
+  race: "african",
+  isSwitched: false,
+  foods: ["rice", "meat"],
+  dateTime: {
+    startDate: moment(),
+    endDate: moment(),
+    startTime: moment(),
+    endTime: moment(),
+  },
+};
+
+export { COUNTRIES, COLORS, RACES, FOODS, INITIAL_VALUE, INITIAL_VALUE_DEV };

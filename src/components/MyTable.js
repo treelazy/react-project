@@ -1,7 +1,7 @@
 import React from "react";
 import { Table, Tag, Col, Divider } from "antd";
 
-export default function MyTable({ data, onEdit, onDelete }) {
+export default function MyTable({ data, onEdit, onDelete, isLastOne }) {
   const columns = [
     {
       title: "ID",
@@ -59,10 +59,17 @@ export default function MyTable({ data, onEdit, onDelete }) {
       title: "Action",
       key: "action",
       render: (text, record) => (
+        // when there's only one record left, hide the delete option
         <span>
-          <a onClick={onEdit}>Edit</a>
-          <Divider type="vertical" />
-          <a onClick={() => onDelete(record.key)}>Delete</a>
+          <a onClick={() => onEdit(record.key)}>Edit</a>
+          {isLastOne ? (
+            ""
+          ) : (
+            <>
+              <Divider type="vertical" />
+              <a onClick={() => onDelete(record.key)}>Delete</a>
+            </>
+          )}
         </span>
       ),
     },
