@@ -11,6 +11,7 @@ import {
   DatePicker,
   TimePicker,
 } from "antd";
+import { Formik, useFormikContext } from "formik";
 import { COUNTRIES, COLORS, RACES, FOODS } from "../data/const";
 import uniqid from "uniqid";
 import { INITIAL_VALUE } from "../data/const";
@@ -18,12 +19,11 @@ import DateTimePicker from "./DateTimePicker";
 
 const { RangePicker } = DatePicker;
 
-export default function MyForm({ onSubmit }) {
+function MyForm({ onSubmit }) {
   const [state, setState] = useState(INITIAL_VALUE);
 
-  function handleValueChange(value, field) {
-    setState({ ...state, [field]: value });
-  }
+  const { values, setFieldValue, errors, touched, setFieldTouched } =
+    useFormikContext();
 
   function handleReset() {
     setState(INITIAL_VALUE);
@@ -47,11 +47,13 @@ export default function MyForm({ onSubmit }) {
         ? `${range[0].format("YYYY-MM-DD")} ~ ${range[1].format("YYYY-MM-DD")}`
         : "",
       time: time ? time.format("HH:mm:ss") : "",
-      dateTime: `${startDate.format("YYYY-MM-DD")} ${startTime.format(
-        "HH:mm:ss"
-      )} ~ ${endDate.format("YYYY-MM-DD")} ${endTime.format("HH:mm:ss")}`,
+      dateTime:
+        startDate && startTime && endDate && endTime
+          ? `${startDate.format("YYYY-MM-DD")} ${startTime.format(
+              "HH:mm:ss"
+            )} ~ ${endDate.format("YYYY-MM-DD")} ${endTime.format("HH:mm:ss")}`
+          : "",
     });
-    setState(INITIAL_VALUE);
   }
 
   return (
@@ -73,22 +75,36 @@ export default function MyForm({ onSubmit }) {
       >
         <Form labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
           <h1 style={{ textAlign: "center" }}>MyForm</h1>
-          <Form.Item label="Name" wrapperCol={{ span: 9 }}>
+          <Form.Item
+            label="Name"
+            name="name"
+            wrapperCol={{ span: 9 }}
+            validateStatus={touched.name && errors.name && "error"}
+            help={touched.name && errors.name}
+          >
             <Input
               placeholder="Please enter your name"
-              value={state.name}
+              value={values.name}
               onChange={(e) => {
-                handleValueChange(e.target.value, "name");
+                setFieldValue("name", e.target.value);
               }}
+              onBlur={() => setFieldTouched("name", true)}
             />
           </Form.Item>
-          <Form.Item name="country" label="Country" wrapperCol={{ span: 9 }}>
+          <Form.Item
+            name="country"
+            label="Country"
+            wrapperCol={{ span: 9 }}
+            validateStatus={touched.country && errors.country && "error"}
+            help={touched.country && errors.country}
+          >
             <Select
               placeholder="Please select a country"
               onChange={(country) => {
-                handleValueChange(country, "country");
+                setFieldValue("country", country);
               }}
-              value={state.country}
+              value={values.country}
+              onBlur={() => setFieldTouched("country", true)}
             >
               {COUNTRIES.map((country) => (
                 <Select.Option key={country.key} value={country.value}>
@@ -97,14 +113,21 @@ export default function MyForm({ onSubmit }) {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item name="color" label="Color" wrapperCol={{ span: 9 }}>
+          <Form.Item
+            name="colors"
+            label="Colors"
+            wrapperCol={{ span: 9 }}
+            validateStatus={touched.colors && errors.colors && "error"}
+            help={touched.colors && errors.colors}
+          >
             <Select
               mode="multiple"
               placeholder="Please select favourite colors"
               onChange={(colors) => {
-                handleValueChange(colors, "colors");
+                setFieldValue("colors", colors);
               }}
-              value={state.colors ?? []}
+              value={values.colors}
+              onBlur={() => setFieldTouched("colors", true)}
             >
               {COLORS.map((color) => (
                 <Select.Option key={color.key} value={color.value}>
@@ -113,12 +136,18 @@ export default function MyForm({ onSubmit }) {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item name="race" label="Race">
+          <Form.Item
+            name="race"
+            label="Race"
+            validateStatus={touched.race && errors.race && "error"}
+            help={touched.race && errors.race}
+          >
             <Radio.Group
               onChange={(e) => {
-                handleValueChange(e.target.value, "race");
+                setFieldValue("race", e.target.value);
               }}
-              value={state.race}
+              value={values.race}
+              onBlur={() => setFieldTouched("race", true)}
             >
               {RACES.map((race) => (
                 <Radio key={race.key} value={race.value}>
@@ -127,19 +156,19 @@ export default function MyForm({ onSubmit }) {
               ))}
             </Radio.Group>
           </Form.Item>
-          <Form.Item name="switch" label="Switch" valuePropName="checked">
+          <Form.Item name="isSwitched" label="Switch" valuePropName="checked">
             <Switch
-              checked={state.isSwitched}
+              checked={values.isSwitched}
               onClick={() => {
-                handleValueChange(!state.isSwitched, "isSwitched");
+                setFieldValue("isSwitched", !values.isSwitched);
               }}
             />
           </Form.Item>
-          <Form.Item name="food" label="Food">
+          <Form.Item name="foods" label="Food">
             <Checkbox.Group
-              value={state.foods}
-              onChange={(foods) => {
-                handleValueChange(foods, "foods");
+              value={values.foods}
+              onChange={(food) => {
+                setFieldValue("foods", food);
               }}
             >
               {FOODS.map((food) => (
@@ -157,26 +186,34 @@ export default function MyForm({ onSubmit }) {
           </Form.Item>
           <Form.Item label="Date">
             <DatePicker
-              onChange={(date) => handleValueChange(date, "date")}
+              // onChange={(date) => handleValueChange(date, "date")}
               value={state.date}
             />
           </Form.Item>
           <Form.Item label="Date Range">
             <RangePicker
-              onChange={(range) => handleValueChange(range, "range")}
+              // onChange={(range) => handleValueChange(range, "range")}
               value={state.range}
             />
           </Form.Item>
           <Form.Item label="Time">
             <TimePicker
-              onChange={(time) => handleValueChange(time, "time")}
+              // onChange={(time) => handleValueChange(time, "time")}
               value={state.time}
             />
           </Form.Item>
-          <Form.Item label="Date and Time">
+          <Form.Item
+            name="dateTime"
+            label="Date and Time"
+            validateStatus={touched.dateTime && errors.dateTime && "error"}
+            help={touched.dateTime && errors.dateTime}
+          >
             <DateTimePicker
-              value={state.dateTime}
-              onChange={(dateTime) => handleValueChange(dateTime, "dateTime")}
+              value={values.dateTime}
+              onChange={(dateTime) => {
+                setFieldValue("dateTime", dateTime);
+              }}
+              onBlur={() => setFieldTouched("dateTime", true)}
             />
           </Form.Item>
           <Form.Item
@@ -197,5 +234,43 @@ export default function MyForm({ onSubmit }) {
         </Form>
       </Col>
     </div>
+  );
+}
+
+export default function MyFormWithFormik({ props }) {
+  return (
+    <Formik
+      initialValues={INITIAL_VALUE}
+      validateOnBlur
+      validate={(values) => {
+        const errors = {};
+        if (values.name.length < 5) {
+          errors.name = "Name should have at least 5 charaters";
+        }
+        if (!values.country) {
+          errors.country = "Please select a country";
+        }
+        if (!values.colors.length) {
+          errors.colors = "Please choose at least one color";
+        }
+        if (!values.race) {
+          errors.race = "Please select your race";
+        }
+        if (
+          !values.dateTime.startDate ||
+          !values.dateTime.endDate ||
+          !values.dateTime.startTime ||
+          !values.dateTime.endTime
+        ) {
+          errors.dateTime = "Please select the missing date/time ";
+        }
+        return errors;
+      }}
+      onSubmit={(values) => {
+        alert(JSON.stringify(values, null, 2));
+      }}
+    >
+      <MyForm />
+    </Formik>
   );
 }
