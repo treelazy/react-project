@@ -1,7 +1,14 @@
 import React from "react";
-import { Table, Tag, Col, Divider } from "antd";
+import { Table, Tag, Divider } from "antd";
 
-export default function MyTable({ data, onEdit, onDelete, isLastOne }) {
+export default function MyTable({
+  data,
+  onEdit,
+  onDelete,
+  isLastOne,
+  onRowSelection,
+  selectedRowKeys,
+}) {
   const columns = [
     {
       title: "ID",
@@ -75,5 +82,15 @@ export default function MyTable({ data, onEdit, onDelete, isLastOne }) {
     },
   ];
 
-  return <Table columns={columns} dataSource={data} />;
+  // rowSelection object indicates the need for row selection
+  const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      onRowSelection(selectedRowKeys);
+    },
+    selectedRowKeys: selectedRowKeys,
+  };
+
+  return (
+    <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
+  );
 }

@@ -10,6 +10,7 @@ function App() {
   const [isVisible, setIsVisible] = useState(false);
   const [isEditMode, seIsEditMode] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
+  const [selectedRecordKeys, setSelectedRecordKeys] = useState([]);
 
   function insertData(newRecord) {
     console.log("INSERT", data, newRecord);
@@ -64,6 +65,19 @@ function App() {
     });
   }
 
+  function handleDeleteMany() {
+    setData(
+      data.filter(
+        (record) => !selectedRecordKeys.some((key) => key === record.key)
+      )
+    );
+    setSelectedRecordKeys([]);
+  }
+
+  function handleRowSelection(keys) {
+    setSelectedRecordKeys(keys);
+  }
+
   return (
     <div style={{ paddingTop: "32px", height: "100vh" }}>
       <Row type="flex" justify="center">
@@ -92,14 +106,26 @@ function App() {
             onDelete={handleDelete}
             onEdit={handleEdit}
             isLastOne={data.length === 1}
+            onRowSelection={handleRowSelection}
+            selectedRowKeys={selectedRecordKeys}
           />
         </Col>
       </Row>
       <Row type="flex" justify="center">
         <Col style={{ marginTop: "2rem" }}>
-          <Button type="primary" icon="form" onClick={showModal}>
+          <Button
+            style={{ marginRight: "1rem" }}
+            type="primary"
+            icon="form"
+            onClick={showModal}
+          >
             New Record
           </Button>
+          {selectedRecordKeys.length ? (
+            <Button type="danger" icon="delete" onClick={handleDeleteMany}>
+              Delete
+            </Button>
+          ) : null}
         </Col>
       </Row>
     </div>

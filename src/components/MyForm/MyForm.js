@@ -41,7 +41,7 @@ export default function MyForm({ visible, onCancel, isEditMode }) {
           }}
         >
           <Form labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
-            <h1 style={{ textAlign: "center", marginBottom: "1rem" }}>
+            <h1 style={{ textAlign: "center", marginBottom: "1.5rem" }}>
               {isEditMode ? "Edit a Record" : "Create a New Record"}
             </h1>
             <Form.Item
