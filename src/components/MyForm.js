@@ -15,7 +15,7 @@ import { INITIAL_VALUE } from "../data/const";
 import DateTimePicker from "./DateTimePicker";
 import { formatBeforeSaved } from "../helper";
 
-function MyForm({ onSubmit }) {
+function MyForm() {
   const {
     values,
     setFieldValue,
@@ -221,8 +221,9 @@ export default function MyFormWithFormik(props) {
         }
         return errors;
       }}
-      onSubmit={(values) => {
+      onSubmit={(values, { resetForm }) => {
         props.onSubmit(formatBeforeSaved(values));
+        resetForm();
       }}
     >
       <MyForm />
