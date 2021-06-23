@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Formik } from "formik";
-import { INITIAL_VALUE, INITIAL_VALUE_DEV } from "../../data/const";
+import { INITIAL_VALUE, DEV_INITIAL_VALUE } from "../../data/const";
 import { formatBeforeSaved } from "../../helper";
 import MyFormWithModal from "./MyFormWithModal";
 
@@ -17,7 +17,7 @@ export default function MyFormWithFormik({
   return (
     <Formik
       enableReinitialize
-      initialValues={isEditMode ? values : INITIAL_VALUE_DEV}
+      initialValues={isEditMode ? values : INITIAL_VALUE}
       validateOnBlur
       validate={(values) => {
         const errors = {};
@@ -50,7 +50,7 @@ export default function MyFormWithFormik({
           onInsert(formatBeforeSaved(values));
         }
         onCancel();
-        resetForm();
+        resetForm({ values: INITIAL_VALUE });
       }}
     >
       <MyFormWithModal

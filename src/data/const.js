@@ -33,7 +33,7 @@ const INITIAL_VALUE = {
 };
 
 // this is used for developing/testing
-const INITIAL_VALUE_DEV = {
+const DEV_INITIAL_VALUE = {
   name: "henry",
   country: "usa",
   colors: ["red", "blue"],
@@ -48,4 +48,4 @@ const INITIAL_VALUE_DEV = {
   },
 };
 
-export { COUNTRIES, COLORS, RACES, FOODS, INITIAL_VALUE, INITIAL_VALUE_DEV };
+export { COUNTRIES, COLORS, RACES, FOODS, INITIAL_VALUE, DEV_INITIAL_VALUE };

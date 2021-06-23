@@ -1,14 +1,15 @@
 import React from "react";
-import { Modal, Button, Row } from "antd";
+import { Modal, Button, Row, Col } from "antd";
 import { useFormikContext } from "formik";
 import MyForm from "./MyForm";
+import { INITIAL_VALUE, DEV_INITIAL_VALUE } from "../../data/const";
 
 export default function MyFormWitModal({ visible, onCancel, isEditMode }) {
   const { submitForm, resetForm } = useFormikContext();
 
   function handleCancel() {
     onCancel();
-    resetForm();
+    resetForm({ values: INITIAL_VALUE });
   }
 
   return (
@@ -20,16 +21,19 @@ export default function MyFormWitModal({ visible, onCancel, isEditMode }) {
       onOk={submitForm}
       width="45%"
       footer={
-        <Row type="flex" justify="center">
-          <Button key="reset" onClick={resetForm}>
-            Reset
-          </Button>
-          <Button key="cancel" onClick={handleCancel}>
-            Cancel
-          </Button>
-          <Button key="submit" type="primary" onClick={submitForm}>
-            Submit
-          </Button>
+        <Row>
+          <Col offset={0} span={2}>
+            <Button onClick={() => resetForm({ values: DEV_INITIAL_VALUE })}>
+              Cheat
+            </Button>
+          </Col>
+          <Col span={13}>
+            {isEditMode ? null : <Button onClick={resetForm}>Reset</Button>}
+            <Button onClick={handleCancel}>Cancel</Button>
+            <Button type="primary" onClick={submitForm}>
+              Submit
+            </Button>
+          </Col>
         </Row>
       }
     >
