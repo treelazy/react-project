@@ -5,11 +5,10 @@ import MyForm from "./MyForm";
 import { INITIAL_VALUE, DEV_INITIAL_VALUE } from "../../data/const";
 
 export default function MyFormWitModal({ visible, onCancel, isEditMode }) {
-  const { submitForm, resetForm } = useFormikContext();
+  const { values, submitForm, resetForm } = useFormikContext();
 
   function handleCancel() {
     onCancel();
-    resetForm({ values: INITIAL_VALUE });
   }
 
   return (
@@ -23,7 +22,11 @@ export default function MyFormWitModal({ visible, onCancel, isEditMode }) {
       footer={
         <Row>
           <Col offset={0} span={2}>
-            <Button onClick={() => resetForm({ values: DEV_INITIAL_VALUE })}>
+            <Button
+              onClick={() =>
+                resetForm({ values: { ...values, ...DEV_INITIAL_VALUE } })
+              }
+            >
               Cheat
             </Button>
           </Col>

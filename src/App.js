@@ -28,10 +28,9 @@ function App() {
       console.log("KEYS", d.key, record.key);
       return d.key === record.key;
     });
-    console.log(index);
     const newData = [...data.slice(0, index), record, ...data.slice(index + 1)];
-    console.log("EDIT", newData);
     setData(newData);
+    setTimeout(() => setSelectedRecord(null), 500);
     openNotification(
       "success",
       "Record Updated",
@@ -46,7 +45,7 @@ function App() {
 
   function handleCancel() {
     setIsVisible(false);
-    setSelectedRecord(null);
+    setTimeout(() => setSelectedRecord(null), 500);
   }
 
   function handleEdit(key) {

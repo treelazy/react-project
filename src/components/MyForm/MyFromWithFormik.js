@@ -43,14 +43,13 @@ export default function MyFormWithFormik({
         }
         return errors;
       }}
-      onSubmit={(values, { resetForm }) => {
+      onSubmit={(values) => {
         if (isEditMode) {
           onEdit(formatBeforeSaved(values));
         } else {
           onInsert(formatBeforeSaved(values));
         }
         onCancel();
-        resetForm({ values: INITIAL_VALUE });
       }}
     >
       <MyFormWithModal
