@@ -9,11 +9,15 @@ export default function MyFormWithFormik({
   values,
   onCancel,
   visible,
+  isEditMode,
+  onInsert,
+  onEdit,
   ...props
 }) {
   return (
     <Formik
-      initialValues={values || INITIAL_VALUE_DEV}
+      enableReinitialize
+      initialValues={isEditMode ? values : INITIAL_VALUE_DEV}
       validateOnBlur
       validate={(values) => {
         const errors = {};
@@ -40,12 +44,16 @@ export default function MyFormWithFormik({
         return errors;
       }}
       onSubmit={(values, { resetForm }) => {
-        props.onSubmit(formatBeforeSaved(values));
+        if (isEditMode) {
+          onEdit(formatBeforeSaved(values));
+        } else {
+          onInsert(formatBeforeSaved(values));
+        }
         onCancel();
         resetForm();
       }}
     >
-      <MyForm visible={visible} onCancel={onCancel} />
+      <MyForm visible={visible} onCancel={onCancel} isEditMode={isEditMode} />
     </Formik>
   );
 }

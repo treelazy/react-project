@@ -170,19 +170,7 @@ export default function MyForm({ visible, onCancel }) {
                 span: 12,
                 offset: 6,
               }}
-            >
-              {/* <Button
-                type="primary"
-                style={{ marginRight: "10px" }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  submitForm();
-                }}
-              >
-                Submit
-              </Button>
-              <Button onClick={() => resetForm()}>Reset</Button> */}
-            </Form.Item>
+            ></Form.Item>
           </Form>
         </Col>
       </div>

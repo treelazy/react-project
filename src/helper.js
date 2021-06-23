@@ -1,5 +1,4 @@
 import moment from "moment";
-import uniqid from "uniqid";
 
 // this is used for formatting data from localStorage into React State
 function formatDate(storageData) {
@@ -27,7 +26,6 @@ function formatBeforeSaved(values) {
   } = values;
   return {
     ...values,
-    key: uniqid(),
     start:
       startDate && startTime
         ? `${startDate.format("YYYY-MM-DD")} ${startTime.format("HH:mm:ss")}`
@@ -39,4 +37,11 @@ function formatBeforeSaved(values) {
   };
 }
 
-export { formatDate, formatBeforeSaved };
+const serial = {
+  _num: 0,
+  generate: function () {
+    return this._num++;
+  },
+};
+
+export { formatDate, formatBeforeSaved, serial };

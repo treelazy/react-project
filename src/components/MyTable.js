@@ -75,11 +75,5 @@ export default function MyTable({ data, onEdit, onDelete, isLastOne }) {
     },
   ];
 
-  return (
-    <div style={{ justifyContent: "center", display: "flex" }}>
-      <Col span={18} style={{ backgroundColor: "white" }}>
-        <Table columns={columns} dataSource={data} />
-      </Col>
-    </div>
-  );
+  return <Table columns={columns} dataSource={data} />;
 }
