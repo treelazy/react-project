@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Col,
   Form,
@@ -8,14 +8,12 @@ import {
   Switch,
   Checkbox,
   Select,
-  DatePicker,
-  TimePicker,
 } from "antd";
 import { Formik, useFormikContext } from "formik";
 import { COUNTRIES, COLORS, RACES, FOODS } from "../data/const";
-import uniqid from "uniqid";
 import { INITIAL_VALUE } from "../data/const";
 import DateTimePicker from "./DateTimePicker";
+import { formatBeforeSaved } from "../helper";
 
 function MyForm({ onSubmit }) {
   const {
@@ -224,33 +222,7 @@ export default function MyFormWithFormik(props) {
         return errors;
       }}
       onSubmit={(values) => {
-        alert(JSON.stringify(values, null, 2));
-        const {
-          date,
-          range,
-          time,
-          dateTime: { startDate, endDate, startTime, endTime },
-        } = values;
-        // format data before saving into prarent's state(which will be displayed in the table)
-        props.onSubmit({
-          ...values,
-          key: uniqid(),
-          date: date ? date.format("YYYY-MM-DD") : "",
-          range: range.length
-            ? `${range[0].format("YYYY-MM-DD")} ~ ${range[1].format(
-                "YYYY-MM-DD"
-              )}`
-            : "",
-          time: time ? time.format("HH:mm:ss") : "",
-          dateTime:
-            startDate && startTime && endDate && endTime
-              ? `${startDate.format("YYYY-MM-DD")} ${startTime.format(
-                  "HH:mm:ss"
-                )} ~ ${endDate.format("YYYY-MM-DD")} ${endTime.format(
-                  "HH:mm:ss"
-                )}`
-              : "",
-        });
+        props.onSubmit(formatBeforeSaved(values));
       }}
     >
       <MyForm />
