@@ -9,6 +9,7 @@ export default function MyFormWitModal({ visible, onCancel, isEditMode }) {
 
   function handleCancel() {
     onCancel();
+    setTimeout(() => resetForm({ values: INITIAL_VALUE }), 500);
   }
 
   return (
