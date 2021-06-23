@@ -47,9 +47,6 @@ const columns = [
       </span>
     ),
   },
-  // { title: "Date", key: "date", dataIndex: "date" },
-  // { title: "Range", key: "range", dataIndex: "range" },
-  // { title: "Time", key: "time", dataIndex: "time" },
   { title: "Date and Time", key: "dateTime", dataIndex: "dateTime" },
 ];
 

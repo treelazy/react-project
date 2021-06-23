@@ -17,8 +17,6 @@ import uniqid from "uniqid";
 import { INITIAL_VALUE } from "../data/const";
 import DateTimePicker from "./DateTimePicker";
 
-const { RangePicker } = DatePicker;
-
 function MyForm({ onSubmit }) {
   const {
     values,
@@ -27,11 +25,8 @@ function MyForm({ onSubmit }) {
     touched,
     setFieldTouched,
     submitForm,
+    resetForm,
   } = useFormikContext();
-
-  function handleReset() {
-    // setState(INITIAL_VALUE);
-  }
 
   return (
     <div
@@ -161,24 +156,6 @@ function MyForm({ onSubmit }) {
               ))}
             </Checkbox.Group>
           </Form.Item>
-          {/* <Form.Item label="Date">
-            <DatePicker
-              // onChange={(date) => handleValueChange(date, "date")}
-              value={state.date}
-            />
-          </Form.Item>
-          <Form.Item label="Date Range">
-            <RangePicker
-              // onChange={(range) => handleValueChange(range, "range")}
-              value={state.range}
-            />
-          </Form.Item>
-          <Form.Item label="Time">
-            <TimePicker
-              // onChange={(time) => handleValueChange(time, "time")}
-              value={state.time}
-            />
-          </Form.Item> */}
           <Form.Item
             name="dateTime"
             label="Date and Time"
@@ -209,7 +186,7 @@ function MyForm({ onSubmit }) {
             >
               Submit
             </Button>
-            <Button onClick={handleReset}>Reset</Button>
+            <Button onClick={() => resetForm()}>Reset</Button>
           </Form.Item>
         </Form>
       </Col>
