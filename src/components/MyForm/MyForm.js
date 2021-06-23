@@ -9,13 +9,11 @@ import {
   Checkbox,
   Select,
 } from "antd";
-import { Formik, useFormikContext } from "formik";
-import { COUNTRIES, COLORS, RACES, FOODS } from "../data/const";
-import { INITIAL_VALUE } from "../data/const";
-import DateTimePicker from "./DateTimePicker";
-import { formatBeforeSaved } from "../helper";
+import { useFormikContext } from "formik";
+import { COUNTRIES, COLORS, RACES, FOODS } from "../../data/const";
+import DateTimePicker from "../DateTimePicker";
 
-function MyForm() {
+export default function MyForm() {
   const {
     values,
     setFieldValue,
@@ -189,44 +187,5 @@ function MyForm() {
         </Form>
       </Col>
     </div>
-  );
-}
-
-export default function MyFormWithFormik(props) {
-  return (
-    <Formik
-      initialValues={INITIAL_VALUE}
-      validateOnBlur
-      validate={(values) => {
-        const errors = {};
-        if (values.name.length < 5) {
-          errors.name = "Name should have at least 5 charaters";
-        }
-        if (!values.country) {
-          errors.country = "Please select a country";
-        }
-        if (!values.colors.length) {
-          errors.colors = "Please choose at least one color";
-        }
-        if (!values.race) {
-          errors.race = "Please select your race";
-        }
-        if (
-          !values.dateTime.startDate ||
-          !values.dateTime.endDate ||
-          !values.dateTime.startTime ||
-          !values.dateTime.endTime
-        ) {
-          errors.dateTime = "Please select the missing date/time ";
-        }
-        return errors;
-      }}
-      onSubmit={(values, { resetForm }) => {
-        props.onSubmit(formatBeforeSaved(values));
-        resetForm();
-      }}
-    >
-      <MyForm />
-    </Formik>
   );
 }
