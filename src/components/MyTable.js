@@ -31,9 +31,21 @@ export default function MyTable({
       key: "colors",
       render: (colors) => (
         <span>
-          {colors.map((color) => (
-            <Tag key={color}>{color}</Tag>
-          ))}
+          {colors.map((color) => {
+            let styleColor = "";
+            if (color === "red") {
+              styleColor = "volcano";
+            } else if (color === "blue") {
+              styleColor = "geekblue";
+            } else if (color === "green") {
+              styleColor = "green";
+            }
+            return (
+              <Tag key={color} color={styleColor}>
+                {color}
+              </Tag>
+            );
+          })}
         </span>
       ),
     },
