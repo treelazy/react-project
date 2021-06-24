@@ -1,4 +1,18 @@
 import moment from "moment";
+import { notification } from "antd";
+
+const openNotification = (type, title, message, delay) => {
+  delay = delay || 300;
+  setTimeout(
+    () =>
+      notification[type]({
+        duration: 3,
+        message: title,
+        description: message,
+      }),
+    delay
+  );
+};
 
 // this is used for formatting data from localStorage into React State
 function formatDate(storageData) {
@@ -19,4 +33,29 @@ function formatDate(storageData) {
   }
 }
 
-export { formatDate };
+// format data before saving into App's state(which will be displayed in the table)
+function formatBeforeSaved(values) {
+  const {
+    dateTime: { startDate, endDate, startTime, endTime },
+  } = values;
+  return {
+    ...values,
+    start:
+      startDate && startTime
+        ? `${startDate.format("YYYY-MM-DD")} ${startTime.format("HH:mm:ss")}`
+        : "",
+    end:
+      endDate && endTime
+        ? `${endDate.format("YYYY-MM-DD")} ${endTime.format("HH:mm:ss")}`
+        : "",
+  };
+}
+
+const serial = {
+  _num: 0,
+  generate: function () {
+    return this._num++;
+  },
+};
+
+export { formatDate, formatBeforeSaved, serial, openNotification };

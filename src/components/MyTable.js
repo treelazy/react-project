@@ -1,64 +1,108 @@
 import React from "react";
-import { Table, Tag, Col } from "antd";
+import { Table, Tag, Divider } from "antd";
 
-const columns = [
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-  },
-  {
-    title: "Country",
-    dataIndex: "country",
-    key: "country",
-  },
-  {
-    title: "Colors",
-    dataIndex: "colors",
-    key: "colors",
-    render: (colors) => (
-      <span>
-        {colors.map((color) => (
-          <Tag key={color}>{color}</Tag>
-        ))}
-      </span>
-    ),
-  },
-  {
-    title: "Race",
-    key: "race",
-    dataIndex: "race",
-  },
-  {
-    title: "Switch",
-    key: "isSwitched",
-    dataIndex: "isSwitched",
-    render: (bool) => <span>{bool.toString()}</span>,
-  },
-  {
-    title: "Food",
-    key: "foods",
-    dataIndex: "foods",
-    render: (foods) => (
-      <span>
-        {foods.map((food) => (
-          <Tag key={food}>{food}</Tag>
-        ))}
-      </span>
-    ),
-  },
-  { title: "Date", key: "date", dataIndex: "date" },
-  { title: "Range", key: "range", dataIndex: "range" },
-  { title: "Time", key: "time", dataIndex: "time" },
-  { title: "Date and Time", key: "dateTime", dataIndex: "dateTime" },
-];
+export default function MyTable({
+  data,
+  onEdit,
+  onDelete,
+  isLastOne,
+  onRowSelection,
+  selectedRowKeys,
+}) {
+  const columns = [
+    {
+      title: "ID",
+      dataIndex: "key",
+      key: "key",
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Country",
+      dataIndex: "country",
+      key: "country",
+    },
+    {
+      title: "Colors",
+      dataIndex: "colors",
+      key: "colors",
+      render: (colors) => (
+        <span>
+          {colors.map((color) => {
+            let styleColor = "";
+            if (color === "red") {
+              styleColor = "volcano";
+            } else if (color === "blue") {
+              styleColor = "geekblue";
+            } else if (color === "green") {
+              styleColor = "green";
+            }
+            return (
+              <Tag key={color} color={styleColor}>
+                {color}
+              </Tag>
+            );
+          })}
+        </span>
+      ),
+    },
+    {
+      title: "Race",
+      key: "race",
+      dataIndex: "race",
+    },
+    {
+      title: "Switch",
+      key: "isSwitched",
+      dataIndex: "isSwitched",
+      render: (bool) => <span>{bool.toString()}</span>,
+    },
+    {
+      title: "Food",
+      key: "foods",
+      dataIndex: "foods",
+      render: (foods) => (
+        <span>
+          {foods.map((food) => (
+            <Tag key={food}>{food}</Tag>
+          ))}
+        </span>
+      ),
+    },
+    { title: "Start", key: "start", dataIndex: "start" },
+    { title: "End", key: "end", dataIndex: "end" },
+    {
+      title: "Action",
+      key: "action",
+      render: (text, record) => (
+        // when there's only one record left, hide the delete option
+        <span>
+          <a onClick={() => onEdit(record.key)}>Edit</a>
+          {isLastOne ? (
+            ""
+          ) : (
+            <>
+              <Divider type="vertical" />
+              <a onClick={() => onDelete(record.key)}>Delete</a>
+            </>
+          )}
+        </span>
+      ),
+    },
+  ];
 
-export default function MyTable({ data }) {
+  // rowSelection object indicates the need for row selection
+  const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      onRowSelection(selectedRowKeys);
+    },
+    selectedRowKeys: selectedRowKeys,
+  };
+
   return (
-    <div style={{ justifyContent: "center", display: "flex" }}>
-      <Col span={18} style={{ backgroundColor: "white" }}>
-        <Table columns={columns} dataSource={data} />
-      </Col>
-    </div>
+    <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
   );
 }

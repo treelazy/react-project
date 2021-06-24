@@ -1,11 +1,11 @@
 import React from "react";
-import { Form, DatePicker, TimePicker } from "antd";
+import { DatePicker, TimePicker } from "antd";
 import moment from "moment";
 
 const inline = { display: "inline-block" };
 const pushRight = { marginRight: "0.25rem" };
 
-export default function DateTimePicker({ value, onChange }) {
+export default function DateTimePicker({ value, onChange, onBlur }) {
   const { startDate, endDate, startTime, endTime } = value;
 
   function disabledStartDate(current) {
@@ -52,17 +52,27 @@ export default function DateTimePicker({ value, onChange }) {
   }
 
   return (
-    <Form.Item>
+    <>
       <DatePicker
         style={{ ...inline, ...pushRight }}
         disabledDate={disabledStartDate}
         value={startDate}
         onChange={handleStartDateChange}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {
+            onBlur();
+          }
+        }}
       />
       <TimePicker
         style={{ ...inline }}
         value={startTime}
         onChange={handleStartTimeChange}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {
+            onBlur();
+          }
+        }}
       />
       {` ~ `}
       <DatePicker
@@ -70,12 +80,22 @@ export default function DateTimePicker({ value, onChange }) {
         disabledDate={disabledEndDate}
         value={endDate}
         onChange={handleEndDateChange}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {
+            onBlur();
+          }
+        }}
       />
       <TimePicker
         style={{ ...inline }}
         value={endTime}
         onChange={handleEndTimeChange}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {
+            onBlur();
+          }
+        }}
       />
-    </Form.Item>
+    </>
   );
 }
