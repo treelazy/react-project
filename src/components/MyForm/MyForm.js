@@ -62,7 +62,9 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
           </Col>
           <Col span={13}>
             {isEditMode ? null : (
-              <Button onClick={() => setValues(INITIAL_VALUE)}>Reset</Button>
+              <Button onClick={() => resetForm({ values: INITIAL_VALUE })}>
+                Reset
+              </Button>
             )}
             <Button onClick={handleCancel}>Cancel</Button>
             <Button type="primary" onClick={submitForm}>

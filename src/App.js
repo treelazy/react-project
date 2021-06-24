@@ -65,7 +65,7 @@ function App() {
     delete formikData.end;
 
     // select the specific record, send the data to Formik, and then open the modal form
-    setSelectedRecord(tableRecord);
+    setSelectedRecord(formikData);
     showModal({ isEditMode: true });
   }
 
