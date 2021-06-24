@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, DatePicker, TimePicker } from "antd";
+import { DatePicker, TimePicker } from "antd";
 import moment from "moment";
 
 const inline = { display: "inline-block" };

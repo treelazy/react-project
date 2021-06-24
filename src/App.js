@@ -13,7 +13,6 @@ function App() {
   const [selectedRecordKeys, setSelectedRecordKeys] = useState([]);
 
   function insertData(newRecord) {
-    console.log("INSERT", data, newRecord);
     newRecord.key = serial.generate();
     setData([...data, newRecord]);
     openNotification(
@@ -25,7 +24,6 @@ function App() {
 
   function editData(record) {
     const index = data.findIndex((d) => {
-      console.log("KEYS", d.key, record.key);
       return d.key === record.key;
     });
     const newData = [...data.slice(0, index), record, ...data.slice(index + 1)];
@@ -57,7 +55,6 @@ function App() {
     delete formikData.end;
 
     setSelectedRecord(tableRecord);
-    console.log(selectedRecord);
     showModal({ isEditMode: true });
   }
 
