@@ -1,5 +1,5 @@
 import React from "react";
-
+import * as yup from "yup";
 import { Formik } from "formik";
 import { INITIAL_VALUE } from "../../data/const";
 import { formatBeforeSaved } from "../../helper";
@@ -19,30 +19,37 @@ export default function MyFormWithFormik({
       enableReinitialize
       initialValues={isEditMode ? values || INITIAL_VALUE : INITIAL_VALUE}
       validateOnBlur
-      validate={(values) => {
-        const errors = {};
-        if (values.name.length < 5) {
-          errors.name = "Name should have at least 5 charaters";
-        }
-        if (!values.country) {
-          errors.country = "Please select a country";
-        }
-        if (!values.colors.length) {
-          errors.colors = "Please choose at least one color";
-        }
-        if (!values.race) {
-          errors.race = "Please select your race";
-        }
-        if (
-          !values.dateTime.startDate ||
-          !values.dateTime.endDate ||
-          !values.dateTime.startTime ||
-          !values.dateTime.endTime
-        ) {
-          errors.dateTime = "Please select the missing date/time ";
-        }
-        return errors;
-      }}
+      validationSchema={yup.object({
+        name: yup
+          .string()
+          .min(5, "Name should have at least 5 charaters")
+          .required("Name should have at least 5 charaters"),
+        country: yup.string().required("Please select a country"),
+        colors: yup.array().min(1, "Please choose at least one color"),
+        race: yup.string().required("Please select your race"),
+        dateTime: yup
+          .object({})
+          .test(
+            "startDate",
+            "Please select start date",
+            (dateTime) => !!dateTime.startDate
+          )
+          .test(
+            "startTime",
+            "Please select start time",
+            (dateTime) => !!dateTime.startTime
+          )
+          .test(
+            "endDate",
+            "Please select end date",
+            (dateTime) => !!dateTime.endDate
+          )
+          .test(
+            "endTime",
+            "Please select end time",
+            (dateTime) => !!dateTime.endTime
+          ),
+      })}
       onSubmit={(values, { resetForm }) => {
         if (isEditMode) {
           onEdit(formatBeforeSaved(values));
