@@ -1,9 +1,9 @@
 import React from "react";
 
 import { Formik } from "formik";
-import { INITIAL_VALUE, DEV_INITIAL_VALUE } from "../../data/const";
+import { INITIAL_VALUE } from "../../data/const";
 import { formatBeforeSaved } from "../../helper";
-import MyFormWithModal from "./MyFormWithModal";
+import MyForm from "./MyForm";
 
 export default function MyFormWithFormik({
   values,
@@ -49,15 +49,12 @@ export default function MyFormWithFormik({
         } else {
           onInsert(formatBeforeSaved(values));
         }
+        // delay the data update to avoid showing unfriendly data to user
         setTimeout(() => resetForm({ values: INITIAL_VALUE }), 500);
         onCancel();
       }}
     >
-      <MyFormWithModal
-        visible={visible}
-        onCancel={onCancel}
-        isEditMode={isEditMode}
-      />
+      <MyForm visible={visible} onCancel={onCancel} isEditMode={isEditMode} />
     </Formik>
   );
 }

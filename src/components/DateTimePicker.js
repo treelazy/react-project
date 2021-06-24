@@ -8,6 +8,7 @@ const pushRight = { marginRight: "0.25rem" };
 export default function DateTimePicker({ value, onChange, onBlur }) {
   const { startDate, endDate, startTime, endTime } = value;
 
+  // user can't select start dates which are later than the end date
   function disabledStartDate(current) {
     if (endDate == null) {
       return false;
@@ -16,6 +17,7 @@ export default function DateTimePicker({ value, onChange, onBlur }) {
     }
   }
 
+  // user can't select end dates which are earlier than the start date
   function disabledEndDate(current) {
     if (startDate == null) {
       return false;
@@ -51,6 +53,13 @@ export default function DateTimePicker({ value, onChange, onBlur }) {
     onChange({ ...value, endTime: newTime });
   }
 
+  function handleOnBlur(isOpen) {
+    // when a picker's popup is closed, trigger the onBlur
+    if (!isOpen) {
+      onBlur();
+    }
+  }
+
   return (
     <>
       <DatePicker
@@ -58,21 +67,13 @@ export default function DateTimePicker({ value, onChange, onBlur }) {
         disabledDate={disabledStartDate}
         value={startDate}
         onChange={handleStartDateChange}
-        onOpenChange={(isOpen) => {
-          if (!isOpen) {
-            onBlur();
-          }
-        }}
+        onOpenChange={handleOnBlur}
       />
       <TimePicker
         style={{ ...inline }}
         value={startTime}
         onChange={handleStartTimeChange}
-        onOpenChange={(isOpen) => {
-          if (!isOpen) {
-            onBlur();
-          }
-        }}
+        onOpenChange={handleOnBlur}
       />
       {` ~ `}
       <DatePicker
@@ -80,21 +81,13 @@ export default function DateTimePicker({ value, onChange, onBlur }) {
         disabledDate={disabledEndDate}
         value={endDate}
         onChange={handleEndDateChange}
-        onOpenChange={(isOpen) => {
-          if (!isOpen) {
-            onBlur();
-          }
-        }}
+        onOpenChange={handleOnBlur}
       />
       <TimePicker
         style={{ ...inline }}
         value={endTime}
         onChange={handleEndTimeChange}
-        onOpenChange={(isOpen) => {
-          if (!isOpen) {
-            onBlur();
-          }
-        }}
+        onOpenChange={handleOnBlur}
       />
     </>
   );
