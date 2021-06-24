@@ -49,6 +49,7 @@ export default function MyFormWithFormik({
         } else {
           onInsert(formatBeforeSaved(values));
         }
+        // delay the data update to avoid showing unfriendly data to user
         setTimeout(() => resetForm({ values: INITIAL_VALUE }), 500);
         onCancel();
       }}

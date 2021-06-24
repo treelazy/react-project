@@ -9,6 +9,7 @@ export default function MyFormWitModal({ visible, onCancel, isEditMode }) {
 
   function handleCancel() {
     onCancel();
+    // delay the data update to avoid showing unfriendly data to user
     setTimeout(() => resetForm({ values: INITIAL_VALUE }), 500);
   }
 
@@ -24,6 +25,7 @@ export default function MyFormWitModal({ visible, onCancel, isEditMode }) {
         <Row>
           <Col offset={0} span={2}>
             <Button
+              // a button used for demo only, to save time typing data manually
               onClick={() =>
                 resetForm({ values: { ...values, ...DEV_INITIAL_VALUE } })
               }

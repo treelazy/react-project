@@ -6,10 +6,15 @@ import MyTable from "./components/MyTable";
 import { serial, openNotification } from "./helper";
 
 function App() {
+  // data is for table rows
   const [data, setData] = useState([]);
+  // isVisible controls the Modal
   const [isVisible, setIsVisible] = useState(false);
+  // isEdiMode controls whether the form is for creating data or updating data
   const [isEditMode, seIsEditMode] = useState(false);
+  // selectedRecord is the selected data when editting a record
   const [selectedRecord, setSelectedRecord] = useState(null);
+  // the corresponding records'keys when checkboxes selected
   const [selectedRecordKeys, setSelectedRecordKeys] = useState([]);
 
   function insertData(newRecord) {
@@ -28,6 +33,7 @@ function App() {
     });
     const newData = [...data.slice(0, index), record, ...data.slice(index + 1)];
     setData(newData);
+    // delay the data update to avoid showing unfriendly data to user
     setTimeout(() => setSelectedRecord(null), 500);
     openNotification(
       "success",
@@ -36,6 +42,9 @@ function App() {
     );
   }
 
+  // the modal form has two mode, one is for creating a record, the other is for editting a record
+  // when user clicks on edit button, it shows the modal form for editting records
+  // when user clicks on new button, it shows the modal form for creating a record
   function showModal({ isEditMode }) {
     seIsEditMode(isEditMode);
     setIsVisible(true);
@@ -43,17 +52,19 @@ function App() {
 
   function handleCancel() {
     setIsVisible(false);
+    // delay the data update to avoid showing unfriendly data to user
     setTimeout(() => setSelectedRecord(null), 500);
   }
 
   function handleEdit(key) {
     const tableRecord = data.find((record) => record.key === key);
 
-    // the data of start and end is only for table, not for Formik
+    // the data of start and end is only for table, not for Formik, so we delete them before sending to Formik
     const formikData = Object.assign({}, tableRecord);
     delete formikData.start;
     delete formikData.end;
 
+    // select the specific record, send the data to Formik, and then open the modal form
     setSelectedRecord(tableRecord);
     showModal({ isEditMode: true });
   }
@@ -149,11 +160,14 @@ function App() {
           >
             New Record
           </Button>
-          {selectedRecordKeys.length ? (
-            <Button type="danger" icon="delete" onClick={handleDeleteMany}>
-              Delete
-            </Button>
-          ) : null}
+          {
+            // hide the delete button when no record is selected
+            selectedRecordKeys.length ? (
+              <Button type="danger" icon="delete" onClick={handleDeleteMany}>
+                Delete
+              </Button>
+            ) : null
+          }
         </Col>
       </Row>
     </div>

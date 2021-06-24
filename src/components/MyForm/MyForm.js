@@ -4,7 +4,7 @@ import { useFormikContext } from "formik";
 import { COUNTRIES, COLORS, RACES, FOODS } from "../../data/const";
 import DateTimePicker from "../DateTimePicker";
 
-export default function MyForm({ visible, onCancel, isEditMode }) {
+export default function MyForm({ isEditMode }) {
   const { values, setFieldValue, errors, touched, setFieldTouched } =
     useFormikContext();
 
