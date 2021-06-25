@@ -122,14 +122,6 @@ function App() {
       <Row type="flex" justify="center">
         <Typography.Title>Table List</Typography.Title>
       </Row>
-      <MyFormWithFormik
-        onInsert={insertData}
-        onEdit={editData}
-        visible={isVisible}
-        onCancel={handleCancel}
-        values={selectedRecord}
-        isEditMode={isEditMode}
-      />
       <Row type="flex" justify="center">
         <Col
           span={18}
@@ -170,6 +162,14 @@ function App() {
           }
         </Col>
       </Row>
+      <MyFormWithFormik
+        onInsert={insertData}
+        onEdit={editData}
+        visible={isVisible}
+        onCancel={handleCancel}
+        values={selectedRecord}
+        isEditMode={isEditMode}
+      />
     </div>
   );
 }

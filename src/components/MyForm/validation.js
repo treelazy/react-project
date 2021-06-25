@@ -8,22 +8,10 @@ export default yup.object({
   country: yup.string().required("Please select a country"),
   colors: yup.array().min(1, "Please choose at least one color"),
   race: yup.string().required("Please select your race"),
-  dateTime: yup
-    .object({})
-    .test(
-      "startDate",
-      "Please select start date",
-      (dateTime) => !!dateTime.startDate
-    )
-    .test(
-      "startTime",
-      "Please select start time",
-      (dateTime) => !!dateTime.startTime
-    )
-    .test("endDate", "Please select end date", (dateTime) => !!dateTime.endDate)
-    .test(
-      "endTime",
-      "Please select end time",
-      (dateTime) => !!dateTime.endTime
-    ),
+  dateTime: yup.object({
+    startDate: yup.date().nullable().required("Select a start date"),
+    startTime: yup.date().nullable().required("Select a start time"),
+    endDate: yup.date().nullable().required("Select an end date"),
+    endTime: yup.date().nullable().required("Select an end time"),
+  }),
 });

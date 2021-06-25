@@ -1,5 +1,4 @@
 import React from "react";
-import * as yup from "yup";
 import { Formik } from "formik";
 import { INITIAL_VALUE } from "../../data/const";
 import { formatBeforeSaved } from "../../helper";
