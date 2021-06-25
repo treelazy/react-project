@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Col,
   Form,
@@ -284,7 +284,6 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
                 }
               >
                 <TimePicker
-                  // style={{ ...inline }}
                   value={values?.dateTime?.startTime}
                   onChange={(newTime) =>
                     handleTimeChange(newTime, "dateTime.startTime")
