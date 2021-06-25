@@ -34,7 +34,6 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
     submitForm,
     setValues,
     resetForm,
-    validateField,
   } = useFormikContext();
 
   function handleCancel() {
@@ -64,13 +63,17 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
   }
 
   function handleStartDateChange(newDate) {
-    setFieldValue("dateTime.startDate", newDate);
-    setFieldValue("dateTime.startTime", moment()); //when datePicker is selected, set timePicker to current time
+    //when datePicker is selected, also set timePicker to current time
+    setValues({
+      dateTime: { ...values.dateTime, startDate: newDate, startTime: moment() },
+    });
   }
 
   function handleEndDateChange(newDate) {
-    setFieldValue("dateTime.endDate", newDate);
-    setFieldValue("dateTime.endTime", moment()); //when datePicker is selected, set timePicker to current time
+    //when datePicker is selected, also set timePicker to current time
+    setValues({
+      dateTime: { ...values.dateTime, endDate: newDate, endTime: moment() },
+    });
   }
 
   function handleTimeChange(newTime, field) {
@@ -262,7 +265,10 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
                   value={values?.dateTime?.startDate}
                   onChange={handleStartDateChange}
                   onBlur={() => {
-                    setFieldTouched("dateTime.startDate", true);
+                    // shut down the validation for touch,
+                    // otherwise it would cause a race condition with the following setValues's validation,
+                    // end up using a stale value for validation
+                    setFieldTouched("dateTime.startDate", true, false);
                   }}
                 />
               </Form.Item>
@@ -303,7 +309,10 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
                   value={values?.dateTime?.endDate}
                   onChange={handleEndDateChange}
                   onBlur={() => {
-                    setFieldTouched("dateTime.endDate", true);
+                    // shut down the validation for touch,
+                    // otherwise it would cause a race condition with the following setValues's validation,
+                    // end up using a stale value for validation
+                    setFieldTouched("dateTime.endDate", true, false);
                   }}
                 />
               </Form.Item>
