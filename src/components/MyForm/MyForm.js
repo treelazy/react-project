@@ -10,6 +10,8 @@ import {
   Modal,
   Row,
   Button,
+  TimePicker,
+  DatePicker,
 } from "antd";
 import { useFormikContext } from "formik";
 import {
@@ -20,7 +22,7 @@ import {
   DEV_INITIAL_VALUE,
   INITIAL_VALUE,
 } from "../../data/const";
-import DateTimePicker from "../DateTimePicker";
+import moment from "moment";
 
 export default function MyForm({ isEditMode, visible, onCancel }) {
   const {
@@ -40,6 +42,49 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
     setTimeout(() => resetForm({ values: INITIAL_VALUE }), 500);
   }
 
+  // user can't select start dates which are later than the end date
+  function disabledStartDate(current) {
+    const endDate = values?.dateTime?.endDate;
+    if (endDate == null) {
+      return false;
+    } else {
+      return current > endDate;
+    }
+  }
+
+  // user can't select end dates which are earlier than the start date
+  function disabledEndDate(current) {
+    const startDate = values?.dateTime?.startDate;
+    if (startDate == null) {
+      return false;
+    } else {
+      return current < startDate;
+    }
+  }
+
+  function handleStartDateChange(newDate) {
+    //when datePicker is selected, also set timePicker to current time
+    setValues({
+      dateTime: { ...values.dateTime, startDate: newDate, startTime: moment() },
+    });
+  }
+
+  function handleEndDateChange(newDate) {
+    //when datePicker is selected, also set timePicker to current time
+    setValues({
+      dateTime: { ...values.dateTime, endDate: newDate, endTime: moment() },
+    });
+  }
+
+  function handleTimeChange(newTime, field) {
+    // when timePicker is cleared, set time value to 00:00:00
+    if (newTime == null) {
+      newTime = moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+    }
+
+    setFieldValue(field, newTime);
+  }
+
   return (
     <Modal
       visible={visible}
@@ -47,7 +92,7 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
       okText={"Submit"}
       cancelText={"Cancel"}
       onOk={submitForm}
-      width="45%"
+      width="60%"
       footer={
         <Row>
           <Col offset={0} span={2}>
@@ -62,7 +107,9 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
           </Col>
           <Col span={13}>
             {isEditMode ? null : (
-              <Button onClick={() => setValues(INITIAL_VALUE)}>Reset</Button>
+              <Button onClick={() => resetForm({ values: INITIAL_VALUE })}>
+                Reset
+              </Button>
             )}
             <Button onClick={handleCancel}>Cancel</Button>
             <Button type="primary" onClick={submitForm}>
@@ -201,19 +248,92 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
                 ))}
               </Checkbox.Group>
             </Form.Item>
-            <Form.Item
-              name="dateTime"
-              label="Date and Time"
-              validateStatus={touched?.dateTime && errors?.dateTime && "error"}
-              help={touched?.dateTime && errors?.dateTime}
-            >
-              <DateTimePicker
-                value={values.dateTime}
-                onChange={(dateTime) => {
-                  setFieldValue("dateTime", dateTime);
-                }}
-                onBlur={() => setFieldTouched("dateTime", true)}
-              />
+            <Form.Item label="Date and Time" wrapperCol={{ span: 20 }}>
+              <Form.Item
+                style={{ display: "inline-block" }}
+                validateStatus={
+                  touched?.dateTime?.startDate &&
+                  errors?.dateTime?.startDate &&
+                  "error"
+                }
+                help={
+                  touched?.dateTime?.startDate && errors?.dateTime?.startDate
+                }
+              >
+                <DatePicker
+                  disabledDate={disabledStartDate}
+                  value={values?.dateTime?.startDate}
+                  onChange={handleStartDateChange}
+                  onBlur={() => {
+                    // shut down the validation for touch,
+                    // otherwise it would cause a race condition with the following setValues's validation,
+                    // end up using a stale value for validation
+                    setFieldTouched("dateTime.startDate", true, false);
+                  }}
+                />
+              </Form.Item>
+              <Form.Item
+                style={{ display: "inline-block" }}
+                validateStatus={
+                  touched?.dateTime?.startTime &&
+                  errors?.dateTime?.startTime &&
+                  "error"
+                }
+                help={
+                  touched?.dateTime?.startTime && errors?.dateTime?.startTime
+                }
+              >
+                <TimePicker
+                  value={values?.dateTime?.startTime}
+                  onChange={(newTime) =>
+                    handleTimeChange(newTime, "dateTime.startTime")
+                  }
+                  onBlur={() => {
+                    setFieldTouched("dateTime.startTime", true);
+                  }}
+                />
+              </Form.Item>
+              {` ~ `}
+              <Form.Item
+                style={{ display: "inline-block" }}
+                validateStatus={
+                  touched?.dateTime?.endDate &&
+                  errors?.dateTime?.endDate &&
+                  "error"
+                }
+                help={touched?.dateTime?.endDate && errors?.dateTime?.endDate}
+              >
+                <DatePicker
+                  disabledDate={disabledEndDate}
+                  value={values?.dateTime?.endDate}
+                  onChange={handleEndDateChange}
+                  onBlur={() => {
+                    // shut down the validation for touch,
+                    // otherwise it would cause a race condition with the following setValues's validation,
+                    // end up using a stale value for validation
+                    setFieldTouched("dateTime.endDate", true, false);
+                  }}
+                />
+              </Form.Item>
+              <Form.Item
+                style={{ display: "inline-block" }}
+                validateStatus={
+                  touched?.dateTime?.endTime &&
+                  errors?.dateTime?.endTime &&
+                  "error"
+                }
+                help={touched?.dateTime?.endTime && errors?.dateTime?.endTime}
+              >
+                <TimePicker
+                  value={values?.dateTime?.endTime}
+                  onChange={(newTime) =>
+                    handleTimeChange(newTime, "dateTime.endTime")
+                  }
+                  onBlur={() => {
+                    setFieldTouched("dateTime.endTime", true);
+                  }}
+                />
+              </Form.Item>
             </Form.Item>
             <Form.Item
               wrapperCol={{
