@@ -65,6 +65,7 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
   function handleStartDateChange(newDate) {
     //when datePicker is selected, also set timePicker to current time
     setValues({
+      ...values,
       dateTime: { ...values.dateTime, startDate: newDate, startTime: moment() },
     });
   }
@@ -72,6 +73,7 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
   function handleEndDateChange(newDate) {
     //when datePicker is selected, also set timePicker to current time
     setValues({
+      ...values,
       dateTime: { ...values.dateTime, endDate: newDate, endTime: moment() },
     });
   }

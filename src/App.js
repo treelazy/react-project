@@ -43,7 +43,7 @@ function App() {
   }
 
   // the modal form has two mode, one is for creating a record, the other is for editting a record
-  // when user clicks on edit button, it shows the modal form for editting records
+  // when user clicks on edit button, it shows the modal form for editting a record
   // when user clicks on new button, it shows the modal form for creating a record
   function showModal({ isEditMode }) {
     seIsEditMode(isEditMode);
