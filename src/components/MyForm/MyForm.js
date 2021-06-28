@@ -111,7 +111,7 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
               {...getValidationProps("id")}
             >
               <Input
-                addonAfter={`${values.id?.length}/10`}
+                addonAfter={`${values?.id?.length}/10`}
                 placeholder="請輸入"
                 {...getFieldProps("id")}
               />
@@ -122,8 +122,13 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
               label={"組織名稱"}
               labelCol={{ span: 8, offset: 0 }}
               wrapperCol={{ span: 16 }}
+              {...getValidationProps("orgName")}
             >
-              <Input addonAfter="0/30" defaultValue="請輸入" />
+              <Input
+                addonAfter={`${values?.orgName?.length}/30`}
+                placeholder="請輸入"
+                {...getFieldProps("orgName")}
+              />
             </Form.Item>
           </Col>
           <Col span={8}>
@@ -131,11 +136,13 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
               label={"重量"}
               labelCol={{ span: 4, offset: 0 }}
               wrapperCol={{ span: 20 }}
+              {...getValidationProps("weight")}
             >
               <InputNumber
                 addonAfter="0/10"
                 defaultValue="請輸入"
                 style={{ width: "55%" }}
+                {...getFieldProps("weight")}
               />
               <div
                 className="ant-input-group-addon"

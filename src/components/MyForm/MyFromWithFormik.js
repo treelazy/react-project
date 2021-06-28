@@ -2,7 +2,7 @@ import React from "react";
 import { Formik } from "formik";
 import { INITIAL_VALUE, DELAY_TIME } from "../../data/const";
 import { StateFormat } from "../../helper";
-import validation from "./validation";
+import validation from "./validation/validation";
 import MyForm from "./MyForm";
 
 export default function MyFormWithFormik({
