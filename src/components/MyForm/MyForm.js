@@ -21,6 +21,7 @@ import {
   FOODS,
   DEV_INITIAL_VALUE,
   INITIAL_VALUE,
+  DELAY_TIME,
 } from "../../data/const";
 import moment from "moment";
 
@@ -39,7 +40,7 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
   function handleCancel() {
     onCancel();
     // delay the data update to avoid showing unfriendly data to user
-    setTimeout(() => resetForm({ values: INITIAL_VALUE }), 500);
+    setTimeout(() => resetForm({ values: INITIAL_VALUE }), DELAY_TIME);
   }
 
   // user can't select start dates which are later than the end date

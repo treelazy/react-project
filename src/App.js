@@ -4,6 +4,7 @@ import { Button, Modal, Row, Col, Typography } from "antd";
 import MyFormWithFormik from "./components/MyForm/MyFromWithFormik";
 import MyTable from "./components/MyTable";
 import { serial, openNotification } from "./helper";
+import { DELAY_TIME } from "./data/const";
 
 function App() {
   // data is for table rows
@@ -34,7 +35,7 @@ function App() {
     const newData = [...data.slice(0, index), record, ...data.slice(index + 1)];
     setData(newData);
     // delay the data update to avoid showing unfriendly data to user
-    setTimeout(() => setSelectedRecord(null), 500);
+    setTimeout(() => setSelectedRecord(null), DELAY_TIME);
     openNotification(
       "success",
       "Record Updated",
@@ -53,7 +54,7 @@ function App() {
   function handleCancel() {
     setIsVisible(false);
     // delay the data update to avoid showing unfriendly data to user
-    setTimeout(() => setSelectedRecord(null), 500);
+    setTimeout(() => setSelectedRecord(null), DELAY_TIME);
   }
 
   function handleEdit(key) {

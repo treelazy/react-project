@@ -1,6 +1,6 @@
 import React from "react";
 import { Formik } from "formik";
-import { INITIAL_VALUE } from "../../data/const";
+import { INITIAL_VALUE, DELAY_TIME } from "../../data/const";
 import { formatBeforeSaved } from "../../helper";
 import validation from "./validation";
 import MyForm from "./MyForm";
@@ -27,7 +27,7 @@ export default function MyFormWithFormik({
           onInsert(formatBeforeSaved(values));
         }
         // delay the data update to avoid showing unfriendly data to user
-        setTimeout(() => resetForm({ values: INITIAL_VALUE }), 500);
+        setTimeout(() => resetForm({ values: INITIAL_VALUE }), DELAY_TIME);
         onCancel();
       }}
     >

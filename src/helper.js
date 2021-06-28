@@ -1,8 +1,8 @@
-import moment from "moment";
 import { notification } from "antd";
+import { DELAY_TIME } from "./data/const";
 
 const openNotification = (type, title, message, delay) => {
-  delay = delay || 300;
+  delay = delay || DELAY_TIME;
   setTimeout(
     () =>
       notification[type]({
