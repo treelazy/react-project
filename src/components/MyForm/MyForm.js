@@ -25,6 +25,11 @@ import {
 } from "../../data/const";
 import moment from "moment";
 
+const gutter = [
+  { xs: 8, sm: 16, md: 24, lg: 32 },
+  { xs: 8, sm: 16, md: 24, lg: 32 },
+];
+
 export default function MyForm({ isEditMode, visible, onCancel }) {
   const {
     values,
@@ -41,64 +46,6 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
     onCancel();
     // delay the data update to avoid showing unfriendly data to user
     setTimeout(() => resetForm({ values: INITIAL_VALUE }), DELAY_TIME);
-  }
-
-  // user can't select start dates which are later than the end date
-  function disabledStartDate(current) {
-    const endDate = values?.dateTime?.endDate;
-    if (endDate == null) {
-      return false;
-    } else {
-      return current > endDate;
-    }
-  }
-
-  // user can't select end dates which are earlier than the start date
-  function disabledEndDate(current) {
-    const startDate = values?.dateTime?.startDate;
-    if (startDate == null) {
-      return false;
-    } else {
-      return current < startDate;
-    }
-  }
-
-  function handleStartDateChange(newDate) {
-    //when datePicker is selected, also set timePicker to current time
-    setValues({
-      ...values,
-      dateTime: { ...values.dateTime, startDate: newDate, startTime: moment() },
-    });
-  }
-
-  function handleEndDateChange(newDate) {
-    //when datePicker is selected, also set timePicker to current time
-    setValues({
-      ...values,
-      dateTime: { ...values.dateTime, endDate: newDate, endTime: moment() },
-    });
-  }
-
-  function handleTimeChange(newTime, field) {
-    // when timePicker is cleared, set time value to 00:00:00
-    if (newTime == null) {
-      newTime = moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
-    }
-
-    setFieldValue(field, newTime);
-  }
-
-  function handleOpenChange(isOpen, field) {
-    const isClosed = !isOpen;
-    // delay the validation of touch,
-    // otherwise it would cause a race condition with the following setValues's validation,
-    // and then end up using a stale value for validation
-    // ref: https://github.com/formium/formik/issues/2083, https://github.com/formium/formik/issues/2059
-    if (isClosed) {
-      setTimeout(() => {
-        setFieldTouched(field, true);
-      });
-    }
   }
 
   return (
@@ -122,7 +69,7 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
             </Button>
           </Col>
           <Col span={13}>
-            {isEditMode ? null : (
+            {isEditMode && (
               <Button onClick={() => resetForm({ values: INITIAL_VALUE })}>
                 Reset
               </Button>
@@ -135,225 +82,52 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
         </Row>
       }
     >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
-        <Col
-          span={24}
-          style={{
-            backgroundColor: "white",
-            borderRadius: "1rem",
-          }}
-        >
-          <Form labelCol={{ span: 4 }} wrapperCol={{ span: 20 }}>
-            <h1 style={{ textAlign: "center", marginBottom: "1.5rem" }}>
-              {isEditMode
-                ? `Edit Record ID: ${values?.key}`
-                : "Create a New Record"}
-            </h1>
-
-            <Form.Item
-              label="Name"
-              name="name"
-              wrapperCol={{ span: 9 }}
-              validateStatus={touched?.name && errors?.name && "error"}
-              help={touched?.name && errors?.name}
-            >
-              <Input
-                placeholder="Please enter your name"
-                value={values?.name}
-                onChange={(e) => {
-                  setFieldValue("name", e.target.value);
-                }}
-                onBlur={() => setFieldTouched("name", true)}
-              />
-            </Form.Item>
-            <Form.Item
-              name="country"
-              label="Country"
-              wrapperCol={{ span: 9 }}
-              validateStatus={touched?.country && errors?.country && "error"}
-              help={touched?.country && errors?.country}
-            >
-              <Select
-                placeholder="Please select a country"
-                onChange={(country) => {
-                  setFieldValue("country", country);
-                }}
-                value={values?.country}
-                onBlur={() => setFieldTouched("country", true)}
-              >
-                {COUNTRIES.map((country) => (
-                  <Select.Option key={country?.key} value={country?.value}>
-                    {country?.name}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-            <Form.Item
-              name="colors"
-              label="Colors"
-              wrapperCol={{ span: 9 }}
-              validateStatus={touched?.colors && errors?.colors && "error"}
-              help={touched?.colors && errors?.colors}
-            >
-              <Select
-                mode="multiple"
-                placeholder="Please select favourite colors"
-                onChange={(colors) => {
-                  setFieldValue("colors", colors);
-                }}
-                value={values?.colors}
-                onBlur={() => setFieldTouched("colors", true)}
-              >
-                {COLORS.map((color) => (
-                  <Select.Option key={color?.key} value={color?.value}>
-                    {color?.name}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-            <Form.Item
-              name="race"
-              label="Race"
-              validateStatus={touched?.race && errors?.race && "error"}
-              help={touched?.race && errors?.race}
-            >
-              <Radio.Group
-                onChange={(e) => {
-                  setFieldValue("race", e.target.value);
-                }}
-                value={values?.race}
-                onBlur={() => setFieldTouched("race", true)}
-              >
-                {RACES.map((race) => (
-                  <Radio key={race?.key} value={race?.value}>
-                    {race?.name}
-                  </Radio>
-                ))}
-              </Radio.Group>
-            </Form.Item>
-            <Form.Item name="isSwitched" label="Switch">
-              <Switch
-                checked={values?.isSwitched}
-                onClick={() => {
-                  setFieldValue("isSwitched", !values?.isSwitched);
-                }}
-              />
-            </Form.Item>
-            <Form.Item name="foods" label="Food">
-              <Checkbox.Group
-                value={values?.foods}
-                onChange={(food) => {
-                  setFieldValue("foods", food);
-                }}
-              >
-                {FOODS.map((food) => (
-                  <Checkbox
-                    key={food?.key}
-                    value={food?.value}
-                    style={{
-                      lineHeight: "32px",
-                    }}
-                  >
-                    {food?.name}
-                  </Checkbox>
-                ))}
-              </Checkbox.Group>
-            </Form.Item>
-            <Form.Item label="Date and Time" wrapperCol={{ span: 20 }}>
-              <Form.Item
-                style={{ display: "inline-block" }}
-                validateStatus={
-                  touched?.dateTime?.startDate &&
-                  errors?.dateTime?.startDate &&
-                  "error"
-                }
-                help={
-                  touched?.dateTime?.startDate && errors?.dateTime?.startDate
-                }
-              >
-                <DatePicker
-                  disabledDate={disabledStartDate}
-                  value={values?.dateTime?.startDate}
-                  onChange={handleStartDateChange}
-                  onOpenChange={(isOpen) =>
-                    handleOpenChange(isOpen, "dateTime.startDate")
-                  }
-                />
-              </Form.Item>
-              <Form.Item
-                style={{ display: "inline-block" }}
-                validateStatus={
-                  touched?.dateTime?.startTime &&
-                  errors?.dateTime?.startTime &&
-                  "error"
-                }
-                help={
-                  touched?.dateTime?.startTime && errors?.dateTime?.startTime
-                }
-              >
-                <TimePicker
-                  value={values?.dateTime?.startTime}
-                  onChange={(newTime) =>
-                    handleTimeChange(newTime, "dateTime.startTime")
-                  }
-                  onBlur={() => {
-                    setFieldTouched("dateTime.startTime", true);
-                  }}
-                />
-              </Form.Item>
-              {` ~ `}
-              <Form.Item
-                style={{ display: "inline-block" }}
-                validateStatus={
-                  touched?.dateTime?.endDate &&
-                  errors?.dateTime?.endDate &&
-                  "error"
-                }
-                help={touched?.dateTime?.endDate && errors?.dateTime?.endDate}
-              >
-                <DatePicker
-                  disabledDate={disabledEndDate}
-                  value={values?.dateTime?.endDate}
-                  onChange={handleEndDateChange}
-                  onOpenChange={(isOpen) =>
-                    handleOpenChange(isOpen, "dateTime.endDate")
-                  }
-                />
-              </Form.Item>
-              <Form.Item
-                style={{ display: "inline-block" }}
-                validateStatus={
-                  touched?.dateTime?.endTime &&
-                  errors?.dateTime?.endTime &&
-                  "error"
-                }
-                help={touched?.dateTime?.endTime && errors?.dateTime?.endTime}
-              >
-                <TimePicker
-                  value={values?.dateTime?.endTime}
-                  onChange={(newTime) =>
-                    handleTimeChange(newTime, "dateTime.endTime")
-                  }
-                  onBlur={() => {
-                    setFieldTouched("dateTime.endTime", true);
-                  }}
-                />
-              </Form.Item>
-            </Form.Item>
-            <Form.Item
-              wrapperCol={{
-                span: 12,
-                offset: 6,
-              }}
-            ></Form.Item>
-          </Form>
-        </Col>
-      </div>
+      <Form>
+        <Row gutter={gutter}>
+          <Col span={8}>
+            <div style={{ backgroundColor: "blue" }}>Col</div>
+          </Col>
+          <Col span={8}>
+            <div style={{ backgroundColor: "blue" }}>Col</div>
+          </Col>
+          <Col span={8}>
+            <div style={{ backgroundColor: "blue" }}>Col</div>
+          </Col>
+        </Row>
+        <Row gutter={gutter}>
+          <Col span={8}>
+            <div style={{ backgroundColor: "blue" }}>Col</div>
+          </Col>
+          <Col span={8}>
+            <div style={{ backgroundColor: "blue" }}>Col</div>
+          </Col>
+          <Col span={8}>
+            <div style={{ backgroundColor: "blue" }}>Col</div>
+          </Col>
+        </Row>
+        <Row gutter={gutter}>
+          <Col span={8}>
+            <div style={{ backgroundColor: "blue" }}>Col</div>
+          </Col>
+          <Col span={8}>
+            <div style={{ backgroundColor: "blue" }}>Col</div>
+          </Col>
+          <Col span={8}>
+            <div style={{ backgroundColor: "blue" }}>Col</div>
+          </Col>
+        </Row>
+        <Row gutter={gutter}>
+          <Col span={8}>
+            <div style={{ backgroundColor: "blue" }}>Col</div>
+          </Col>
+          <Col span={8}>
+            <div style={{ backgroundColor: "blue" }}>Col</div>
+          </Col>
+          <Col span={8}>
+            <div style={{ backgroundColor: "blue" }}>Col</div>
+          </Col>
+        </Row>
+      </Form>
     </Modal>
   );
 }
