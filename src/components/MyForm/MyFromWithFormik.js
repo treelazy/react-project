@@ -1,7 +1,7 @@
 import React from "react";
 import { Formik } from "formik";
 import { INITIAL_VALUE, DELAY_TIME } from "../../data/const";
-import { formatBeforeSaved } from "../../helper";
+import { StateFormat } from "../../helper";
 import validation from "./validation";
 import MyForm from "./MyForm";
 
@@ -12,7 +12,7 @@ export default function MyFormWithFormik({
   isEditMode,
   onInsert,
   onEdit,
-  ...props
+  ...otherProps
 }) {
   return (
     <Formik
@@ -22,9 +22,9 @@ export default function MyFormWithFormik({
       validationSchema={validation}
       onSubmit={(values, { resetForm }) => {
         if (isEditMode) {
-          onEdit(formatBeforeSaved(values));
+          onEdit(StateFormat.toTable(values));
         } else {
-          onInsert(formatBeforeSaved(values));
+          onInsert(StateFormat.toTable(values));
         }
         // delay the data update to avoid showing unfriendly data to user
         setTimeout(() => resetForm({ values: INITIAL_VALUE }), DELAY_TIME);

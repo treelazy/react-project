@@ -14,23 +14,35 @@ const openNotification = (type, title, message, delay) => {
   );
 };
 
-// format data before saving into App's state(which will be displayed in the table)
-function formatBeforeSaved(values) {
-  const {
-    dateTime: { startDate, endDate, startTime, endTime },
-  } = values;
-  return {
-    ...values,
-    start:
-      startDate && startTime
-        ? `${startDate.format("YYYY-MM-DD")} ${startTime.format("HH:mm:ss")}`
-        : "",
-    end:
-      endDate && endTime
-        ? `${endDate.format("YYYY-MM-DD")} ${endTime.format("HH:mm:ss")}`
-        : "",
-  };
-}
+const StateFormat = {
+  // format Formik data/state before saving into App's state(which will be displayed in the table)
+  toTable(formikValues) {
+    const {
+      dateTime: { startDate, endDate, startTime, endTime },
+    } = formikValues;
+    return {
+      ...formikValues,
+      start:
+        startDate && startTime
+          ? `${startDate.format("YYYY-MM-DD")} ${startTime.format("HH:mm:ss")}`
+          : "",
+      end:
+        endDate && endTime
+          ? `${endDate.format("YYYY-MM-DD")} ${endTime.format("HH:mm:ss")}`
+          : "",
+    };
+  },
+  // format Table'record data/state before saving into Formik's state
+  toFormik(tableRecord) {
+    const formikData = Object.assign({}, tableRecord);
+
+    // the data of start and end is only for table, not for Formik, so we delete them before sending to Formik
+    delete formikData.start;
+    delete formikData.end;
+
+    return formikData;
+  },
+};
 
 const serial = {
   _num: 0,
@@ -39,4 +51,4 @@ const serial = {
   },
 };
 
-export { formatBeforeSaved, serial, openNotification };
+export { StateFormat, serial, openNotification };

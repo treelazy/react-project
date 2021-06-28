@@ -88,6 +88,19 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
     setFieldValue(field, newTime);
   }
 
+  function handleOpenChange(isOpen, field) {
+    const isClosed = !isOpen;
+    // delay the validation of touch,
+    // otherwise it would cause a race condition with the following setValues's validation,
+    // and then end up using a stale value for validation
+    // ref: https://github.com/formium/formik/issues/2083, https://github.com/formium/formik/issues/2059
+    if (isClosed) {
+      setTimeout(() => {
+        setFieldTouched(field, true);
+      });
+    }
+  }
+
   return (
     <Modal
       visible={visible}
@@ -267,12 +280,9 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
                   disabledDate={disabledStartDate}
                   value={values?.dateTime?.startDate}
                   onChange={handleStartDateChange}
-                  onBlur={() => {
-                    // shut down the validation for touch,
-                    // otherwise it would cause a race condition with the following setValues's validation,
-                    // end up using a stale value for validation
-                    setFieldTouched("dateTime.startDate", true, false);
-                  }}
+                  onOpenChange={(isOpen) =>
+                    handleOpenChange(isOpen, "dateTime.startDate")
+                  }
                 />
               </Form.Item>
               <Form.Item
@@ -310,12 +320,9 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
                   disabledDate={disabledEndDate}
                   value={values?.dateTime?.endDate}
                   onChange={handleEndDateChange}
-                  onBlur={() => {
-                    // shut down the validation for touch,
-                    // otherwise it would cause a race condition with the following setValues's validation,
-                    // end up using a stale value for validation
-                    setFieldTouched("dateTime.endDate", true, false);
-                  }}
+                  onOpenChange={(isOpen) =>
+                    handleOpenChange(isOpen, "dateTime.endDate")
+                  }
                 />
               </Form.Item>
               <Form.Item

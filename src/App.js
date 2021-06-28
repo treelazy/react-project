@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button, Modal, Row, Col, Typography } from "antd";
 import MyFormWithFormik from "./components/MyForm/MyFromWithFormik";
 import MyTable from "./components/MyTable";
-import { serial, openNotification } from "./helper";
+import { serial, openNotification, StateFormat } from "./helper";
 import { DELAY_TIME } from "./data/const";
 
 function App() {
@@ -59,11 +59,7 @@ function App() {
 
   function handleEdit(key) {
     const tableRecord = data.find((record) => record.key === key);
-
-    // the data of start and end is only for table, not for Formik, so we delete them before sending to Formik
-    const formikData = Object.assign({}, tableRecord);
-    delete formikData.start;
-    delete formikData.end;
+    const formikData = StateFormat.toFormik(tableRecord);
 
     // select the specific record, send the data to Formik, and then open the modal form
     setSelectedRecord(formikData);
