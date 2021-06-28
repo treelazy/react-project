@@ -1,5 +1,7 @@
 import moment from "moment";
 
+const DELAY_TIME = 500;
+
 const COUNTRIES = [
   { key: 0, name: "China", value: "china" },
   { key: 1, name: "U.S.A", value: "usa" },
@@ -48,4 +50,12 @@ const DEV_INITIAL_VALUE = {
   },
 };
 
-export { COUNTRIES, COLORS, RACES, FOODS, INITIAL_VALUE, DEV_INITIAL_VALUE };
+export {
+  COUNTRIES,
+  COLORS,
+  RACES,
+  FOODS,
+  INITIAL_VALUE,
+  DEV_INITIAL_VALUE,
+  DELAY_TIME,
+};

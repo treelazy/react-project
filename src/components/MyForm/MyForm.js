@@ -21,6 +21,7 @@ import {
   FOODS,
   DEV_INITIAL_VALUE,
   INITIAL_VALUE,
+  DELAY_TIME,
 } from "../../data/const";
 import moment from "moment";
 
@@ -39,7 +40,7 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
   function handleCancel() {
     onCancel();
     // delay the data update to avoid showing unfriendly data to user
-    setTimeout(() => resetForm({ values: INITIAL_VALUE }), 500);
+    setTimeout(() => resetForm({ values: INITIAL_VALUE }), DELAY_TIME);
   }
 
   // user can't select start dates which are later than the end date
@@ -65,6 +66,7 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
   function handleStartDateChange(newDate) {
     //when datePicker is selected, also set timePicker to current time
     setValues({
+      ...values,
       dateTime: { ...values.dateTime, startDate: newDate, startTime: moment() },
     });
   }
@@ -72,6 +74,7 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
   function handleEndDateChange(newDate) {
     //when datePicker is selected, also set timePicker to current time
     setValues({
+      ...values,
       dateTime: { ...values.dateTime, endDate: newDate, endTime: moment() },
     });
   }
@@ -83,6 +86,19 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
     }
 
     setFieldValue(field, newTime);
+  }
+
+  function handleOpenChange(isOpen, field) {
+    const isClosed = !isOpen;
+    // delay the validation of touch,
+    // otherwise it would cause a race condition with the following setValues's validation,
+    // and then end up using a stale value for validation
+    // ref: https://github.com/formium/formik/issues/2083, https://github.com/formium/formik/issues/2059
+    if (isClosed) {
+      setTimeout(() => {
+        setFieldTouched(field, true);
+      });
+    }
   }
 
   return (
@@ -264,12 +280,9 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
                   disabledDate={disabledStartDate}
                   value={values?.dateTime?.startDate}
                   onChange={handleStartDateChange}
-                  onBlur={() => {
-                    // shut down the validation for touch,
-                    // otherwise it would cause a race condition with the following setValues's validation,
-                    // end up using a stale value for validation
-                    setFieldTouched("dateTime.startDate", true, false);
-                  }}
+                  onOpenChange={(isOpen) =>
+                    handleOpenChange(isOpen, "dateTime.startDate")
+                  }
                 />
               </Form.Item>
               <Form.Item
@@ -307,12 +320,9 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
                   disabledDate={disabledEndDate}
                   value={values?.dateTime?.endDate}
                   onChange={handleEndDateChange}
-                  onBlur={() => {
-                    // shut down the validation for touch,
-                    // otherwise it would cause a race condition with the following setValues's validation,
-                    // end up using a stale value for validation
-                    setFieldTouched("dateTime.endDate", true, false);
-                  }}
+                  onOpenChange={(isOpen) =>
+                    handleOpenChange(isOpen, "dateTime.endDate")
+                  }
                 />
               </Form.Item>
               <Form.Item

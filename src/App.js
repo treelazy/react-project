@@ -3,7 +3,8 @@ import { useState } from "react";
 import { Button, Modal, Row, Col, Typography } from "antd";
 import MyFormWithFormik from "./components/MyForm/MyFromWithFormik";
 import MyTable from "./components/MyTable";
-import { serial, openNotification } from "./helper";
+import { serial, openNotification, StateFormat } from "./helper";
+import { DELAY_TIME } from "./data/const";
 
 function App() {
   // data is for table rows
@@ -34,7 +35,7 @@ function App() {
     const newData = [...data.slice(0, index), record, ...data.slice(index + 1)];
     setData(newData);
     // delay the data update to avoid showing unfriendly data to user
-    setTimeout(() => setSelectedRecord(null), 500);
+    setTimeout(() => setSelectedRecord(null), DELAY_TIME);
     openNotification(
       "success",
       "Record Updated",
@@ -43,7 +44,7 @@ function App() {
   }
 
   // the modal form has two mode, one is for creating a record, the other is for editting a record
-  // when user clicks on edit button, it shows the modal form for editting records
+  // when user clicks on edit button, it shows the modal form for editting a record
   // when user clicks on new button, it shows the modal form for creating a record
   function showModal({ isEditMode }) {
     seIsEditMode(isEditMode);
@@ -53,16 +54,12 @@ function App() {
   function handleCancel() {
     setIsVisible(false);
     // delay the data update to avoid showing unfriendly data to user
-    setTimeout(() => setSelectedRecord(null), 500);
+    setTimeout(() => setSelectedRecord(null), DELAY_TIME);
   }
 
   function handleEdit(key) {
     const tableRecord = data.find((record) => record.key === key);
-
-    // the data of start and end is only for table, not for Formik, so we delete them before sending to Formik
-    const formikData = Object.assign({}, tableRecord);
-    delete formikData.start;
-    delete formikData.end;
+    const formikData = StateFormat.toFormik(tableRecord);
 
     // select the specific record, send the data to Formik, and then open the modal form
     setSelectedRecord(formikData);

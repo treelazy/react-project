@@ -31,7 +31,7 @@ export default function MyTable({
       key: "colors",
       render: (colors) => (
         <span>
-          {colors.map((color) => {
+          {colors?.map((color) => {
             let styleColor = "";
             if (color === "red") {
               styleColor = "volcano";
@@ -66,7 +66,7 @@ export default function MyTable({
       dataIndex: "foods",
       render: (foods) => (
         <span>
-          {foods.map((food) => (
+          {foods?.map((food) => (
             <Tag key={food}>{food}</Tag>
           ))}
         </span>
