@@ -159,14 +159,18 @@ function App() {
           }
         </Col>
       </Row>
-      <MyFormWithFormik
-        onInsert={insertData}
-        onEdit={editData}
-        visible={isVisible}
-        onCancel={handleCancel}
-        values={selectedRecord}
-        isEditMode={isEditMode}
-      />
+      <Row>
+        <Col className="test" span={16}>
+          <MyFormWithFormik
+            onInsert={insertData}
+            onEdit={editData}
+            visible={isVisible}
+            onCancel={handleCancel}
+            values={selectedRecord}
+            isEditMode={isEditMode}
+          />
+        </Col>
+      </Row>
     </div>
   );
 }

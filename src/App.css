@@ -1,1 +1,15 @@
-@import '~antd/dist/antd.css';
+@import "~antd/dist/antd.css";
+
+/* modal */
+.modal-wrapper {
+  /* to center modal */
+  margin: auto;
+}
+.modal-wrapper {
+  width: 95%;
+}
+@media screen and (min-width: 1600px) {
+  .modal-wrapper {
+    width: 70%;
+  }
+}
