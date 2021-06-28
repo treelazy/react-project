@@ -39,6 +39,26 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
     resetForm,
   } = useFormikContext();
 
+  function getValidationProps(field) {
+    return {
+      name: field,
+      validateStatus: touched[field] && errors[field] && "error",
+      help: touched[field] && errors[field],
+    };
+  }
+  function getFieldProps(field) {
+    return {
+      value: values[field],
+      onChange: (arg) => {
+        let value = arg.target ? arg.target.value : arg;
+        setFieldValue(field, value);
+      },
+      onBlur: () => {
+        setFieldTouched(field, true);
+      },
+    };
+  }
+
   function handleCancel() {
     onCancel();
     // delay the data update to avoid showing unfriendly data to user
@@ -88,8 +108,13 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
               label={"編號"}
               labelCol={{ span: 6, offset: 0 }}
               wrapperCol={{ span: 18 }}
+              {...getValidationProps("id")}
             >
-              <Input addonAfter="0/10" defaultValue="請輸入" />
+              <Input
+                addonAfter={`${values.id?.length}/10`}
+                placeholder="請輸入"
+                {...getFieldProps("id")}
+              />
             </Form.Item>
           </Col>
           <Col span={8}>
@@ -191,19 +216,14 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
               wrapperCol={{ span: 18 }}
             >
               <Form.Item
-                style={{ display: "inline-block", width: "calc(50% - 0.5rem)" }}
+                style={{
+                  display: "inline-block",
+                  width: "calc(50% - 0.5rem)",
+                  marginRight: "1rem",
+                }}
               >
                 <DatePicker placeholder="請選擇日期" />
               </Form.Item>
-              <span
-                style={{
-                  display: "inline-block",
-                  width: "1rem",
-                  textAlign: "center",
-                }}
-              >
-                ~
-              </span>
               <Form.Item
                 style={{ display: "inline-block", width: "calc(50% - 0.5rem)" }}
               >
@@ -218,19 +238,14 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
               wrapperCol={{ span: 16 }}
             >
               <Form.Item
-                style={{ display: "inline-block", width: "calc(50% - 1rem)" }}
+                style={{
+                  display: "inline-block",
+                  width: "calc(50% - 1rem)",
+                  marginRight: "1rem",
+                }}
               >
                 <DatePicker placeholder="請選擇日期" />
               </Form.Item>
-              <span
-                style={{
-                  display: "inline-block",
-                  width: "1rem",
-                  textAlign: "center",
-                }}
-              >
-                ~
-              </span>
               <Form.Item
                 style={{ display: "inline-block", width: "calc(50% - 1rem)" }}
               >

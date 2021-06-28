@@ -21,34 +21,22 @@ const FOODS = [
   { key: 1, name: "Noodle", value: "noodle" },
   { key: 2, name: "Meat", value: "meat" },
 ];
+
 const INITIAL_VALUE = {
-  name: "",
-  country: "",
+  id: "",
+  orgName: "",
+  weight: 0,
+  description: "",
+  instruction: "",
+  max: { isEnabled: false, value: 0 },
   colors: [],
-  race: "",
-  isSwitched: false,
-  foods: [],
-  date: null,
-  range: [],
-  time: null,
-  dateTime: { startDate: null, endDate: null, startTime: null, endTime: null },
+  start: { date: null, time: null },
+  end: { date: null, time: null },
+  gender: "",
 };
 
 // this is used for developing/testing
-const DEV_INITIAL_VALUE = {
-  name: "henry",
-  country: "usa",
-  colors: ["red", "blue"],
-  race: "african",
-  isSwitched: false,
-  foods: ["rice", "meat"],
-  dateTime: {
-    startDate: moment(),
-    endDate: moment(),
-    startTime: moment(),
-    endTime: moment(),
-  },
-};
+const DEV_INITIAL_VALUE = INITIAL_VALUE;
 
 export {
   COUNTRIES,
