@@ -30,7 +30,10 @@ export default Yup.object({
     .test("weight", "請輸入半形數字 0~9999999.99/小數點後限2位", (value) =>
       value.toString().match(/^\d{0,7}(\.\d{1,2})?$/)
     ),
-  // description: "",
+  description: Yup.string()
+    .required("此欄位必填")
+    .max(3000)
+    .matches(/^.*$/, "此欄位不支援斷行"),
   // instruction: "",
   // max: { isEnabled: false, value: 0 },
   // colors: [],

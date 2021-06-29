@@ -167,10 +167,15 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
               label={"描述"}
               labelCol={{ span: 2, offset: 0 }}
               wrapperCol={{ span: 22 }}
+              {...getValidationProps("description")}
             >
-              <Input.TextArea defaultValue="請輸入" autoSize={{ minRows: 5 }} />
-              <div style={{ lineHeight: "1rem" }}>
-                <span>0/3000</span>
+              <Input.TextArea
+                defaultValue="請輸入"
+                autoSize={{ minRows: 5 }}
+                {...getFieldProps("description")}
+              />
+              <div className="text-area-addon" style={{ lineHeight: "1rem" }}>
+                <span>{values?.description?.length}/3000</span>
               </div>
             </Form.Item>
           </Col>
