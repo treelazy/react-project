@@ -62,6 +62,26 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
     };
   }
 
+  // when date is selected, set time to current time
+  // when date is cleared, clear the time as well
+  function handleDateChange(startOrEnd, date) {
+    const time = date ? moment() : null;
+    setValues({ ...values, [startOrEnd]: { date, time } });
+  }
+
+  // when timepicker is cleared, set time to 00:00:00
+  function handleTimeChange(field, time) {
+    time =
+      time ||
+      moment().set({
+        hour: 0,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+      });
+    setFieldValue(field, time);
+  }
+
   function handleCancel() {
     onCancel();
     // delay the data update to avoid showing unfriendly data to user
@@ -201,8 +221,8 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
           <Col span={8}>
             <Form.Item
               label={"上限"}
-              labelCol={{ span: 8, offset: 0 }}
-              wrapperCol={{ span: 16 }}
+              labelCol={{ span: 6, offset: 0 }}
+              wrapperCol={{ span: 18 }}
             >
               <Form.Item
                 style={{ display: "inline-block", width: "20%" }}
@@ -258,6 +278,7 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
               label={"開始時間"}
               labelCol={{ span: 6, offset: 0 }}
               wrapperCol={{ span: 18 }}
+              name={"start"}
             >
               <Form.Item
                 style={{
@@ -265,35 +286,91 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
                   width: "calc(50% - 0.5rem)",
                   marginRight: "1rem",
                 }}
+                validateStatus={
+                  touched?.start?.date && errors?.start?.date && "error"
+                }
+                help={touched?.start?.date && errors?.start?.date}
               >
-                <DatePicker placeholder="請選擇日期" />
+                <DatePicker
+                  placeholder="請選擇日期"
+                  value={values?.start?.date}
+                  onChange={(date) => {
+                    handleDateChange("start", date);
+                  }}
+                  onOpenChange={(isOpen) => {
+                    if (!isOpen) {
+                      setTimeout(() => setFieldTouched("start.date", true));
+                    }
+                  }}
+                />
               </Form.Item>
               <Form.Item
                 style={{ display: "inline-block", width: "calc(50% - 0.5rem)" }}
+                validateStatus={
+                  touched?.start?.time && errors?.start?.time && "error"
+                }
+                help={touched?.start?.time && errors?.start?.time}
               >
-                <TimePicker placeholder="請選擇時間" />
+                <TimePicker
+                  placeholder="請選擇時間"
+                  onChange={(time) => {
+                    handleTimeChange("start.time", time);
+                  }}
+                  onBlur={() => {
+                    setFieldTouched("start.time", true);
+                  }}
+                  value={values?.start?.time}
+                />
               </Form.Item>
             </Form.Item>
           </Col>
           <Col span={8}>
             <Form.Item
               label={"結束時間"}
-              labelCol={{ span: 6, offset: 2 }}
-              wrapperCol={{ span: 16 }}
+              labelCol={{ span: 6, offset: 0 }}
+              wrapperCol={{ span: 18 }}
             >
               <Form.Item
                 style={{
                   display: "inline-block",
-                  width: "calc(50% - 1rem)",
+                  width: "calc(50% - 0.5rem)",
                   marginRight: "1rem",
                 }}
+                validateStatus={
+                  touched?.end?.date && errors?.end?.date && "error"
+                }
+                help={touched?.end?.date && errors?.end?.date}
               >
-                <DatePicker placeholder="請選擇日期" />
+                <DatePicker
+                  placeholder="請選擇日期"
+                  value={values?.end?.date}
+                  onChange={(date) => {
+                    handleDateChange("end", date);
+                  }}
+                  onOpenChange={(isOpen) => {
+                    if (!isOpen) {
+                      setTimeout(() => setFieldTouched("end.date", true));
+                    }
+                  }}
+                />
               </Form.Item>
               <Form.Item
-                style={{ display: "inline-block", width: "calc(50% - 1rem)" }}
+                style={{ display: "inline-block", width: "calc(50% - 0.5rem)" }}
+                validateStatus={
+                  touched?.end?.time && errors?.end?.time && "error"
+                }
+                help={touched?.end?.time && errors?.end?.time}
               >
-                <TimePicker placeholder="請選擇時間" />
+                <TimePicker
+                  placeholder="請選擇時間"
+                  onChange={(time) => {
+                    handleTimeChange("end.time", time);
+                  }}
+                  onBlur={() => {
+                    setFieldTouched("end.time", true);
+                  }}
+                  value={values?.end?.time}
+                />
               </Form.Item>
             </Form.Item>
           </Col>

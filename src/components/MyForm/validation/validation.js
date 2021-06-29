@@ -1,4 +1,3 @@
-import testUtils from "react-dom/test-utils";
 import * as Yup from "yup";
 import { isCharFullwidth } from "../../../helper";
 
@@ -59,7 +58,13 @@ export default Yup.object({
     }),
   }),
   colors: Yup.array().min(1, "此欄位必須選擇一個"),
-  // start: { date: null, time: null },
-  // end: { date: null, time: null },
+  start: Yup.object({
+    date: Yup.date().required(),
+    time: Yup.date().required(),
+  }),
+  end: Yup.object({
+    date: Yup.date().required(),
+    time: Yup.date().required(),
+  }),
   // gender: "",
 });
