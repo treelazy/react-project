@@ -26,9 +26,9 @@ export default Yup.object({
       "請輸入中文、全形半形英文/數字"
     ),
   weight: Yup.number()
-    .lessThan(10000000, "請輸入半形數字 0~9999999.99/小數點後限2位")
-    .test("2-decimals", "請輸入半形數字 0~9999999.99/小數點後限2位", (value) =>
-      value.toString().match()
+    .typeError("請輸入半形數字 0~9999999.99/小數點後限2位")
+    .test("weight", "請輸入半形數字 0~9999999.99/小數點後限2位", (value) =>
+      value.toString().match(/^\d{0,7}(\.\d{1,2})?$/)
     ),
   // description: "",
   // instruction: "",
