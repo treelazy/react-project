@@ -219,8 +219,8 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
               wrapperCol={{ span: 14 }}
             >
               <Select mode="multiple">
-                {COLORS.map(({ id, value, name }) => (
-                  <Select.Option key={id} value={value}>
+                {COLORS.map(({ key, value, name }) => (
+                  <Select.Option key={key} value={value}>
                     {name}
                   </Select.Option>
                 ))}
