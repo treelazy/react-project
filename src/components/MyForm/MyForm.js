@@ -25,6 +25,7 @@ import {
   DELAY_TIME,
 } from "../../data/const";
 import moment from "moment";
+import { useChineseCharsCount } from "./hooks/hooks";
 
 const gutter = { xs: 4, sm: 8, md: 16, lg: 24 };
 export default function MyForm({ isEditMode, visible, onCancel }) {
@@ -38,6 +39,8 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
     setValues,
     resetForm,
   } = useFormikContext();
+
+  const chineseCharsCounts = useChineseCharsCount(values.description);
 
   function getValidationProps(field) {
     return {
@@ -175,7 +178,7 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
                 {...getFieldProps("description")}
               />
               <div className="text-area-addon" style={{ lineHeight: "1rem" }}>
-                <span>{values?.description?.length}/3000</span>
+                <span>{chineseCharsCounts}/3000</span>
               </div>
             </Form.Item>
           </Col>
