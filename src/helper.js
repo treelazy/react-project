@@ -1,5 +1,6 @@
 import { notification } from "antd";
 import { DELAY_TIME } from "./data/const";
+import isFullwidthCodePoint from "is-fullwidth-code-point";
 
 const openNotification = (type, title, message, delay) => {
   delay = delay || DELAY_TIME;
@@ -44,6 +45,14 @@ const StateFormat = {
   },
 };
 
+const isCharFullwidth = function (char) {
+  if (char.length > 1) {
+    console.warn("isCharFullwidth should be called on a single char");
+  }
+  let charCode = char.charCodeAt(0);
+  return isFullwidthCodePoint(charCode);
+};
+
 const serial = {
   _num: 0,
   generate: function () {
@@ -51,4 +60,4 @@ const serial = {
   },
 };
 
-export { StateFormat, serial, openNotification };
+export { StateFormat, serial, openNotification, isCharFullwidth };

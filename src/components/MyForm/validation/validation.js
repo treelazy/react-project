@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import { isCharFullwidth } from "../../../helper";
 
 export default Yup.object({
   // \u4e00-\u9fff: CJK Unified Ideographs
@@ -32,9 +33,20 @@ export default Yup.object({
     ),
   description: Yup.string()
     .required("此欄位必填")
-    .max(3000)
+    .max(3000, "請輸入1-3000個字")
     .matches(/^.*$/, "此欄位不支援斷行"),
-  // instruction: "",
+  instruction: Yup.string()
+    .matches(/^[^\s]*$/, "此欄位不支援空白")
+    .max(15, "請輸入1-15個中文、半形英文/數字/特殊符號")
+    .test("instruction", "請輸入中文、半形英文/數字/特殊符號", (value) => {
+      // remove chinise characters, and then check whether there's still any fullwidth char left
+      let withoutChinese =
+        value?.replace(
+          /[\u4e00-\u9fff\u3400-\u4dbf\u{20000}-\u{2A6DF}\u{2A700}-\u{2B73F}\u{2B740}–\u{2B81F}\u{2B820}–\u{2CEAF}\u3105-\u3129]/gu,
+          ""
+        ) || "";
+      return [...withoutChinese].every((char) => !isCharFullwidth(char));
+    }),
   // max: { isEnabled: false, value: 0 },
   // colors: [],
   // start: { date: null, time: null },

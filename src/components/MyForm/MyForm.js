@@ -186,8 +186,13 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
               label={"使用方式"}
               labelCol={{ span: 6, offset: 0 }}
               wrapperCol={{ span: 18 }}
+              {...getValidationProps("instruction")}
             >
-              <Input addonAfter="0/15" defaultValue="請輸入" />
+              <Input
+                addonAfter={`${values?.instruction?.length}/15`}
+                defaultValue="請輸入"
+                {...getFieldProps("instruction")}
+              />
             </Form.Item>
           </Col>
           <Col span={8}>

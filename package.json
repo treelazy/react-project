@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^12.1.10",
     "antd": "3.26.19",
     "formik": "^2.2.9",
+    "is-fullwidth-code-point": "^3.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
