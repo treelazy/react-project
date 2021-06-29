@@ -204,11 +204,34 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
               labelCol={{ span: 8, offset: 0 }}
               wrapperCol={{ span: 16 }}
             >
-              <Form.Item style={{ display: "inline-block", width: "20%" }}>
-                <Switch />
+              <Form.Item
+                style={{ display: "inline-block", width: "20%" }}
+                {...getValidationProps("max.value")}
+              >
+                <Switch
+                  checked={values?.max?.isActive}
+                  onChange={(bool) => setFieldValue("max.isActive", bool)}
+                />
               </Form.Item>
-              <Form.Item style={{ display: "inline-block", width: "80%" }}>
-                <Input addonAfter="0/30" defaultValue="請輸入" />
+              <Form.Item
+                style={{ display: "inline-block", width: "80%" }}
+                validateStatus={
+                  touched?.max?.value && errors?.max?.value && "error"
+                }
+                help={touched?.max?.value && errors?.max?.value}
+              >
+                <Input
+                  addonAfter={`${values?.max?.value?.length}/10`}
+                  defaultValue="請輸入"
+                  value={values?.max?.value}
+                  onChange={(e) => {
+                    setFieldValue("max.value", e.target.value);
+                  }}
+                  onBlur={() => {
+                    setFieldTouched("max.value", true);
+                  }}
+                  disabled={!values?.max?.isActive}
+                />
               </Form.Item>
             </Form.Item>
           </Col>
@@ -217,8 +240,9 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
               label={"顏色"}
               labelCol={{ span: 4, offset: 0 }}
               wrapperCol={{ span: 14 }}
+              {...getValidationProps("colors")}
             >
-              <Select mode="multiple">
+              <Select mode="multiple" {...getFieldProps("colors")}>
                 {COLORS.map(({ key, value, name }) => (
                   <Select.Option key={key} value={value}>
                     {name}

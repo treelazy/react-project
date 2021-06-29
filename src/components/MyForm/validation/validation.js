@@ -1,3 +1,4 @@
+import testUtils from "react-dom/test-utils";
 import * as Yup from "yup";
 import { isCharFullwidth } from "../../../helper";
 
@@ -47,8 +48,17 @@ export default Yup.object({
         ) || "";
       return [...withoutChinese].every((char) => !isCharFullwidth(char));
     }),
-  // max: { isEnabled: false, value: 0 },
-  // colors: [],
+  max: Yup.object({
+    isActive: Yup.bool(),
+    value: Yup.string().when("isActive", {
+      is: true,
+      then: Yup.string()
+        .required("此欄位必填")
+        .matches(/^[^\s]*$/, "此欄位不支援空白")
+        .matches(/^[1-9][0-9]{0,9}$/, "請輸入10位半形數字"),
+    }),
+  }),
+  colors: Yup.array().min(1, "此欄位必須選擇一個"),
   // start: { date: null, time: null },
   // end: { date: null, time: null },
   // gender: "",

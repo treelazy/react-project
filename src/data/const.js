@@ -28,7 +28,7 @@ const INITIAL_VALUE = {
   weight: 0,
   description: "",
   instruction: "",
-  max: { isEnabled: false, value: 0 },
+  max: { isActive: false, value: "" },
   colors: [],
   start: { date: null, time: null },
   end: { date: null, time: null },
