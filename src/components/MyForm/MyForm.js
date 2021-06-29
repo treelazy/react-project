@@ -6,7 +6,6 @@ import {
   InputNumber,
   Radio,
   Switch,
-  Checkbox,
   Select,
   Modal,
   Row,
@@ -16,10 +15,8 @@ import {
 } from "antd";
 import { useFormikContext } from "formik";
 import {
-  COUNTRIES,
   COLORS,
-  RACES,
-  FOODS,
+  GENDERS,
   DEV_INITIAL_VALUE,
   INITIAL_VALUE,
   DELAY_TIME,
@@ -100,14 +97,14 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
       footer={
         <Row>
           <Col offset={0} span={2}>
-            <Button
+            {/* <Button
               // a button used for demo only, to save time typing data manually
               onClick={() => {
                 setValues({ ...values, ...DEV_INITIAL_VALUE });
               }}
             >
               Cheat
-            </Button>
+            </Button> */}
           </Col>
           <Col span={13}>
             {isEditMode && (
@@ -143,8 +140,8 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
           <Col span={8}>
             <Form.Item
               label={"組織名稱"}
-              labelCol={{ span: 8, offset: 0 }}
-              wrapperCol={{ span: 16 }}
+              labelCol={{ span: 6, offset: 0 }}
+              wrapperCol={{ span: 18 }}
               {...getValidationProps("orgName")}
             >
               <Input
@@ -165,7 +162,10 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
                 addonAfter="0/10"
                 defaultValue="請輸入"
                 style={{ width: "55%" }}
-                {...getFieldProps("weight")}
+                type="number"
+                value={values.weight}
+                onChange={(val) => setFieldValue("weight", val || 0)}
+                onBlur={() => setFieldTouched("weight", true)}
               />
               <div
                 className="ant-input-group-addon"
@@ -191,15 +191,15 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
               labelCol={{ span: 2, offset: 0 }}
               wrapperCol={{ span: 22 }}
               {...getValidationProps("description")}
+              help={`${chineseCharsCounts}/3000 ${
+                touched?.description && errors?.description
+              }`.replace("undefined", "")}
             >
               <Input.TextArea
                 defaultValue="請輸入"
                 autoSize={{ minRows: 5 }}
                 {...getFieldProps("description")}
               />
-              <div className="text-area-addon" style={{ lineHeight: "1rem" }}>
-                <span>{chineseCharsCounts}/3000</span>
-              </div>
             </Form.Item>
           </Col>
         </Row>
@@ -230,7 +230,9 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
               >
                 <Switch
                   checked={values?.max?.isActive}
-                  onChange={(bool) => setFieldValue("max.isActive", bool)}
+                  onChange={(bool) =>
+                    setValues({ ...values, max: { isActive: bool, value: "" } })
+                  }
                 />
               </Form.Item>
               <Form.Item
@@ -278,7 +280,7 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
               label={"開始時間"}
               labelCol={{ span: 6, offset: 0 }}
               wrapperCol={{ span: 18 }}
-              name={"start"}
+              {...getFieldProps("start")}
             >
               <Form.Item
                 style={{
@@ -379,10 +381,14 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
               label={"性別"}
               labelCol={{ span: 4, offset: 0 }}
               wrapperCol={{ span: 20 }}
+              {...getValidationProps("gender")}
             >
-              <Radio.Group>
-                <Radio value={"M"}>男性</Radio>
-                <Radio value={"F"}>女性</Radio>
+              <Radio.Group {...getFieldProps("gender")}>
+                {GENDERS.map((g) => (
+                  <Radio key={g.key} value={g.value}>
+                    {g.name}
+                  </Radio>
+                ))}
               </Radio.Group>
             </Form.Item>
           </Col>

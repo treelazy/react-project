@@ -1,25 +1,14 @@
-import moment from "moment";
-
 const DELAY_TIME = 500;
 
-const COUNTRIES = [
-  { key: 0, name: "China", value: "china" },
-  { key: 1, name: "U.S.A", value: "usa" },
-];
 const COLORS = [
-  { key: 0, name: "Red", value: "red" },
-  { key: 1, name: "Green", value: "green" },
-  { key: 2, name: "Blue", value: "blue" },
+  { key: 0, name: "紅色", value: "red" },
+  { key: 1, name: "綠色", value: "green" },
+  { key: 2, name: "藍色", value: "blue" },
 ];
-const RACES = [
-  { key: 0, name: "Asian", value: "asian" },
-  { key: 1, name: "African", value: "african" },
-  { key: 2, name: "Caucasian", value: "caucasian" },
-];
-const FOODS = [
-  { key: 0, name: "Rice", value: "rice" },
-  { key: 1, name: "Noodle", value: "noodle" },
-  { key: 2, name: "Meat", value: "meat" },
+
+const GENDERS = [
+  { key: 0, name: "男性", value: "M" },
+  { key: 1, name: "女性", value: "F" },
 ];
 
 const INITIAL_VALUE = {
@@ -38,12 +27,4 @@ const INITIAL_VALUE = {
 // this is used for developing/testing
 const DEV_INITIAL_VALUE = INITIAL_VALUE;
 
-export {
-  COUNTRIES,
-  COLORS,
-  RACES,
-  FOODS,
-  INITIAL_VALUE,
-  DEV_INITIAL_VALUE,
-  DELAY_TIME,
-};
+export { COLORS, GENDERS, INITIAL_VALUE, DEV_INITIAL_VALUE, DELAY_TIME };

@@ -1,31 +1,17 @@
 import * as Yup from "yup";
 import { isCharFullwidth } from "../../../helper";
+import { regexForId, regexForOrgName, regexForAnyChinese } from "./helper";
 
 export default Yup.object({
-  // \u4e00-\u9fff: CJK Unified Ideographs
-  // \u3400-\u4dbf: CJK Unified Ideographs Extension A
-  // \u{20000}-\u{2A6DF}: CJK Unified Ideographs Extension B
-  // \u{2A700}-\u{2B73F}: CJK Unified Ideographs Extension C
-  // \u{2B740}–\u{2B81F}: CJK Unified Ideographs Extension D
-  // \u{2B820}–\u{2CEAF}: CJK Unified Ideographs Extension E
-  // \u3105-\u3129: unicodes of Bopofomo
   id: Yup.string()
     .required("此欄位必填")
     .matches(/^[^\s]*$/, "此欄位不支援空白")
     .max(10, "請輸入1-10個中文，半形英文及數字")
-    .matches(
-      /^[a-zA-Z0-9\u4e00-\u9fff\u3400-\u4dbf\u{20000}-\u{2A6DF}\u{2A700}-\u{2B73F}\u{2B740}–\u{2B81F}\u{2B820}–\u{2CEAF}\u3105-\u3129]*$/u,
-      "請輸入中文，半形英文及數字"
-    ),
-  // \uff10-\uff19: fullwidth number(０-９)
-  // \uff41-\uff5a: fullwidth lowercase letters(ａ-ｚ)
-  // \uff21-\uff3a: fullwidth uppercase letters(Ａ-Ｚ)
+    .matches(regexForId(), "請輸入中文，半形英文及數字"),
+
   orgName: Yup.string()
     .max(30, "請輸入1-30個中文、全形半形英文/數字")
-    .matches(
-      /^[\s\uff10-\uff19\uff41-\uff5a\uff21-\uff3aa-zA-Z0-9\u4e00-\u9fff\u3400-\u4dbf\u{20000}-\u{2A6DF}\u{2A700}-\u{2B73F}\u{2B740}–\u{2B81F}\u{2B820}–\u{2CEAF}\u3105-\u3129]*$/u,
-      "請輸入中文、全形半形英文/數字"
-    ),
+    .matches(regexForOrgName(), "請輸入中文、全形半形英文/數字"),
   weight: Yup.number()
     .typeError("請輸入半形數字 0~9999999.99/小數點後限2位")
     .test("weight", "請輸入半形數字 0~9999999.99/小數點後限2位", (value) =>
@@ -40,11 +26,7 @@ export default Yup.object({
     .max(15, "請輸入1-15個中文、半形英文/數字/特殊符號")
     .test("instruction", "請輸入中文、半形英文/數字/特殊符號", (value) => {
       // remove chinise characters, and then check whether there's still any fullwidth char left
-      let withoutChinese =
-        value?.replace(
-          /[\u4e00-\u9fff\u3400-\u4dbf\u{20000}-\u{2A6DF}\u{2A700}-\u{2B73F}\u{2B740}–\u{2B81F}\u{2B820}–\u{2CEAF}\u3105-\u3129]/gu,
-          ""
-        ) || "";
+      let withoutChinese = value?.replace(regexForAnyChinese(), "") || "";
       return [...withoutChinese].every((char) => !isCharFullwidth(char));
     }),
   max: Yup.object({
@@ -54,17 +36,53 @@ export default Yup.object({
       then: Yup.string()
         .required("此欄位必填")
         .matches(/^[^\s]*$/, "此欄位不支援空白")
-        .matches(/^[1-9][0-9]{0,9}$/, "請輸入10位半形數字"),
+        // the number is not allowed to start with 0, unless the whole number itself is just a single 0
+        // 這串數字不能是0開頭，除非這整串數字剛好就是一個0
+        .matches(/(^[1-9][0-9]{0,9}$)|(^0$)/, "請輸入10位半形數字"),
     }),
   }),
-  colors: Yup.array().min(1, "此欄位必須選擇一個"),
   start: Yup.object({
-    date: Yup.date().required(),
-    time: Yup.date().required(),
+    date: Yup.date().test(
+      "start date",
+      "必須小於結束日期",
+      (startDate, context) => {
+        const root = context?.from?.[1];
+        const { date: endDate, time: endTime } = root?.value?.end;
+        // if end date/time is empty, skip the validation
+        if (endDate == null || endTime == null) {
+          return true;
+        }
+        if (startDate > endDate) {
+          return false;
+        } else {
+          return true;
+        }
+      }
+    ),
+    time: Yup.date().test(
+      "start time",
+      "必須小於結束時間",
+      (startTime, context) => {
+        const root = context?.from?.[1];
+        const { date: endDate, time: endTime } = root?.value?.end;
+        const { date: startDate } = context?.parent;
+        // if either of startDate, enDate, or endTime is empty, skip the validation
+        console.log(startDate, endDate, startTime, endTime);
+        if (startDate == null || endDate == null || endTime == null) {
+          return true;
+        }
+        if (startDate.isSame(endDate, "day") && startTime > endTime) {
+          return false;
+        } else {
+          return true;
+        }
+      }
+    ),
   }),
   end: Yup.object({
     date: Yup.date().required(),
     time: Yup.date().required(),
   }),
-  // gender: "",
+  colors: Yup.array().min(1, "此欄位必須選擇一個"),
+  gender: Yup.string().required("此欄位必填"),
 });
