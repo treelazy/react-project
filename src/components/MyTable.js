@@ -47,6 +47,11 @@ export default function MyTable({
   };
 
   return (
-    <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
+    <Table
+      rowKey="id"
+      rowSelection={rowSelection}
+      columns={columns}
+      dataSource={data}
+    />
   );
 }
