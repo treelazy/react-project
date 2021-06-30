@@ -128,12 +128,12 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
               label={"編號"}
               labelCol={{ span: 6, offset: 0 }}
               wrapperCol={{ span: 18 }}
-              {...getValidationProps("id")}
+              {...getValidationProps("tag")}
             >
               <Input
-                addonAfter={`${values?.id?.length}/10`}
+                addonAfter={`${values?.tag?.length}/10`}
                 placeholder="請輸入"
-                {...getFieldProps("id")}
+                {...getFieldProps("tag")}
               />
             </Form.Item>
           </Col>

@@ -117,7 +117,7 @@ function App() {
   return (
     <div style={{ paddingTop: "32px", height: "100vh" }}>
       <Row type="flex" justify="center">
-        <Typography.Title>Table List</Typography.Title>
+        <Typography.Title>資料列表</Typography.Title>
       </Row>
       <Row type="flex" justify="center">
         <Col
@@ -151,11 +151,11 @@ function App() {
           </Button>
           {
             // hide the delete button when no record is selected
-            selectedRecordKeys.length ? (
+            selectedRecordKeys?.length > 0 && (
               <Button type="danger" icon="delete" onClick={handleDeleteMany}>
                 Delete
               </Button>
-            ) : null
+            )
           }
         </Col>
       </Row>
