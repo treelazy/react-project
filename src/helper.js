@@ -19,10 +19,10 @@ const openNotification = (type, title, message, delay) => {
 // map form data to table data
 const _mapToTable = {
   start(fStart) {
-    return fStart.format("YYYY-MM-DD HH:mm:ss");
+    return fStart?.format("YYYY-MM-DD HH:mm:ss");
   },
   end(fEnd) {
-    return fEnd.format("YYYY-MM-DD HH:mm:ss");
+    return fEnd?.format("YYYY-MM-DD HH:mm:ss");
   },
   max(fMax) {
     return fMax.isActive ? fMax.value : null;
@@ -46,10 +46,10 @@ const _mapToTable = {
 // map table data to form data
 const _mapToForm = {
   start(tStart) {
-    return moment(tStart);
+    return tStart == null ? null : moment(tStart);
   },
   end(tEnd) {
-    return moment(tEnd);
+    return tEnd == null ? null : moment(tEnd);
   },
   max(tMax) {
     const fMax = {};
