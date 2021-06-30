@@ -21,7 +21,6 @@ import {
   INITIAL_VALUE,
   DELAY_TIME,
 } from "../../data/const";
-import moment from "moment";
 import { useChineseCharsCount } from "./hooks/hooks";
 
 const gutter = { xs: 4, sm: 8, md: 16, lg: 24 };

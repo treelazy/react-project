@@ -30,7 +30,7 @@ function App() {
 
   function editData(record) {
     const index = data.findIndex((d) => {
-      return d.key === record.key;
+      return d.id === record.id;
     });
     const newData = [...data.slice(0, index), record, ...data.slice(index + 1)];
     setData(newData);
@@ -57,8 +57,8 @@ function App() {
     setTimeout(() => setSelectedRecord(null), DELAY_TIME);
   }
 
-  function handleEdit(key) {
-    const tableRecord = data.find((record) => record.key === key);
+  function handleEdit(id) {
+    const tableRecord = data.find((record) => record.id === id);
     const formData = StateFormat.toForm(tableRecord);
     console.log(formData);
 
@@ -67,16 +67,16 @@ function App() {
     showModal({ isEditMode: true });
   }
 
-  function handleDelete(key) {
+  function handleDelete(id) {
     Modal.confirm({
       title: "Confirm",
       content: (
         <span>
-          You sure you want to delete <b>ID:{`${key}`}</b>?
+          You sure you want to delete <b>ID:{`${id}`}</b>?
         </span>
       ),
       onOk: () => {
-        setData(data.filter((record) => record.key !== key));
+        setData(data.filter((record) => record.id !== id));
         openNotification(
           "warning",
           "Record Deleted",
@@ -98,7 +98,7 @@ function App() {
       onOk: () => {
         setData(
           data.filter(
-            (record) => !selectedRecordKeys.some((key) => key === record.key)
+            (record) => !selectedRecordKeys.some((id) => id === record.id)
           )
         );
         setSelectedRecordKeys([]);

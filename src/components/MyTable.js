@@ -22,13 +22,13 @@ export default function MyTable({
     render: (text, record) => (
       // when there's only one record left, hide the delete option
       <span>
-        <a onClick={() => onEdit(record.key)}>修改</a>
+        <a onClick={() => onEdit(record.id)}>修改</a>
         {
           // hide the delete option when there's only one record left
           !isLastOne && (
             <>
               <Divider type="vertical" />
-              <a onClick={() => onDelete(record.key)}>刪除</a>
+              <a onClick={() => onDelete(record.id)}>刪除</a>
             </>
           )
         }
