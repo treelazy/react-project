@@ -10,25 +10,25 @@ export default function MyTable({
   onRowSelection,
   selectedRowKeys,
 }) {
-  const columns = Object.keys(SCHEMA).map((field) => ({
+  const columnsFromSchema = Object.keys(SCHEMA).map((field) => ({
     title: SCHEMA[field].title,
     dataIndex: field,
     key: field,
   }));
 
   const actionField = {
-    title: "Action",
+    title: "選項",
     key: "action",
     render: (text, record) => (
       // when there's only one record left, hide the delete option
       <span>
-        <a onClick={() => onEdit(record.key)}>Edit</a>
+        <a onClick={() => onEdit(record.key)}>修改</a>
         {
           // hide the delete option when there's only one record left
           !isLastOne && (
             <>
               <Divider type="vertical" />
-              <a onClick={() => onDelete(record.key)}>Delete</a>
+              <a onClick={() => onDelete(record.key)}>刪除</a>
             </>
           )
         }
@@ -36,7 +36,7 @@ export default function MyTable({
     ),
   };
 
-  columns.push(actionField);
+  const columns = [...columnsFromSchema, actionField];
 
   // rowSelection object indicates the need for row selection
   const rowSelection = {

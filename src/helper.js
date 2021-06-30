@@ -18,19 +18,20 @@ const openNotification = (type, title, message, delay) => {
 const StateFormat = {
   // format Formik data/state before saving into App's state(which will be displayed in the table)
   toTable(formikValues) {
-    const {
-      dateTime: { startDate, endDate, startTime, endTime },
-    } = formikValues;
+    console.log(formikValues);
+    // const
+    //    {  }
+    //  = formikValues;
     return {
       ...formikValues,
-      start:
-        startDate && startTime
-          ? `${startDate.format("YYYY-MM-DD")} ${startTime.format("HH:mm:ss")}`
-          : "",
-      end:
-        endDate && endTime
-          ? `${endDate.format("YYYY-MM-DD")} ${endTime.format("HH:mm:ss")}`
-          : "",
+      // start:
+      //   startDate && startTime
+      //     ? `${startDate.format("YYYY-MM-DD")} ${startTime.format("HH:mm:ss")}`
+      //     : "",
+      // end:
+      //   endDate && endTime
+      //     ? `${endDate.format("YYYY-MM-DD")} ${endTime.format("HH:mm:ss")}`
+      //     : "",
     };
   },
   // format Table'record data/state before saving into Formik's state
