@@ -10,7 +10,7 @@ export default function MyTable({
   onRowSelection,
   selectedRowKeys,
 }) {
-  const columnsFromSchema = Object.keys(SCHEMA).map((field) => ({
+  const columns = Object.keys(SCHEMA).map((field) => ({
     title: SCHEMA[field].title,
     dataIndex: field,
     key: field,
@@ -36,7 +36,7 @@ export default function MyTable({
     ),
   };
 
-  const columns = [...columnsFromSchema, actionField];
+  columns.push(actionField);
 
   // rowSelection object indicates the need for row selection
   const rowSelection = {

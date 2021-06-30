@@ -19,7 +19,7 @@ function App() {
   const [selectedRecordKeys, setSelectedRecordKeys] = useState([]);
 
   function insertData(newRecord) {
-    newRecord.key = serial.generate();
+    newRecord.id = serial.generate();
     setData([...data, newRecord]);
     openNotification(
       "success",
@@ -59,10 +59,11 @@ function App() {
 
   function handleEdit(key) {
     const tableRecord = data.find((record) => record.key === key);
-    const formikData = StateFormat.toFormik(tableRecord);
+    const formData = StateFormat.toForm(tableRecord);
+    console.log(formData);
 
     // select the specific record, send the data to Formik, and then open the modal form
-    setSelectedRecord(formikData);
+    setSelectedRecord(formData);
     showModal({ isEditMode: true });
   }
 
@@ -121,7 +122,7 @@ function App() {
       </Row>
       <Row type="flex" justify="center">
         <Col
-          span={18}
+          span={22}
           style={{
             backgroundColor: "white",
             padding: "1rem",

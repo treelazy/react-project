@@ -37,7 +37,7 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
     resetForm,
   } = useFormikContext();
 
-  const chineseCharsCounts = useChineseCharsCount(values.description);
+  const chineseCharsCounts = useChineseCharsCount(values?.description);
 
   function getValidationProps(field) {
     return {
@@ -48,7 +48,7 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
   }
   function getFieldProps(field) {
     return {
-      value: values[field],
+      value: values?.[field],
       onChange: (arg) => {
         let value = arg.target ? arg.target.value : arg;
         setFieldValue(field, value);
@@ -143,7 +143,7 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
                 defaultValue="請輸入"
                 style={{ width: "55%" }}
                 type="number"
-                value={values.weight}
+                value={values?.weight}
                 onChange={(val) => setFieldValue("weight", val || 0)}
                 onBlur={() => setFieldTouched("weight", true)}
               />
