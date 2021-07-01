@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import {
   Col,
   Form,
@@ -284,6 +284,12 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
                       setTimeout(() => setFieldTouched("start", true));
                     }
                   }}
+                  disabledDate={(current) => {
+                    if (values?.end == null) {
+                      return false;
+                    }
+                    return current >= values?.end;
+                  }}
                 />
               </Form.Item>
               <Form.Item
@@ -292,7 +298,6 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
                 <TimePicker
                   placeholder="請選擇時間"
                   onChange={(time) => {
-                    console.log(time);
                     setFieldValue("start", time);
                   }}
                   onBlur={() => {
@@ -327,6 +332,12 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
                     if (!isOpen) {
                       setTimeout(() => setFieldTouched("end", true));
                     }
+                  }}
+                  disabledDate={(current) => {
+                    if (values?.start == null) {
+                      return false;
+                    }
+                    return current <= values?.start;
                   }}
                 />
               </Form.Item>

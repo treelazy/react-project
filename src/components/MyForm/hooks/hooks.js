@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { regexForAnyChinese } from "../validation/helper";
 
-function useChineseCharsCount(description) {
+function useChineseCharsCount(description = "") {
   const [charCounts, setCharCounts] = useState(0);
   useEffect(() => {
     const chineseChars = description?.match(regexForAnyChinese()) || "";
