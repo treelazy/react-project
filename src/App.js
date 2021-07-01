@@ -21,11 +21,7 @@ function App() {
   function insertData(newRecord) {
     newRecord.id = serial.generate();
     setData([...data, newRecord]);
-    openNotification(
-      "success",
-      "New Record Added",
-      "You have successfully added a new record."
-    );
+    openNotification("success", "新增資料", "你已經成功新增一筆資料");
   }
 
   function editData(record) {
@@ -36,11 +32,7 @@ function App() {
     setData(newData);
     // delay the data update to avoid showing unfriendly data to user
     setTimeout(() => setSelectedRecord(null), DELAY_TIME);
-    openNotification(
-      "success",
-      "Record Updated",
-      "You have successfully updated a new record."
-    );
+    openNotification("success", "資料更新", "你已經成功更新一筆資料");
   }
 
   // the modal form has two mode, one is for creating a record, the other is for editting a record
@@ -69,30 +61,30 @@ function App() {
 
   function handleDelete(id) {
     Modal.confirm({
-      title: "Confirm",
+      title: " 刪除資料",
+      okText: "確定",
+      cancelText: "取消",
       content: (
         <span>
-          You sure you want to delete <b>ID:{`${id}`}</b>?
+          確定要刪除這幾筆資料 <b>流水號:{`${id}`}</b>?
         </span>
       ),
       onOk: () => {
         setData(data.filter((record) => record.id !== id));
-        openNotification(
-          "warning",
-          "Record Deleted",
-          "You have successfully deleted a record."
-        );
+        openNotification("warning", "資料刪除", "你已經成功刪除單筆資料");
       },
     });
   }
 
   function handleDeleteMany() {
     Modal.confirm({
-      title: "Confirm",
+      title: "刪除資料",
+      okText: "確定",
+      cancelText: "取消",
       content: (
         <span>
-          You sure you want to delete{" "}
-          <b>IDs:{`${selectedRecordKeys.toString()}`}</b>?
+          確定要刪除這幾筆資料{" "}
+          <b>流水號:{`${selectedRecordKeys.toString()}`}</b>？
         </span>
       ),
       onOk: () => {
@@ -102,11 +94,7 @@ function App() {
           )
         );
         setSelectedRecordKeys([]);
-        openNotification(
-          "warning",
-          "Records Deleted",
-          "You have successfully deleted multiple records."
-        );
+        openNotification("warning", "資料刪除", "你已經成功刪除多筆資料");
       },
     });
   }
