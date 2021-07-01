@@ -1,61 +1,78 @@
 import moment from "moment";
-
+import { longStr } from "./dummy";
 const DELAY_TIME = 500;
 
-const COUNTRIES = [
-  { key: 0, name: "China", value: "china" },
-  { key: 1, name: "U.S.A", value: "usa" },
-];
 const COLORS = [
-  { key: 0, name: "Red", value: "red" },
-  { key: 1, name: "Green", value: "green" },
-  { key: 2, name: "Blue", value: "blue" },
+  { key: 0, name: "紅色", value: "red" },
+  { key: 1, name: "綠色", value: "green" },
+  { key: 2, name: "藍色", value: "blue" },
 ];
-const RACES = [
-  { key: 0, name: "Asian", value: "asian" },
-  { key: 1, name: "African", value: "african" },
-  { key: 2, name: "Caucasian", value: "caucasian" },
+
+const GENDERS = [
+  { key: 0, name: "男性", value: "M" },
+  { key: 1, name: "女性", value: "F" },
 ];
-const FOODS = [
-  { key: 0, name: "Rice", value: "rice" },
-  { key: 1, name: "Noodle", value: "noodle" },
-  { key: 2, name: "Meat", value: "meat" },
-];
-const INITIAL_VALUE = {
-  name: "",
-  country: "",
-  colors: [],
-  race: "",
-  isSwitched: false,
-  foods: [],
-  date: null,
-  range: [],
-  time: null,
-  dateTime: { startDate: null, endDate: null, startTime: null, endTime: null },
+
+// _devVal is for demo usage
+const SCHEMA = {
+  id: { type: "string", title: "流水號", initVal: null, _devVal: null },
+  tag: { type: "string", title: "編號", initVal: "", _devVal: "測試用編號" },
+  orgName: {
+    type: "string",
+    title: "組織名稱",
+    initVal: "",
+    _devVal: "測試用組織名稱",
+  },
+  weight: { type: "number", title: "重量", initVal: 0, _devVal: 12345 },
+  description: {
+    type: "string",
+    title: "描述",
+    initVal: "",
+    _devVal: longStr,
+  },
+  instruction: {
+    type: "string",
+    title: "使用方式",
+    initVal: "",
+    _devVal: "測試用使用方式資料",
+  },
+  max: {
+    type: "string",
+    title: "上限",
+    initVal: { isActive: false, value: "" },
+    _devVal: { isActive: true, value: "2218" },
+  },
+  colors: { title: "顏色", initVal: [], _devVal: ["blue"] },
+  start: {
+    title: "開始時間",
+    initVal: null,
+    _devVal: moment(),
+  },
+  end: {
+    title: "結束時間",
+    initVal: null,
+    _devVal: moment().add(1, "hours"),
+  },
+  gender: { title: "性別", initVal: "", _devVal: "M" },
 };
 
-// this is used for developing/testing
-const DEV_INITIAL_VALUE = {
-  name: "henry",
-  country: "usa",
-  colors: ["red", "blue"],
-  race: "african",
-  isSwitched: false,
-  foods: ["rice", "meat"],
-  dateTime: {
-    startDate: moment(),
-    endDate: moment(),
-    startTime: moment(),
-    endTime: moment(),
-  },
-};
+// initial value for formik
+const INITIAL_VALUE = Object.keys(SCHEMA).reduce((acc, key) => {
+  acc[key] = SCHEMA[key].initVal;
+  return acc;
+}, {});
+
+// this is used for developing/testing only
+const DEV_INITIAL_VALUE = Object.keys(SCHEMA).reduce((acc, key) => {
+  acc[key] = SCHEMA[key]._devVal;
+  return acc;
+}, {});
 
 export {
-  COUNTRIES,
   COLORS,
-  RACES,
-  FOODS,
+  GENDERS,
   INITIAL_VALUE,
   DEV_INITIAL_VALUE,
   DELAY_TIME,
+  SCHEMA,
 };

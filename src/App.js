@@ -19,7 +19,7 @@ function App() {
   const [selectedRecordKeys, setSelectedRecordKeys] = useState([]);
 
   function insertData(newRecord) {
-    newRecord.key = serial.generate();
+    newRecord.id = serial.generate();
     setData([...data, newRecord]);
     openNotification(
       "success",
@@ -30,7 +30,7 @@ function App() {
 
   function editData(record) {
     const index = data.findIndex((d) => {
-      return d.key === record.key;
+      return d.id === record.id;
     });
     const newData = [...data.slice(0, index), record, ...data.slice(index + 1)];
     setData(newData);
@@ -57,25 +57,26 @@ function App() {
     setTimeout(() => setSelectedRecord(null), DELAY_TIME);
   }
 
-  function handleEdit(key) {
-    const tableRecord = data.find((record) => record.key === key);
-    const formikData = StateFormat.toFormik(tableRecord);
+  function handleEdit(id) {
+    const tableRecord = data.find((record) => record.id === id);
+    const formData = StateFormat.toForm(tableRecord);
+    console.log(formData);
 
     // select the specific record, send the data to Formik, and then open the modal form
-    setSelectedRecord(formikData);
+    setSelectedRecord(formData);
     showModal({ isEditMode: true });
   }
 
-  function handleDelete(key) {
+  function handleDelete(id) {
     Modal.confirm({
       title: "Confirm",
       content: (
         <span>
-          You sure you want to delete <b>ID:{`${key}`}</b>?
+          You sure you want to delete <b>ID:{`${id}`}</b>?
         </span>
       ),
       onOk: () => {
-        setData(data.filter((record) => record.key !== key));
+        setData(data.filter((record) => record.id !== id));
         openNotification(
           "warning",
           "Record Deleted",
@@ -97,7 +98,7 @@ function App() {
       onOk: () => {
         setData(
           data.filter(
-            (record) => !selectedRecordKeys.some((key) => key === record.key)
+            (record) => !selectedRecordKeys.some((id) => id === record.id)
           )
         );
         setSelectedRecordKeys([]);
@@ -117,11 +118,11 @@ function App() {
   return (
     <div style={{ paddingTop: "32px", height: "100vh" }}>
       <Row type="flex" justify="center">
-        <Typography.Title>Table List</Typography.Title>
+        <Typography.Title>資料列表</Typography.Title>
       </Row>
       <Row type="flex" justify="center">
         <Col
-          span={18}
+          span={22}
           style={{
             backgroundColor: "white",
             padding: "1rem",
@@ -147,26 +148,30 @@ function App() {
             icon="form"
             onClick={showModal}
           >
-            New Record
+            新增
           </Button>
           {
             // hide the delete button when no record is selected
-            selectedRecordKeys.length ? (
+            selectedRecordKeys?.length > 0 && (
               <Button type="danger" icon="delete" onClick={handleDeleteMany}>
-                Delete
+                刪除
               </Button>
-            ) : null
+            )
           }
         </Col>
       </Row>
-      <MyFormWithFormik
-        onInsert={insertData}
-        onEdit={editData}
-        visible={isVisible}
-        onCancel={handleCancel}
-        values={selectedRecord}
-        isEditMode={isEditMode}
-      />
+      <Row>
+        <Col className="test" span={16}>
+          <MyFormWithFormik
+            onInsert={insertData}
+            onEdit={editData}
+            visible={isVisible}
+            onCancel={handleCancel}
+            values={selectedRecord}
+            isEditMode={isEditMode}
+          />
+        </Col>
+      </Row>
     </div>
   );
 }
