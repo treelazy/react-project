@@ -16,14 +16,14 @@ const GENDERS = [
 // _devVal is for demo usage
 const SCHEMA = {
   id: { type: "string", title: "流水號", initVal: null, _devVal: null },
-  tag: { type: "string", title: "編號", initVal: "", _devVal: "苦艾酒" },
+  tag: { type: "string", title: "編號", initVal: "", _devVal: "測試用編號" },
   orgName: {
     type: "string",
     title: "組織名稱",
     initVal: "",
-    _devVal: "黑衣組織",
+    _devVal: "測試用組織名稱",
   },
-  weight: { type: "number", title: "重量", initVal: 0, _devVal: 55688 },
+  weight: { type: "number", title: "重量", initVal: 0, _devVal: 12345 },
   description: {
     type: "string",
     title: "描述",
@@ -34,7 +34,7 @@ const SCHEMA = {
     type: "string",
     title: "使用方式",
     initVal: "",
-    _devVal: "外表看似小孩內心卻過於常人",
+    _devVal: "測試用使用方式資料",
   },
   max: {
     type: "string",

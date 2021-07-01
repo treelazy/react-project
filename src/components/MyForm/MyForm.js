@@ -82,18 +82,18 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
                 setValues({ ...values, ...DEV_INITIAL_VALUE });
               }}
             >
-              作弊
+              快速
             </Button>
           </Col>
-          <Col span={13}>
+          <Col span={12}>
             {!isEditMode && (
               <Button onClick={() => resetForm({ values: INITIAL_VALUE })}>
-                Reset
+                重設
               </Button>
             )}
-            <Button onClick={handleCancel}>Cancel</Button>
+            <Button onClick={handleCancel}>取消</Button>
             <Button type="primary" onClick={submitForm}>
-              Submit
+              送出
             </Button>
           </Col>
         </Row>

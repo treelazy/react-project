@@ -148,13 +148,13 @@ function App() {
             icon="form"
             onClick={showModal}
           >
-            New Record
+            新增
           </Button>
           {
             // hide the delete button when no record is selected
             selectedRecordKeys?.length > 0 && (
               <Button type="danger" icon="delete" onClick={handleDeleteMany}>
-                Delete
+                刪除
               </Button>
             )
           }
