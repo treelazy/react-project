@@ -16,11 +16,14 @@ export default function MyTable({
     key: field,
   }));
 
+  const dscrpCol = columns.find((c) => c.key === "description");
+  dscrpCol.ellipsis = true;
+  dscrpCol.width = "15%";
+
   const actionField = {
     title: "選項",
     key: "action",
     render: (text, record) => (
-      // when there's only one record left, hide the delete option
       <span>
         <a onClick={() => onEdit(record.id)}>修改</a>
         {
