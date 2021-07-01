@@ -104,6 +104,7 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
         <Row gutter={gutter}>
           <Col span={8}>
             <Form.Item
+              className="required"
               label={"編號"}
               labelCol={{ span: 6, offset: 0 }}
               wrapperCol={{ span: 18 }}
@@ -166,6 +167,7 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
         <Row gutter={gutter}>
           <Col span={22}>
             <Form.Item
+              className="required"
               label={"描述"}
               labelCol={{ span: 2, offset: 0 }}
               wrapperCol={{ span: 22 }}
@@ -199,6 +201,7 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
           </Col>
           <Col span={8}>
             <Form.Item
+              className="required"
               label={"上限"}
               labelCol={{ span: 6, offset: 0 }}
               wrapperCol={{ span: 18 }}
@@ -238,6 +241,7 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
           </Col>
           <Col span={8}>
             <Form.Item
+              className="required"
               label={"顏色"}
               labelCol={{ span: 4, offset: 0 }}
               wrapperCol={{ span: 14 }}
@@ -344,6 +348,7 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
           </Col>
           <Col span={8}>
             <Form.Item
+              className="required"
               label={"性別"}
               labelCol={{ span: 4, offset: 0 }}
               wrapperCol={{ span: 20 }}

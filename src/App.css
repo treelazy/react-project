@@ -13,3 +13,8 @@
     width: 70%;
   }
 }
+
+.required label:not(.ant-radio-wrapper)::before {
+    content: "*";
+    color: red;
+}
