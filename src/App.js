@@ -1,12 +1,12 @@
 import "./App.css";
 import { useState } from "react";
 import { Button, Modal, Row, Col, Typography } from "antd";
+import { Formik } from "formik";
 import MyTable from "./components/MyTable";
 import MyForm from "./components/MyForm/MyForm";
 import { serial, openNotification, StateFormat } from "./helper";
 import validation from "./components/MyForm/validation/validation";
 import { INITIAL_VALUE } from "./data/const";
-import { Formik } from "formik";
 
 function App() {
   // data is for table rows

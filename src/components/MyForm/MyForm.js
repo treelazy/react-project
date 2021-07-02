@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import {
   Col,
   Form,
@@ -7,7 +7,6 @@ import {
   Radio,
   Switch,
   Select,
-  Modal,
   Row,
   Button,
   TimePicker,
@@ -22,6 +21,7 @@ import {
   DELAY_TIME,
 } from "../../data/const";
 import { useChineseCharsCount } from "./hooks/hooks";
+import MyFormItem from "./MyFormItem";
 
 const gutter = { xs: 4, sm: 8, md: 16, lg: 24 };
 export default function MyForm({ isEditMode, visible, onCancel }) {
@@ -71,36 +71,40 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
       </h1>
       <Row gutter={gutter}>
         <Col span={8}>
-          <Form.Item
+          <MyFormItem
+            name="tag"
             className="required"
-            label={"編號"}
+            label="編號"
             labelCol={{ span: 6, offset: 0 }}
             wrapperCol={{ span: 18 }}
-            {...getValidationProps("tag")}
           >
-            <Input
-              addonAfter={`${values?.tag?.length}/10`}
-              placeholder="請輸入"
-              {...getFieldProps("tag")}
-            />
-          </Form.Item>
+            {({ field, meta }) => (
+              <Input
+                addonAfter={`${meta.value?.length}/10`}
+                placeholder="請輸入"
+                {...field}
+              />
+            )}
+          </MyFormItem>
         </Col>
         <Col span={8}>
-          <Form.Item
-            label={"組織名稱"}
+          <MyFormItem
+            name="orgName"
+            label="組織名稱"
             labelCol={{ span: 6, offset: 0 }}
             wrapperCol={{ span: 18 }}
-            {...getValidationProps("orgName")}
           >
-            <Input
-              addonAfter={`${values?.orgName?.length}/30`}
-              placeholder="請輸入"
-              {...getFieldProps("orgName")}
-            />
-          </Form.Item>
+            {({ field, meta }) => (
+              <Input
+                addonAfter={`${meta.value?.length}/30`}
+                placeholder="請輸入"
+                {...field}
+              />
+            )}
+          </MyFormItem>
         </Col>
         <Col span={8}>
-          <Form.Item
+          {/* <Form.Item
             label={"重量"}
             labelCol={{ span: 4, offset: 0 }}
             wrapperCol={{ span: 20 }}
@@ -129,7 +133,40 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
             >
               kg
             </div>
-          </Form.Item>
+          </Form.Item> */}
+          <MyFormItem
+            name="weight"
+            label="重量"
+            labelCol={{ span: 4, offset: 0 }}
+            wrapperCol={{ span: 20 }}
+          >
+            {({ field, meta }) => (
+              <>
+                <InputNumber
+                  {...field}
+                  defaultValue="請輸入"
+                  style={{ width: "55%" }}
+                  type="number"
+                  value={meta.value}
+                  onChange={(val) => setFieldValue("weight", val || 0)}
+                />
+                <div
+                  className="ant-input-group-addon"
+                  style={{
+                    paddingTop: "2px",
+                    verticalAlign: "middle",
+                    display: "inline-table",
+                    lineHeight: "24px",
+                    height: "32px",
+                    position: "relative",
+                    top: "-2px",
+                  }}
+                >
+                  kg
+                </div>
+              </>
+            )}
+          </MyFormItem>
         </Col>
       </Row>
       <Row gutter={gutter}>
