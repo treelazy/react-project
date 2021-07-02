@@ -39,26 +39,6 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
 
   const chineseCharsCounts = useChineseCharsCount(values?.description);
 
-  function getValidationProps(field) {
-    return {
-      name: field,
-      validateStatus: touched[field] && errors[field] && "error",
-      help: touched[field] && errors[field],
-    };
-  }
-  function getFieldProps(field) {
-    return {
-      value: values?.[field],
-      onChange: (arg) => {
-        let value = arg.target ? arg.target.value : arg;
-        setFieldValue(field, value);
-      },
-      onBlur: () => {
-        setFieldTouched(field, true);
-      },
-    };
-  }
-
   function handleCancel() {
     onCancel();
     // delay the data update to avoid showing unfriendly data to user
@@ -132,8 +112,8 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
             labelCol={{ span: 2, offset: 0 }}
             wrapperCol={{ span: 22 }}
             help={`${chineseCharsCounts}/3000 ${
-              touched?.description && errors?.description
-            }`.replace("undefined", "")}
+              (touched?.description && errors?.description) ?? ""
+            }`}
           >
             {({ field }) => (
               <Input.TextArea
@@ -221,119 +201,104 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
       </Row>
       <Row gutter={gutter}>
         <Col span={8}>
-          <Form.Item
-            label={"開始時間"}
+          <MyFormItem
+            name="start"
+            type="date"
+            label="開始時間"
             labelCol={{ span: 6, offset: 0 }}
             wrapperCol={{ span: 18 }}
-            {...getValidationProps("start")}
           >
-            <Form.Item
-              style={{
-                display: "inline-block",
-                width: "calc(50% - 0.5rem)",
-                marginRight: "1rem",
-              }}
-            >
-              <DatePicker
-                placeholder="請選擇日期"
-                value={values?.start}
-                onChange={(date) => {
-                  setFieldValue("start", date);
-                }}
-                onOpenChange={(isOpen) => {
-                  if (!isOpen) {
-                    setTimeout(() => setFieldTouched("start", true));
-                  }
-                }}
-                disabledDate={(current) => {
-                  if (values?.end == null) {
-                    return false;
-                  }
-                  return current >= values?.end;
-                }}
-              />
-            </Form.Item>
-            <Form.Item
-              style={{ display: "inline-block", width: "calc(50% - 0.5rem)" }}
-            >
-              <TimePicker
-                placeholder="請選擇時間"
-                onChange={(time) => {
-                  setFieldValue("start", time);
-                }}
-                onBlur={() => {
-                  setFieldTouched("start", true);
-                }}
-                value={values?.start}
-              />
-            </Form.Item>
-          </Form.Item>
+            {({ field }) => (
+              <>
+                <Form.Item
+                  style={{
+                    display: "inline-block",
+                    width: "calc(50% - 0.5rem)",
+                    marginRight: "1rem",
+                    marginBottom: 0,
+                  }}
+                >
+                  <DatePicker
+                    {...field}
+                    placeholder="請選擇日期"
+                    disabledDate={(current) => {
+                      if (values?.end == null) {
+                        return false;
+                      }
+                      return current >= values?.end;
+                    }}
+                  />
+                </Form.Item>
+                <Form.Item
+                  style={{
+                    display: "inline-block",
+                    width: "calc(50% - 0.5rem)",
+                    marginBottom: 0,
+                  }}
+                >
+                  <TimePicker {...field} placeholder="請選擇時間" />
+                </Form.Item>
+              </>
+            )}
+          </MyFormItem>
         </Col>
         <Col span={8}>
-          <Form.Item
-            label={"結束時間"}
+          <MyFormItem
+            name="end"
+            type="date"
+            label="結束時間"
             labelCol={{ span: 6, offset: 0 }}
             wrapperCol={{ span: 18 }}
-            {...getValidationProps("end")}
           >
-            <Form.Item
-              style={{
-                display: "inline-block",
-                width: "calc(50% - 0.5rem)",
-                marginRight: "1rem",
-              }}
-            >
-              <DatePicker
-                placeholder="請選擇日期"
-                value={values?.end}
-                onChange={(date) => {
-                  setFieldValue("end", date);
-                }}
-                onOpenChange={(isOpen) => {
-                  if (!isOpen) {
-                    setTimeout(() => setFieldTouched("end", true));
-                  }
-                }}
-                disabledDate={(current) => {
-                  if (values?.start == null) {
-                    return false;
-                  }
-                  return current <= values?.start;
-                }}
-              />
-            </Form.Item>
-            <Form.Item
-              style={{ display: "inline-block", width: "calc(50% - 0.5rem)" }}
-            >
-              <TimePicker
-                placeholder="請選擇時間"
-                onChange={(time) => {
-                  setFieldValue("end", time);
-                }}
-                onBlur={() => {
-                  setFieldTouched("end", true);
-                }}
-                value={values?.end}
-              />
-            </Form.Item>
-          </Form.Item>
+            {({ field }) => (
+              <>
+                <Form.Item
+                  style={{
+                    display: "inline-block",
+                    width: "calc(50% - 0.5rem)",
+                    marginRight: "1rem",
+                  }}
+                >
+                  <DatePicker
+                    {...field}
+                    placeholder="請選擇日期"
+                    disabledDate={(current) => {
+                      if (values?.start == null) {
+                        return false;
+                      }
+                      return current <= values?.start;
+                    }}
+                  />
+                </Form.Item>
+                <Form.Item
+                  style={{
+                    display: "inline-block",
+                    width: "calc(50% - 0.5rem)",
+                  }}
+                >
+                  <TimePicker {...field} placeholder="請選擇時間" />
+                </Form.Item>
+              </>
+            )}
+          </MyFormItem>
         </Col>
         <Col span={8}>
-          <Form.Item
-            className="required"
-            label={"性別"}
+          <MyFormItem
+            name="gender"
+            label="性別"
             labelCol={{ span: 4, offset: 0 }}
             wrapperCol={{ span: 20 }}
-            {...getValidationProps("gender")}
           >
-            <Radio.Group {...getFieldProps("gender")}>
-              {GENDERS.map((g) => (
-                <Radio key={g.key} value={g.value}>
-                  {g.name}
-                </Radio>
-              ))}
-            </Radio.Group>
-          </Form.Item>
+            {({ field }) => (
+              <Radio.Group {...field}>
+                {GENDERS.map((g) => (
+                  <Radio key={g.key} value={g.value}>
+                    {g.name}
+                  </Radio>
+                ))}
+              </Radio.Group>
+            )}
+          </MyFormItem>
         </Col>
       </Row>
       <Row>

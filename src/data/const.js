@@ -53,7 +53,7 @@ const SCHEMA = {
     initVal: null,
     _devVal: moment().add(1, "hours"),
   },
-  gender: { title: "性別", initVal: "", _devVal: "M" },
+  gender: { title: "性別", initVal: "M", _devVal: "M" },
 };
 
 // initial value for formik

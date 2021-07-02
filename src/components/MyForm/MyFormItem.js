@@ -2,7 +2,7 @@ import React from "react";
 import { Form } from "antd";
 import { useField } from "formik";
 
-export default function MyFormItem({ name, children, type, ...props }) {
+export default function MyFormItem({ name, type, children, ...props }) {
   if (!name) {
     console.error("`name` is required for <MyFormItem/>");
   }
@@ -19,6 +19,12 @@ export default function MyFormItem({ name, children, type, ...props }) {
   if (type === "select") {
     field.onChange = (value) => helpers.setValue(value);
     field.onBlur = () => helpers.setTouched(true);
+  }
+  if (type === "date" || type === "time") {
+    field.onChange = (value) => {
+      setTimeout(() => helpers.setTouched(true));
+      helpers.setValue(value);
+    };
   }
 
   return (
