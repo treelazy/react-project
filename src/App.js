@@ -4,7 +4,6 @@ import { Button, Modal, Row, Col, Typography } from "antd";
 import MyTable from "./components/MyTable";
 import MyForm from "./components/MyForm/MyForm";
 import { serial, openNotification, StateFormat } from "./helper";
-import { DELAY_TIME } from "./data/const";
 import validation from "./components/MyForm/validation/validation";
 import { INITIAL_VALUE } from "./data/const";
 import { Formik } from "formik";
@@ -38,8 +37,6 @@ function App() {
         ...data.slice(index + 1),
       ];
       setData(newData);
-      // delay the data update to avoid showing unfriendly data to user
-      setTimeout(() => setSelectedRecord(null), DELAY_TIME);
       openNotification("success", "資料更新", "你已經成功更新一筆資料");
     }
   }
@@ -173,13 +170,8 @@ function App() {
             initialValues={selectedRecord}
             validateOnBlur
             validationSchema={validation}
-            onSubmit={(values, { resetForm }) => {
+            onSubmit={(values) => {
               saveData(StateFormat.toTable(values));
-              // delay the data update to avoid showing unfriendly data to user
-              setTimeout(
-                () => resetForm({ values: INITIAL_VALUE }),
-                DELAY_TIME
-              );
               closeModal();
             }}
           >
