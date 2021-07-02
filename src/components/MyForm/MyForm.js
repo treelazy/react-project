@@ -22,6 +22,7 @@ import {
 } from "../../data/const";
 import { useChineseCharsCount } from "./hooks/hooks";
 import MyFormItem from "./MyFormItem";
+import MyInputNumber from "./MyInputNumber";
 
 const gutter = { xs: 4, sm: 8, md: 16, lg: 24 };
 export default function MyForm({ isEditMode, visible, onCancel }) {
@@ -80,9 +81,9 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
           >
             {({ field, meta }) => (
               <Input
+                {...field}
                 addonAfter={`${meta.value?.length}/10`}
                 placeholder="請輸入"
-                {...field}
               />
             )}
           </MyFormItem>
@@ -96,82 +97,35 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
           >
             {({ field, meta }) => (
               <Input
+                {...field}
                 addonAfter={`${meta.value?.length}/30`}
                 placeholder="請輸入"
-                {...field}
               />
             )}
           </MyFormItem>
         </Col>
         <Col span={8}>
-          {/* <Form.Item
-            label={"重量"}
-            labelCol={{ span: 4, offset: 0 }}
-            wrapperCol={{ span: 20 }}
-            {...getValidationProps("weight")}
-          >
-            <InputNumber
-              addonAfter="0/10"
-              defaultValue="請輸入"
-              style={{ width: "55%" }}
-              type="number"
-              value={values?.weight}
-              onChange={(val) => setFieldValue("weight", val || 0)}
-              onBlur={() => setFieldTouched("weight", true)}
-            />
-            <div
-              className="ant-input-group-addon"
-              style={{
-                paddingTop: "2px",
-                verticalAlign: "middle",
-                display: "inline-table",
-                lineHeight: "24px",
-                height: "32px",
-                position: "relative",
-                top: "-2px",
-              }}
-            >
-              kg
-            </div>
-          </Form.Item> */}
           <MyFormItem
             name="weight"
             label="重量"
             labelCol={{ span: 4, offset: 0 }}
             wrapperCol={{ span: 20 }}
           >
-            {({ field, meta }) => (
-              <>
-                <InputNumber
-                  {...field}
-                  defaultValue="請輸入"
-                  style={{ width: "55%" }}
-                  type="number"
-                  value={meta.value}
-                  onChange={(val) => setFieldValue("weight", val || 0)}
-                />
-                <div
-                  className="ant-input-group-addon"
-                  style={{
-                    paddingTop: "2px",
-                    verticalAlign: "middle",
-                    display: "inline-table",
-                    lineHeight: "24px",
-                    height: "32px",
-                    position: "relative",
-                    top: "-2px",
-                  }}
-                >
-                  kg
-                </div>
-              </>
+            {({ field, helpers }) => (
+              <MyInputNumber
+                {...field}
+                defaultValue={0}
+                style={{ width: "55%" }}
+                addonAfter="kg"
+                onChange={(v) => helpers.setValue(v)}
+              />
             )}
           </MyFormItem>
         </Col>
       </Row>
       <Row gutter={gutter}>
         <Col span={22}>
-          <Form.Item
+          {/* <Form.Item
             className="required"
             label={"描述"}
             labelCol={{ span: 2, offset: 0 }}
@@ -186,7 +140,25 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
               autoSize={{ minRows: 5 }}
               {...getFieldProps("description")}
             />
-          </Form.Item>
+          </Form.Item> */}
+          <MyFormItem
+            name="description"
+            className="required"
+            label="描述"
+            labelCol={{ span: 2, offset: 0 }}
+            wrapperCol={{ span: 22 }}
+            help={`${chineseCharsCounts}/3000 ${
+              touched?.description && errors?.description
+            }`.replace("undefined", "")}
+          >
+            {({ field }) => (
+              <Input.TextArea
+                {...field}
+                defaultValue="請輸入"
+                autoSize={{ minRows: 5 }}
+              />
+            )}
+          </MyFormItem>
         </Col>
       </Row>
       <Row gutter={gutter}>

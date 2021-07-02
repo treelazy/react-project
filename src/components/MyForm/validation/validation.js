@@ -13,10 +13,13 @@ export default Yup.object().shape(
       .max(30, "請輸入1-30個中文、全形半形英文/數字")
       .matches(regexForOrgName(), "請輸入中文、全形半形英文/數字"),
     weight: Yup.number()
-      .typeError("請輸入半形數字 0~9999999.99/小數點後限2位")
-      .test("weight", "請輸入半形數字 0~9999999.99/小數點後限2位", (value) =>
-        value.toString().match(/^\d{0,7}(\.\d{1,2})?$/)
-      ),
+      .nullable(true)
+      .test("weight", "請輸入半形數字 0~9999999.99/小數點後限2位", (value) => {
+        if (value == null) {
+          return true;
+        }
+        return value.toString().match(/^\d{0,7}(\.\d{1,2})?$/);
+      }),
     description: Yup.string()
       .required("此欄位必填")
       .max(3000, "請輸入1-3000個字")
