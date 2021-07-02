@@ -107,17 +107,17 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
         <Col span={8}>
           <MyFormItem
             name="weight"
+            type="number"
             label="重量"
             labelCol={{ span: 4, offset: 0 }}
             wrapperCol={{ span: 20 }}
           >
-            {({ field, helpers }) => (
+            {({ field }) => (
               <MyInputNumber
                 {...field}
                 defaultValue={0}
                 style={{ width: "55%" }}
                 addonAfter="kg"
-                onChange={(v) => helpers.setValue(v)}
               />
             )}
           </MyFormItem>
@@ -125,22 +125,6 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
       </Row>
       <Row gutter={gutter}>
         <Col span={22}>
-          {/* <Form.Item
-            className="required"
-            label={"描述"}
-            labelCol={{ span: 2, offset: 0 }}
-            wrapperCol={{ span: 22 }}
-            {...getValidationProps("description")}
-            help={`${chineseCharsCounts}/3000 ${
-              touched?.description && errors?.description
-            }`.replace("undefined", "")}
-          >
-            <Input.TextArea
-              defaultValue="請輸入"
-              autoSize={{ minRows: 5 }}
-              {...getFieldProps("description")}
-            />
-          </Form.Item> */}
           <MyFormItem
             name="description"
             className="required"
@@ -163,18 +147,20 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
       </Row>
       <Row gutter={gutter}>
         <Col span={8}>
-          <Form.Item
-            label={"使用方式"}
+          <MyFormItem
+            name="instruction"
+            label="使用方式"
             labelCol={{ span: 6, offset: 0 }}
             wrapperCol={{ span: 18 }}
-            {...getValidationProps("instruction")}
           >
-            <Input
-              addonAfter={`${values?.instruction?.length}/15`}
-              defaultValue="請輸入"
-              {...getFieldProps("instruction")}
-            />
-          </Form.Item>
+            {({ field }) => (
+              <Input
+                {...field}
+                addonAfter={`${values?.instruction?.length}/15`}
+                defaultValue="請輸入"
+              />
+            )}
+          </MyFormItem>
         </Col>
         <Col span={8}>
           <Form.Item
@@ -183,55 +169,54 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
             labelCol={{ span: 6, offset: 0 }}
             wrapperCol={{ span: 18 }}
           >
-            <Form.Item
+            <MyFormItem
+              name="max.isActive"
+              type="switch"
               style={{ display: "inline-block", width: "20%" }}
-              {...getValidationProps("max.value")}
             >
-              <Switch
-                checked={values?.max?.isActive}
-                onChange={(bool) =>
-                  setValues({ ...values, max: { isActive: bool, value: "" } })
-                }
-              />
-            </Form.Item>
-            <Form.Item
+              {({ field }) => (
+                <Switch
+                  {...field}
+                  onChange={(bool) =>
+                    setValues({ ...values, max: { isActive: bool, value: "" } })
+                  }
+                />
+              )}
+            </MyFormItem>
+            <MyFormItem
+              name="max.value"
               style={{ display: "inline-block", width: "80%" }}
-              validateStatus={
-                touched?.max?.value && errors?.max?.value && "error"
-              }
-              help={touched?.max?.value && errors?.max?.value}
             >
-              <Input
-                addonAfter={`${values?.max?.value?.length}/10`}
-                defaultValue="請輸入"
-                value={values?.max?.value}
-                onChange={(e) => {
-                  setFieldValue("max.value", e.target.value);
-                }}
-                onBlur={() => {
-                  setFieldTouched("max.value", true);
-                }}
-                disabled={!values?.max?.isActive}
-              />
-            </Form.Item>
+              {({ field, meta }) => (
+                <Input
+                  {...field}
+                  addonAfter={`${meta.value?.length}/10`}
+                  defaultValue="請輸入"
+                  disabled={!values?.max?.isActive}
+                />
+              )}
+            </MyFormItem>
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item
+          <MyFormItem
+            name="colors"
+            type="select"
             className="required"
-            label={"顏色"}
+            label="顏色"
             labelCol={{ span: 4, offset: 0 }}
             wrapperCol={{ span: 14 }}
-            {...getValidationProps("colors")}
           >
-            <Select mode="multiple" {...getFieldProps("colors")}>
-              {COLORS.map(({ key, value, name }) => (
-                <Select.Option key={key} value={value}>
-                  {name}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
+            {({ field }) => (
+              <Select {...field} mode="multiple">
+                {COLORS.map(({ key, value, name }) => (
+                  <Select.Option key={key} value={value}>
+                    {name}
+                  </Select.Option>
+                ))}
+              </Select>
+            )}
+          </MyFormItem>
         </Col>
       </Row>
       <Row gutter={gutter}>
