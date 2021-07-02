@@ -1,10 +1,13 @@
 import "./App.css";
 import { useState } from "react";
 import { Button, Modal, Row, Col, Typography } from "antd";
-import MyFormWithFormik from "./components/MyForm/MyFromWithFormik";
 import MyTable from "./components/MyTable";
+import MyForm from "./components/MyForm/MyForm";
 import { serial, openNotification, StateFormat } from "./helper";
 import { DELAY_TIME } from "./data/const";
+import validation from "./components/MyForm/validation/validation";
+import { INITIAL_VALUE } from "./data/const";
+import { Formik } from "formik";
 
 function App() {
   // data is for table rows
@@ -14,45 +17,53 @@ function App() {
   // isEdiMode controls whether the form is for creating data or updating data
   const [isEditMode, seIsEditMode] = useState(false);
   // selectedRecord is the selected data when editting a record
-  const [selectedRecord, setSelectedRecord] = useState(null);
+  const [selectedRecord, setSelectedRecord] = useState(INITIAL_VALUE);
   // the corresponding records'keys when checkboxes selected
   const [selectedRecordKeys, setSelectedRecordKeys] = useState([]);
 
-  function insertData(newRecord) {
-    newRecord.id = serial.generate();
-    setData([...data, newRecord]);
-    openNotification("success", "新增資料", "你已經成功新增一筆資料");
-  }
-
-  function editData(record) {
-    const index = data.findIndex((d) => {
-      return d.id === record.id;
-    });
-    const newData = [...data.slice(0, index), record, ...data.slice(index + 1)];
-    setData(newData);
-    // delay the data update to avoid showing unfriendly data to user
-    setTimeout(() => setSelectedRecord(null), DELAY_TIME);
-    openNotification("success", "資料更新", "你已經成功更新一筆資料");
+  function saveData(record) {
+    // insert a new record
+    if (record.id == null) {
+      record.id = serial.generate();
+      setData([...data, record]);
+      openNotification("success", "新增資料", "你已經成功新增一筆資料");
+    } else {
+      // update an existing record
+      const index = data.findIndex((d) => {
+        return d.id === record.id;
+      });
+      const newData = [
+        ...data.slice(0, index),
+        record,
+        ...data.slice(index + 1),
+      ];
+      setData(newData);
+      // delay the data update to avoid showing unfriendly data to user
+      setTimeout(() => setSelectedRecord(null), DELAY_TIME);
+      openNotification("success", "資料更新", "你已經成功更新一筆資料");
+    }
   }
 
   // the modal form has two mode, one is for creating a record, the other is for editting a record
   // when user clicks on edit button, it shows the modal form for editting a record
   // when user clicks on new button, it shows the modal form for creating a record
-  function showModal({ isEditMode }) {
+  function showModal({ isEditMode = false } = {}) {
     seIsEditMode(isEditMode);
     setIsVisible(true);
   }
 
-  function handleCancel() {
+  function closeModal() {
     setIsVisible(false);
-    // delay the data update to avoid showing unfriendly data to user
-    setTimeout(() => setSelectedRecord(null), DELAY_TIME);
+  }
+
+  function handleNew() {
+    setSelectedRecord(INITIAL_VALUE);
+    showModal();
   }
 
   function handleEdit(id) {
     const tableRecord = data.find((record) => record.id === id);
     const formData = StateFormat.toForm(tableRecord);
-    console.log(formData);
 
     // select the specific record, send the data to Formik, and then open the modal form
     setSelectedRecord(formData);
@@ -134,7 +145,7 @@ function App() {
             style={{ marginRight: "1rem" }}
             type="primary"
             icon="form"
-            onClick={showModal}
+            onClick={handleNew}
           >
             新增
           </Button>
@@ -149,16 +160,32 @@ function App() {
         </Col>
       </Row>
       <Row>
-        <Col className="test" span={16}>
-          <MyFormWithFormik
-            onInsert={insertData}
-            onEdit={editData}
-            visible={isVisible}
-            onCancel={handleCancel}
-            values={selectedRecord}
-            isEditMode={isEditMode}
-          />
-        </Col>
+        <Modal
+          destroyOnClose
+          wrapClassName={"modal-wrapper"}
+          width={"100%"}
+          visible={isVisible}
+          onCancel={closeModal}
+          footer={null}
+        >
+          <Formik
+            enableReinitialize
+            initialValues={selectedRecord}
+            validateOnBlur
+            validationSchema={validation}
+            onSubmit={(values, { resetForm }) => {
+              saveData(StateFormat.toTable(values));
+              // delay the data update to avoid showing unfriendly data to user
+              setTimeout(
+                () => resetForm({ values: INITIAL_VALUE }),
+                DELAY_TIME
+              );
+              closeModal();
+            }}
+          >
+            <MyForm onCancel={closeModal} isEditMode={isEditMode} />
+          </Formik>
+        </Modal>
       </Row>
     </div>
   );
