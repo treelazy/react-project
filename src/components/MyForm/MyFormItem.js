@@ -22,8 +22,9 @@ export default function MyFormItem({ name, type, children, ...props }) {
   }
   if (type === "date" || type === "time") {
     field.onChange = (value) => {
-      setTimeout(() => helpers.setTouched(true));
-      helpers.setValue(value);
+      console.log("YO");
+      setTimeout(() => helpers.setTouched(true, false));
+      helpers.setValue(value, false);
     };
   }
 

@@ -35,12 +35,12 @@ export default function MyForm({ isEditMode, onCancel }) {
     // delay the data update to avoid showing unfriendly data to user
     setTimeout(() => resetForm({ values: INITIAL_VALUE }), DELAY_TIME);
   }
-  function handleTimeChange(time, startOrEnd, setValue) {
-    console.log(time);
+  function handleTimeChange(time, startOrEnd, helpers) {
+    setTimeout(() => helpers.setTouched(true, false));
     if (!time) {
       time = startOrEnd.hours(0).minutes(0).seconds(0);
     }
-    setValue(time);
+    helpers.setValue(time);
   }
 
   return (
@@ -223,7 +223,7 @@ export default function MyForm({ isEditMode, onCancel }) {
                       if (values?.end == null) {
                         return false;
                       }
-                      return current >= values?.end;
+                      return current.isAfter(values?.end, "day");
                     }}
                     onChange={(date) => {
                       console.log(date);
@@ -242,7 +242,7 @@ export default function MyForm({ isEditMode, onCancel }) {
                     {...field}
                     placeholder="請選擇時間"
                     onChange={(time) => {
-                      handleTimeChange(time, meta.value, helpers.setValue);
+                      handleTimeChange(time, meta.value, helpers);
                     }}
                   />
                 </Form.Item>
@@ -275,7 +275,7 @@ export default function MyForm({ isEditMode, onCancel }) {
                       if (values?.start == null) {
                         return false;
                       }
-                      return current <= values?.start;
+                      return current.isBefore(values?.start, "day");
                     }}
                   />
                 </Form.Item>
@@ -290,7 +290,7 @@ export default function MyForm({ isEditMode, onCancel }) {
                     {...field}
                     placeholder="請選擇時間"
                     onChange={(time) => {
-                      handleTimeChange(time, meta.value, helpers.setValue);
+                      handleTimeChange(time, meta.value, helpers);
                     }}
                   />
                 </Form.Item>

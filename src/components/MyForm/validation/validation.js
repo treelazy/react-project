@@ -22,8 +22,14 @@ export default Yup.object().shape(
       }),
     description: Yup.string()
       .required("此欄位必填")
-      .max(3000, "請輸入1-3000個字")
-      .matches(/^.*$/, "此欄位不支援斷行"),
+      .matches(/^.*$/, "此欄位不支援斷行")
+      .test("description", "請輸入1-3000個字", (value) => {
+        const chineseChars = value?.match(regexForAnyChinese()) || "";
+        const otherChars = value?.replace(regexForAnyChinese(), "") || "";
+        // a chinese char count as 3
+        return chineseChars.length * 3 + otherChars.length <= 3000;
+      }),
+
     instruction: Yup.string()
       .matches(/^[^\s]*$/, "此欄位不支援空白")
       .max(15, "請輸入1-15個中文、半形英文/數字/特殊符號")
@@ -50,10 +56,9 @@ export default Yup.object().shape(
         is: (val) => val !== null,
         then: Yup.date()
           .nullable(true)
-          .required("此欄位必填")
           .test("開始時間", "必須小於結束時間", (start, context) => {
             const end = context?.parent?.end;
-            return start < end;
+            return start && start < end;
           }),
       }),
     end: Yup.date()
@@ -62,10 +67,9 @@ export default Yup.object().shape(
         is: (val) => val !== null,
         then: Yup.date()
           .nullable(true)
-          .required("此欄位必填")
           .test("結束時間", "必須大於開始時間", (end, context) => {
             const start = context?.parent?.start;
-            return end > start;
+            return end && end > start;
           }),
       }),
     colors: Yup.array().min(1, "此欄位必須選擇一個"),
