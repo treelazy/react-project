@@ -119,7 +119,7 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
               <Input.TextArea
                 {...field}
                 defaultValue="請輸入"
-                autoSize={{ minRows: 5 }}
+                autoSize={{ minRows: 5, maxRows: 5 }}
               />
             )}
           </MyFormItem>
