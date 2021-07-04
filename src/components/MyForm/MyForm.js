@@ -3,7 +3,6 @@ import {
   Col,
   Form,
   Input,
-  InputNumber,
   Radio,
   Switch,
   Select,
@@ -25,17 +24,9 @@ import MyFormItem from "./MyFormItem";
 import MyInputNumber from "./MyInputNumber";
 
 const gutter = { xs: 4, sm: 8, md: 16, lg: 24 };
-export default function MyForm({ isEditMode, visible, onCancel }) {
-  const {
-    values,
-    setFieldValue,
-    errors,
-    touched,
-    setFieldTouched,
-    submitForm,
-    setValues,
-    resetForm,
-  } = useFormikContext();
+export default function MyForm({ isEditMode, onCancel }) {
+  const { values, errors, touched, submitForm, setValues, resetForm } =
+    useFormikContext();
 
   const chineseCharsCounts = useChineseCharsCount(values?.description);
 
@@ -43,6 +34,13 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
     onCancel();
     // delay the data update to avoid showing unfriendly data to user
     setTimeout(() => resetForm({ values: INITIAL_VALUE }), DELAY_TIME);
+  }
+  function handleTimeChange(time, startOrEnd, setValue) {
+    console.log(time);
+    if (!time) {
+      time = startOrEnd.hours(0).minutes(0).seconds(0);
+    }
+    setValue(time);
   }
 
   return (
@@ -208,7 +206,7 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
             labelCol={{ span: 6, offset: 0 }}
             wrapperCol={{ span: 18 }}
           >
-            {({ field }) => (
+            {({ field, meta, helpers }) => (
               <>
                 <Form.Item
                   style={{
@@ -227,6 +225,10 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
                       }
                       return current >= values?.end;
                     }}
+                    onChange={(date) => {
+                      console.log(date);
+                      helpers.setValue(date);
+                    }}
                   />
                 </Form.Item>
                 <Form.Item
@@ -236,7 +238,13 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
                     marginBottom: 0,
                   }}
                 >
-                  <TimePicker {...field} placeholder="請選擇時間" />
+                  <TimePicker
+                    {...field}
+                    placeholder="請選擇時間"
+                    onChange={(time) => {
+                      handleTimeChange(time, meta.value, helpers.setValue);
+                    }}
+                  />
                 </Form.Item>
               </>
             )}
@@ -250,13 +258,14 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
             labelCol={{ span: 6, offset: 0 }}
             wrapperCol={{ span: 18 }}
           >
-            {({ field }) => (
+            {({ field, meta, helpers }) => (
               <>
                 <Form.Item
                   style={{
                     display: "inline-block",
                     width: "calc(50% - 0.5rem)",
                     marginRight: "1rem",
+                    marginBottom: 0,
                   }}
                 >
                   <DatePicker
@@ -274,9 +283,16 @@ export default function MyForm({ isEditMode, visible, onCancel }) {
                   style={{
                     display: "inline-block",
                     width: "calc(50% - 0.5rem)",
+                    marginBottom: 0,
                   }}
                 >
-                  <TimePicker {...field} placeholder="請選擇時間" />
+                  <TimePicker
+                    {...field}
+                    placeholder="請選擇時間"
+                    onChange={(time) => {
+                      handleTimeChange(time, meta.value, helpers.setValue);
+                    }}
+                  />
                 </Form.Item>
               </>
             )}
