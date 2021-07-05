@@ -1,6 +1,6 @@
 import { notification } from "antd";
 import moment from "moment";
-import { DELAY_TIME } from "./data/const";
+import { DELAY_TIME, DEV_INITIAL_VALUE } from "./data/const";
 import isFullwidthCodePoint from "is-fullwidth-code-point";
 
 const openNotification = (type, title, message, delay) => {
@@ -131,8 +131,26 @@ const isCharFullwidth = function (char) {
 const serial = {
   _num: 0,
   generate: function () {
-    return this._num++;
+    return (this._num++).toString();
   },
 };
 
-export { StateFormat, serial, openNotification, isCharFullwidth };
+const createOneTableRecord = () =>
+  StateFormat.toTable({ ...DEV_INITIAL_VALUE, id: serial.generate() });
+
+const createTableRecords = (amount) => {
+  const records = [];
+  for (let i = 0; i < amount; i++) {
+    records.push(createOneTableRecord());
+  }
+  return records;
+};
+
+export {
+  StateFormat,
+  serial,
+  openNotification,
+  isCharFullwidth,
+  createOneTableRecord,
+  createTableRecords,
+};

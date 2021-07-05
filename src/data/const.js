@@ -15,8 +15,7 @@ const GENDERS = [
 
 // _devVal is for demo usage
 const SCHEMA = {
-  id: { type: "string", title: "流水號", initVal: null, _devVal: null },
-  tag: { type: "string", title: "編號", initVal: "", _devVal: "測試用編號" },
+  id: { type: "string", title: "編號", initVal: "", _devVal: "0079" },
   orgName: {
     type: "string",
     title: "組織名稱",
@@ -53,7 +52,7 @@ const SCHEMA = {
     initVal: null,
     _devVal: moment().add(1, "hours"),
   },
-  gender: { title: "性別", initVal: "", _devVal: "M" },
+  gender: { title: "性別", initVal: "M", _devVal: "M" },
 };
 
 // initial value for formik

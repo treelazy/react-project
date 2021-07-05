@@ -14,7 +14,7 @@
   }
 }
 
-.required label:not(.ant-radio-wrapper)::before {
+.required label::before {
     content: "*";
     color: red;
 }
