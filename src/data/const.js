@@ -15,8 +15,7 @@ const GENDERS = [
 
 // _devVal is for demo usage
 const SCHEMA = {
-  id: { type: "string", title: "流水號", initVal: null, _devVal: null },
-  tag: { type: "string", title: "編號", initVal: "", _devVal: "0079" },
+  id: { type: "string", title: "編號", initVal: "", _devVal: "0079" },
   orgName: {
     type: "string",
     title: "組織名稱",

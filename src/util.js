@@ -131,7 +131,7 @@ const isCharFullwidth = function (char) {
 const serial = {
   _num: 0,
   generate: function () {
-    return this._num++;
+    return (this._num++).toString();
   },
 };
 

@@ -4,7 +4,7 @@ import rgx from "./util";
 
 export default Yup.object().shape(
   {
-    tag: Yup.string()
+    id: Yup.string()
       .required("此欄位必填")
       .matches(rgx.noSpace(), "此欄位不支援空白")
       .max(10, "請輸入1-10個半形數字")

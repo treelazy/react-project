@@ -51,7 +51,7 @@ export default function MyForm({ isEditMode, onCancel }) {
       <Row gutter={gutter}>
         <Col span={8}>
           <MyFormItem
-            name="tag"
+            name="id"
             className="required"
             label="編號"
             labelCol={{ span: 6, offset: 0 }}
