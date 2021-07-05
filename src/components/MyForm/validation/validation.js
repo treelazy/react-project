@@ -1,41 +1,40 @@
 import * as Yup from "yup";
 import { isCharFullwidth } from "../../../helper";
-import { regexForTag, regexForOrgName, regexForAnyChinese } from "./helper";
+import rgx from "./helper";
 
 export default Yup.object().shape(
   {
     tag: Yup.string()
       .required("此欄位必填")
-      .matches(/^[^\s]*$/, "此欄位不支援空白")
+      .matches(rgx.noSpace(), "此欄位不支援空白")
       .max(10, "請輸入1-10個中文，半形英文及數字")
-      .matches(regexForTag(), "請輸入中文，半形英文及數字"),
+      .matches(rgx.forTag(), "請輸入中文，半形英文及數字"),
     orgName: Yup.string()
       .max(30, "請輸入1-30個中文、全形半形英文/數字")
-      .matches(regexForOrgName(), "請輸入中文、全形半形英文/數字"),
+      .matches(rgx.forOrgName(), "請輸入中文、全形半形英文/數字"),
     weight: Yup.number()
       .nullable(true)
       .test("weight", "請輸入半形數字 0~9999999.99/小數點後限2位", (value) => {
         if (value == null) {
           return true;
         }
-        return value.toString().match(/^\d{0,7}(\.\d{1,2})?$/);
+        return value.toString().match(rgx.forWeight());
       }),
     description: Yup.string()
       .required("此欄位必填")
-      .matches(/^.*$/, "此欄位不支援斷行")
+      .matches(rgx.noNewline(), "此欄位不支援斷行")
       .test("description", "請輸入1-3000個字", (value) => {
-        const chineseChars = value?.match(regexForAnyChinese()) || "";
-        const otherChars = value?.replace(regexForAnyChinese(), "") || "";
+        const chineseChars = value?.match(rgx.findAnyChinese()) || "";
+        const otherChars = value?.replace(rgx.findAnyChinese(), "") || "";
         // a chinese char count as 3
         return chineseChars.length * 3 + otherChars.length <= 3000;
       }),
-
     instruction: Yup.string()
-      .matches(/^[^\s]*$/, "此欄位不支援空白")
+      .matches(rgx.noSpace(), "此欄位不支援空白")
       .max(15, "請輸入1-15個中文、半形英文/數字/特殊符號")
       .test("instruction", "請輸入中文、半形英文/數字/特殊符號", (value) => {
         // remove chinise characters, and then check whether there's still any fullwidth char left
-        let withoutChinese = value?.replace(regexForAnyChinese(), "") || "";
+        let withoutChinese = value?.replace(rgx.findAnyChinese(), "") || "";
         return [...withoutChinese].every((char) => !isCharFullwidth(char));
       }),
     max: Yup.object({
@@ -44,10 +43,11 @@ export default Yup.object().shape(
         is: true,
         then: Yup.string()
           .required("此欄位必填")
-          .matches(/^[^\s]*$/, "此欄位不支援空白")
+          .matches(rgx.noSpace(), "此欄位不支援空白")
+          .max(10, "請輸入10位半形數字")
           // the number is not allowed to start with 0, unless the whole number itself is just a single 0
           // 這串數字不能是0開頭，除非這整串數字剛好就是單獨一個0
-          .matches(/(^[1-9][0-9]{0,9}$)|(^0$)/, "請輸入10位半形數字"),
+          .matches(rgx.positiveInts(), "請輸入10位半形數字"),
       }),
     }),
     start: Yup.date()
