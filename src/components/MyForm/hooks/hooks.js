@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import rgx from "../validation/helper";
+import rgx from "../validation/util";
 
 function useChineseCharsCount(description = "") {
   const [charCounts, setCharCounts] = useState(0);

@@ -1,14 +1,14 @@
 import * as Yup from "yup";
-import { isCharFullwidth } from "../../../helper";
-import rgx from "./helper";
+import { isCharFullwidth } from "../../../util";
+import rgx from "./util";
 
 export default Yup.object().shape(
   {
     tag: Yup.string()
       .required("此欄位必填")
       .matches(rgx.noSpace(), "此欄位不支援空白")
-      .max(10, "請輸入1-10個中文，半形英文及數字")
-      .matches(rgx.forTag(), "請輸入中文，半形英文及數字"),
+      .max(10, "請輸入1-10個半形數字")
+      .matches(rgx.positiveInts(), "請輸入半形數字"),
     orgName: Yup.string()
       .max(30, "請輸入1-30個中文、全形半形英文/數字")
       .matches(rgx.forOrgName(), "請輸入中文、全形半形英文/數字"),
