@@ -69,6 +69,7 @@ export default function MyForm({ isEditMode, onCancel }) {
         <Col span={8}>
           <MyFormItem
             name="orgName"
+            className="required"
             label="組織名稱"
             labelCol={{ span: 6, offset: 0 }}
             wrapperCol={{ span: 18 }}

@@ -10,6 +10,7 @@ export default Yup.object().shape(
       .max(10, "請輸入1-10個半形數字")
       .matches(rgx.positiveInts(), "請輸入半形數字"),
     orgName: Yup.string()
+      .required("此欄位必填")
       .max(30, "請輸入1-30個中文、全形半形英文/數字")
       .matches(rgx.forOrgName(), "請輸入中文、全形半形英文/數字"),
     weight: Yup.number()
