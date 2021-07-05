@@ -75,6 +75,15 @@ export default Yup.object().shape(
       }),
     colors: Yup.array().min(1, "此欄位必須選擇一個"),
     gender: Yup.string().required("此欄位必填"),
+    price: Yup.number()
+      .nullable(true)
+      .max(10000, "請輸入整數 0-10000")
+      .test("price", "請輸入整數 0-10000", (value) => {
+        if (value == null) {
+          return true;
+        }
+        return value.toString().match(rgx.positiveInts());
+      }),
   },
   // the purpose of supplying this array is to fix cyclic dependency
   // https://github.com/jquense/yup/issues/79#issuecomment-699605408

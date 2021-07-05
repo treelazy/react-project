@@ -7,7 +7,6 @@ export default function MyTable({
   data,
   onEdit,
   onDelete,
-  isLastOne,
   onRowSelection,
   selectedRowKeys,
 }) {
@@ -29,6 +28,10 @@ export default function MyTable({
   const endCol = columns.find((c) => c.key === "end");
   endCol.sorter = (a, b) => new Date(a.end) - new Date(b.end);
 
+  // custimize price column
+  const priceCol = columns.find((c) => c.key === "price");
+  priceCol.sorter = (a, b) => new Date(a.price) - new Date(b.price);
+
   // custimize description column
   const dscrpCol = columns.find((c) => c.key === "description");
   dscrpCol.ellipsis = true;
@@ -40,15 +43,8 @@ export default function MyTable({
     render: (text, record) => (
       <span>
         <a onClick={() => onEdit(record.id)}>修改</a>
-        {
-          // hide the delete option when there's only one record left
-          !isLastOne && (
-            <>
-              <Divider type="vertical" />
-              <a onClick={() => onDelete(record.id)}>刪除</a>
-            </>
-          )
-        }
+        <Divider type="vertical" />
+        <a onClick={() => onDelete(record.id)}>刪除</a>
       </span>
     ),
   };

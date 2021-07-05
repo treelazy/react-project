@@ -89,6 +89,7 @@ const StateFormat = {
     const tGender = _mapToTable.gender(gender);
     const tColors = colors.map(_mapToTable.color);
 
+    console.log(formikValues.id);
     return {
       ...formikValues,
       start: tStart,
@@ -109,6 +110,7 @@ const StateFormat = {
     const fColors = colors.map(_mapToForm.color);
     const fGender = _mapToForm.gender(gender);
 
+    console.log(tableRecord.id);
     return {
       ...formData,
       start: fStart,
@@ -159,15 +161,17 @@ const createOneTableRecord = (fields) =>
 
 const createTableRecords = (amount) => {
   const records = [];
-  const gen = randomGenerator(amount);
+  const uniqNumGen = randomGenerator(amount);
+  const priceGen = randomGenerator(5000);
   for (let i = 0; i < amount; i++) {
-    const uniqNum = gen();
+    const uniqNum = uniqNumGen();
     const uniqStart = moment().subtract({ days: uniqNum, hours: uniqNum });
     const uniqEnd = moment().add({ days: uniqNum, hours: uniqNum });
     const newRecord = createOneTableRecord({
-      id: uniqNum,
+      id: uniqNum.toString(),
       start: uniqStart,
       end: uniqEnd,
+      price: priceGen(),
     });
     records.push(newRecord);
   }

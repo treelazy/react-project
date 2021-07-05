@@ -23,7 +23,6 @@ import { useChineseCharsCount } from "./hooks/hooks";
 import MyFormItem from "./MyFormItem";
 import MyInputNumber from "./MyInputNumber";
 
-const gutter = { xs: 4, sm: 8, md: 16, lg: 24 };
 export default function MyForm({ isEditMode, onCancel }) {
   const { values, errors, touched, submitForm, setValues, resetForm } =
     useFormikContext();
@@ -48,7 +47,7 @@ export default function MyForm({ isEditMode, onCancel }) {
       <h1 style={{ textAlign: "center", marginBottom: "2rem" }}>
         {isEditMode ? "修改資料" : "新增資料"}
       </h1>
-      <Row gutter={gutter}>
+      <Row>
         <Col span={8}>
           <MyFormItem
             name="id"
@@ -102,7 +101,7 @@ export default function MyForm({ isEditMode, onCancel }) {
           </MyFormItem>
         </Col>
       </Row>
-      <Row gutter={gutter}>
+      <Row>
         <Col span={22}>
           <MyFormItem
             name="description"
@@ -124,7 +123,7 @@ export default function MyForm({ isEditMode, onCancel }) {
           </MyFormItem>
         </Col>
       </Row>
-      <Row gutter={gutter}>
+      <Row>
         <Col span={8}>
           <MyFormItem
             name="instruction"
@@ -198,7 +197,7 @@ export default function MyForm({ isEditMode, onCancel }) {
           </MyFormItem>
         </Col>
       </Row>
-      <Row gutter={gutter}>
+      <Row>
         <Col span={8}>
           <MyFormItem
             name="start"
@@ -310,6 +309,22 @@ export default function MyForm({ isEditMode, onCancel }) {
                   </Radio>
                 ))}
               </Radio.Group>
+            )}
+          </MyFormItem>
+        </Col>
+      </Row>
+      <Row>
+        <Col span={8}>
+          <MyFormItem
+            name="price"
+            type="number"
+            className="required"
+            label="價格"
+            labelCol={{ span: 6, offset: 0 }}
+            wrapperCol={{ span: 18 }}
+          >
+            {({ field }) => (
+              <MyInputNumber {...field} addonAfter={"NTD"} defaultValue={0} />
             )}
           </MyFormItem>
         </Col>

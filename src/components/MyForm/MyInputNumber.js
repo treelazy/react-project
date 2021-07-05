@@ -14,7 +14,7 @@ export default function MyInputNumber({ addonAfter, ...props }) {
           lineHeight: "24px",
           height: "32px",
           position: "relative",
-          top: "-2px",
+          top: "-1.5px",
         }}
       >
         {addonAfter}
