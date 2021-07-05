@@ -55,6 +55,13 @@ export default function MyTable({
       rowSelection={rowSelection}
       columns={columns}
       dataSource={data}
+      pagination={{
+        position: "top",
+        showSizeChanger: true,
+        pageSizeOptions: ["20", "50", "100", "200", "500"],
+        defaultPageSize: 20,
+        locale: { items_per_page: "筆/頁" },
+      }}
     />
   );
 }

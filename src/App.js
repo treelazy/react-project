@@ -4,7 +4,13 @@ import { Button, Modal, Row, Col, Typography } from "antd";
 import { Formik } from "formik";
 import MyTable from "./components/MyTable";
 import MyForm from "./components/MyForm/MyForm";
-import { serial, openNotification, StateFormat } from "./util";
+import {
+  serial,
+  openNotification,
+  StateFormat,
+  createOneTableRecord,
+  createTableRecords,
+} from "./util";
 import validation from "./components/MyForm/validation/validation";
 import { INITIAL_VALUE } from "./data/const";
 
@@ -138,6 +144,13 @@ function App() {
       </Row>
       <Row type="flex" justify="center">
         <Col style={{ marginTop: "2rem" }}>
+          <Button
+            onClick={() => {
+              setData((prevData) => [...prevData, ...createTableRecords(1001)]);
+            }}
+          >
+            快速
+          </Button>
           <Button
             style={{ marginRight: "1rem" }}
             type="primary"
