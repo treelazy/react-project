@@ -22,10 +22,9 @@ export default function MyFormItem({ name, type, children, ...props }) {
   }
   if (type === "date" || type === "time") {
     field.onChange = (value) => {
-      console.log("YO");
-      setTimeout(() => helpers.setTouched(true, false));
       helpers.setValue(value, false);
     };
+    field.onBlur = () => setTimeout(() => helpers.setTouched(true));
   }
 
   return (

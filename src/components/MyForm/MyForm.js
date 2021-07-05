@@ -225,10 +225,6 @@ export default function MyForm({ isEditMode, onCancel }) {
                       }
                       return current.isAfter(values?.end, "day");
                     }}
-                    onChange={(date) => {
-                      console.log(date);
-                      helpers.setValue(date);
-                    }}
                   />
                 </Form.Item>
                 <Form.Item
