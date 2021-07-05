@@ -1,6 +1,7 @@
 import React from "react";
 import { Table, Divider } from "antd";
 import { SCHEMA } from "../data/const";
+import moment from "moment";
 
 export default function MyTable({
   data,
@@ -16,6 +17,19 @@ export default function MyTable({
     key: field,
   }));
 
+  // custimize id column
+  const idCol = columns.find((c) => c.key === "id");
+  idCol.sorter = (a, b) => parseInt(a.id) - parseInt(b.id);
+
+  // custimize start column
+  const startCol = columns.find((c) => c.key === "start");
+  startCol.sorter = (a, b) => new Date(a.start) - new Date(b.start);
+
+  // custimize end column
+  const endCol = columns.find((c) => c.key === "end");
+  endCol.sorter = (a, b) => new Date(a.end) - new Date(b.end);
+
+  // custimize description column
   const dscrpCol = columns.find((c) => c.key === "description");
   dscrpCol.ellipsis = true;
   dscrpCol.width = "15%";

@@ -135,13 +135,41 @@ const serial = {
   },
 };
 
-const createOneTableRecord = () =>
-  StateFormat.toTable({ ...DEV_INITIAL_VALUE, id: serial.generate() });
+// create a generator that generate non-duplicate numbers from 1 to num
+const randomGenerator = (upperbound) => {
+  const exists = [];
+  return function () {
+    if (exists.length === upperbound) {
+      console.error("`randomGenerator` has reached it's limit");
+      return exists[exists.length - 1];
+    }
+    let isDuplicate = true;
+    let newNum = null;
+    while (isDuplicate) {
+      newNum = Math.ceil(upperbound * Math.random());
+      isDuplicate = exists.includes(newNum);
+    }
+    exists.push(newNum);
+    return newNum;
+  };
+};
+
+const createOneTableRecord = (fields) =>
+  StateFormat.toTable({ ...DEV_INITIAL_VALUE, ...fields });
 
 const createTableRecords = (amount) => {
   const records = [];
+  const gen = randomGenerator(amount);
   for (let i = 0; i < amount; i++) {
-    records.push(createOneTableRecord());
+    const uniqNum = gen();
+    const uniqStart = moment().subtract({ days: uniqNum, hours: uniqNum });
+    const uniqEnd = moment().add({ days: uniqNum, hours: uniqNum });
+    const newRecord = createOneTableRecord({
+      id: uniqNum,
+      start: uniqStart,
+      end: uniqEnd,
+    });
+    records.push(newRecord);
   }
   return records;
 };
