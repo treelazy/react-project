@@ -4,7 +4,6 @@ import { SCHEMA } from "../data/const";
 
 export default function MyTable({ data, onEdit, onDelete }) {
   const columns = generateColumns(onEdit, onDelete);
-  console.log(columns);
   return (
     <Table
       rowKey="id"

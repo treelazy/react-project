@@ -1,6 +1,6 @@
 import "./App.css";
 import { useState } from "react";
-import { Button, Modal, Row, Col, Typography } from "antd";
+import { Button, Modal, Row, Col, Typography, Icon } from "antd";
 import { Formik } from "formik";
 import MyTable from "./components/MyTable";
 import MyForm from "./components/MyForm/MyForm";
@@ -95,20 +95,18 @@ function App() {
     });
   }
 
-  function handleSearch({ id, orgName, gender }) {
-    console.log("SEARCH TERM", id, orgName, gender);
-    const result = db.filter((record) => {
-      const { id: dataId, orgName: dataOrgName, gender: dataGender } = record;
-      console.log(dataId, dataOrgName, dataGender);
-      const isContainId = dataId?.toUpperCase().includes(id);
+  function handleSearch({ tag, orgName, gender }) {
+    const result = db.data.filter((record) => {
+      const { tag: dataTag, orgName: dataOrgName, gender: dataGender } = record;
+      const isContainId = dataTag?.toUpperCase().includes(tag);
       const isContainOrgName = dataOrgName?.toUpperCase().includes(orgName);
-      const isContainGender = dataGender?.toUpperCase() === gender;
+      const isContainGender = dataGender?.toUpperCase().includes(gender);
 
-      console.log(isContainId, isContainOrgName, isContainGender);
       return isContainId && isContainOrgName && isContainGender;
     });
 
-    setData(result);
+    const tableResult = result.map(Mapper.dbToTable);
+    setData(tableResult);
   }
 
   return (
@@ -127,31 +125,35 @@ function App() {
             borderRadius: "3px",
           }}
         >
+          <Row>
+            <Icon type="info-circle" theme="filled" />
+            <span> 總資料筆數共 {data.length} 筆</span>
+            <Button
+              onClick={() => {
+                const newRecords = createDbRecords(1001);
+                db.insertBatch(newRecords).then((records) => {
+                  const tableRecords = records.map(Mapper.dbToTable);
+                  setData((prevData) => [...prevData, ...tableRecords]);
+                });
+              }}
+            >
+              快速
+            </Button>
+            <Button
+              style={{ marginRight: "1rem" }}
+              type="primary"
+              icon="form"
+              onClick={handleNew}
+            >
+              新增
+            </Button>
+          </Row>
+
           <MyTable data={data} onDelete={handleDelete} onEdit={handleEdit} />
         </Col>
       </Row>
       <Row type="flex" justify="center">
-        <Col style={{ marginTop: "2rem" }}>
-          <Button
-            onClick={() => {
-              const newRecords = createDbRecords(1001);
-              db.insertBatch(newRecords).then((records) => {
-                const tableRecords = records.map(Mapper.dbToTable);
-                setData((prevData) => [...prevData, ...tableRecords]);
-              });
-            }}
-          >
-            快速
-          </Button>
-          <Button
-            style={{ marginRight: "1rem" }}
-            type="primary"
-            icon="form"
-            onClick={handleNew}
-          >
-            新增
-          </Button>
-        </Col>
+        <Col style={{ marginTop: "2rem" }}></Col>
       </Row>
       <Row>
         <Modal
