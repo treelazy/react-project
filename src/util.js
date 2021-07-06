@@ -28,9 +28,6 @@ const _mapFormToDB = {
 
 const _mapDbToTable = {
   max(dbMax) {
-    if (dbMax == null) {
-      console.log("UNDEFINED");
-    }
     return dbMax.isActive ? dbMax.value : null;
   },
   color(dbColor) {
@@ -101,9 +98,6 @@ const Mapper = {
 
   dbToTable(dbData) {
     const { max, colors, gender } = dbData;
-    if (max == null) {
-      console.log("MAXUNDEFINED");
-    }
     const tMax = _mapDbToTable.max(max);
     const tcolors = colors.map(_mapDbToTable.color);
     const tGender = _mapDbToTable.gender(gender);

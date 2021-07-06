@@ -9,7 +9,6 @@ import { openNotification, Mapper, createDbRecords } from "./util";
 import validation from "./components/MyForm/validation/validation";
 import { INITIAL_VALUE } from "./data/const";
 import db from "./data/db";
-import { unstable_renderSubtreeIntoContainer } from "react-dom";
 
 function App() {
   // data is for table rows
@@ -127,7 +126,6 @@ function App() {
 
   function refresh() {
     const allTableRecords = db.data.map(Mapper.dbToTable);
-    console.log(allTableRecords.length);
     setData(allTableRecords);
   }
 
