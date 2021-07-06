@@ -21,7 +21,7 @@ const db = {
     return new Promise((resolve, reject) => {
       try {
         newRecord.id = uniqid();
-        this.data.push(newRecord);
+        this.data.unshift(newRecord);
         resolve(newRecord);
       } catch (e) {
         reject(e);

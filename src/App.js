@@ -9,6 +9,7 @@ import { openNotification, Mapper, createDbRecords } from "./util";
 import validation from "./components/MyForm/validation/validation";
 import { INITIAL_VALUE } from "./data/const";
 import db from "./data/db";
+import { unstable_renderSubtreeIntoContainer } from "react-dom";
 
 function App() {
   // data is for table rows
@@ -19,6 +20,12 @@ function App() {
   const [isEditMode, seIsEditMode] = useState(false);
   // selectedRecord is the selected data when editting a record
   const [selectedRecord, setSelectedRecord] = useState(INITIAL_VALUE);
+  // searchTerm is the key wrods for searching data
+  const [searchTerm, setSearchTerm] = useState({
+    tag: "",
+    orgName: "",
+    gender: "",
+  });
 
   function saveData(record) {
     const index = data.findIndex((d) => {
@@ -27,10 +34,11 @@ function App() {
     // insert a new record
     if (index < 0) {
       db.insert(record).then((record) => {
-        const tableRecord = Mapper.dbToTable(record);
-        setData([...data, tableRecord]);
+        // when a new record added, clean the search inputs and reload all data
+        cleanSearch();
+        refresh();
+        openNotification("success", "新增資料", "你已經成功新增一筆資料");
       });
-      openNotification("success", "新增資料", "你已經成功新增一筆資料");
     } else {
       // update an existing record
       db.update(record).then((record) => {
@@ -109,12 +117,35 @@ function App() {
     setData(tableResult);
   }
 
+  function handleSearchChange({ target: { name, value } }) {
+    setSearchTerm((prevTerm) => ({ ...prevTerm, [name]: value }));
+  }
+
+  function handleSearchClear() {
+    cleanSearch();
+  }
+
+  function refresh() {
+    const allTableRecords = db.data.map(Mapper.dbToTable);
+    console.log(allTableRecords.length);
+    setData(allTableRecords);
+  }
+
+  function cleanSearch() {
+    setSearchTerm({ tag: "", orgName: "", gender: "" });
+  }
+
   return (
     <div style={{ paddingTop: "32px", height: "100vh" }}>
       <Row type="flex" justify="center">
         <Typography.Title>資料列表</Typography.Title>
       </Row>
-      <Search onSearch={handleSearch} />
+      <Search
+        onSearch={handleSearch}
+        onSearchChange={handleSearchChange}
+        searchTerm={searchTerm}
+        onClear={handleSearchClear}
+      />
       <Row type="flex" justify="center">
         <Col
           span={22}
