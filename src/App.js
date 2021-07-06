@@ -5,7 +5,7 @@ import { Formik } from "formik";
 import MyTable from "./components/MyTable";
 import MyForm from "./components/MyForm/MyForm";
 import Search from "./components/Search";
-import { openNotification, StateFormat, createTableRecords } from "./util";
+import { openNotification, Mapper, createDbRecords } from "./util";
 import validation from "./components/MyForm/validation/validation";
 import { INITIAL_VALUE } from "./data/const";
 import db from "./data/db";
@@ -19,8 +19,6 @@ function App() {
   const [isEditMode, seIsEditMode] = useState(false);
   // selectedRecord is the selected data when editting a record
   const [selectedRecord, setSelectedRecord] = useState(INITIAL_VALUE);
-  // the corresponding records'keys when checkboxes selected
-  const [selectedRecordKeys, setSelectedRecordKeys] = useState([]);
 
   function saveData(record) {
     const index = data.findIndex((d) => {
@@ -28,18 +26,24 @@ function App() {
     });
     // insert a new record
     if (index < 0) {
-      setData([...data, record]);
-      db.push(record);
+      db.insert(record).then((record) => {
+        const tableRecord = Mapper.dbToTable(record);
+        setData([...data, tableRecord]);
+      });
       openNotification("success", "新增資料", "你已經成功新增一筆資料");
     } else {
       // update an existing record
-      const newData = [
-        ...data.slice(0, index),
-        record,
-        ...data.slice(index + 1),
-      ];
-      db.splice(index, 1, newData);
-      setData(newData);
+      db.update(record).then((record) => {
+        const tableRecord = Mapper.dbToTable(record);
+        setData((prevData) => {
+          const newData = [
+            ...prevData.slice(0, index),
+            tableRecord,
+            ...prevData.slice(index + 1),
+          ];
+          return newData;
+        });
+      });
       openNotification("success", "資料更新", "你已經成功更新一筆資料");
     }
   }
@@ -63,7 +67,7 @@ function App() {
 
   function handleEdit(id) {
     const tableRecord = data.find((record) => record.id === id);
-    const formData = StateFormat.toForm(tableRecord);
+    const formData = Mapper.toForm(tableRecord);
 
     // select the specific record, send the data to Formik, and then open the modal form
     setSelectedRecord(formData);
@@ -71,26 +75,40 @@ function App() {
   }
 
   function handleDelete(id) {
-    Modal.confirm({
-      title: " 刪除資料",
-      okText: "確定",
-      cancelText: "取消",
-      content: (
-        <span>
-          確定要刪除這幾筆資料 <b>流水號:{`${id}`}</b>?
-        </span>
-      ),
-      onOk: () => {
-        const removedIdx = data.findIndex((record) => record.id === id);
-        db.splice(removedIdx, 1);
-        setData(data.filter((record, idx) => idx !== removedIdx));
-        openNotification("warning", "資料刪除", "你已經成功刪除單筆資料");
-      },
+    db.find(id).then((deleteRecord) => {
+      Modal.confirm({
+        title: " 刪除資料",
+        okText: "確定",
+        cancelText: "取消",
+        content: (
+          <span>
+            確定要刪除這筆資料 <b>編號:{`${deleteRecord.tag}`}</b>?
+          </span>
+        ),
+        onOk: () => {
+          db.delete(id).then((id) => {
+            setData((data) => data.filter((record) => record.id !== id));
+          });
+          openNotification("warning", "資料刪除", "你已經成功刪除單筆資料");
+        },
+      });
     });
   }
 
-  function handleRowSelection(keys) {
-    setSelectedRecordKeys(keys);
+  function handleSearch({ id, orgName, gender }) {
+    console.log("SEARCH TERM", id, orgName, gender);
+    const result = db.filter((record) => {
+      const { id: dataId, orgName: dataOrgName, gender: dataGender } = record;
+      console.log(dataId, dataOrgName, dataGender);
+      const isContainId = dataId?.toUpperCase().includes(id);
+      const isContainOrgName = dataOrgName?.toUpperCase().includes(orgName);
+      const isContainGender = dataGender?.toUpperCase() === gender;
+
+      console.log(isContainId, isContainOrgName, isContainGender);
+      return isContainId && isContainOrgName && isContainGender;
+    });
+
+    setData(result);
   }
 
   return (
@@ -98,8 +116,7 @@ function App() {
       <Row type="flex" justify="center">
         <Typography.Title>資料列表</Typography.Title>
       </Row>
-      <Search />
-
+      <Search onSearch={handleSearch} />
       <Row type="flex" justify="center">
         <Col
           span={22}
@@ -117,9 +134,11 @@ function App() {
         <Col style={{ marginTop: "2rem" }}>
           <Button
             onClick={() => {
-              const newRecords = createTableRecords(1001);
-              db.push(...newRecords);
-              setData((prevData) => [...prevData, ...newRecords]);
+              const newRecords = createDbRecords(1001);
+              db.insertBatch(newRecords).then((records) => {
+                const tableRecords = records.map(Mapper.dbToTable);
+                setData((prevData) => [...prevData, ...tableRecords]);
+              });
             }}
           >
             快速
@@ -149,7 +168,7 @@ function App() {
             validateOnBlur
             validationSchema={validation}
             onSubmit={(values) => {
-              saveData(StateFormat.toTable(values));
+              saveData(Mapper.formToDB(values));
               closeModal();
             }}
           >

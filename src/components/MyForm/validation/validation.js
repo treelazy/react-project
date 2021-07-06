@@ -1,14 +1,21 @@
 import * as Yup from "yup";
 import { isCharFullwidth } from "../../../util";
 import rgx from "./util";
+import db from "../../../data/db";
 
 export default Yup.object().shape(
   {
-    id: Yup.string()
+    tag: Yup.string()
       .required("此欄位必填")
       .matches(rgx.noSpace(), "此欄位不支援空白")
       .max(10, "請輸入1-10個半形數字")
-      .matches(rgx.positiveIntsZeroPrefix(), "請輸入半形數字"),
+      .matches(rgx.positiveIntsZeroPrefix(), "請輸入半形數字")
+      .test("tag-unique", "編號重複", (value, context) => {
+        const { id } = context?.parent;
+        const foundData = db.data.find((d) => d.id !== id && d.tag === value);
+        const isDuplicate = Boolean(foundData);
+        return !isDuplicate;
+      }),
     orgName: Yup.string()
       .required("此欄位必填")
       .max(30, "請輸入1-30個中文、全形半形英文/數字")

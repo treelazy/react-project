@@ -3,15 +3,34 @@ import { Table, Divider } from "antd";
 import { SCHEMA } from "../data/const";
 
 export default function MyTable({ data, onEdit, onDelete }) {
+  const columns = generateColumns(onEdit, onDelete);
+  console.log(columns);
+  return (
+    <Table
+      rowKey="id"
+      columns={columns}
+      dataSource={data}
+      pagination={{
+        position: "top",
+        showSizeChanger: true,
+        pageSizeOptions: ["20", "50", "100", "200", "500"],
+        defaultPageSize: 20,
+        locale: { items_per_page: "筆/頁" },
+      }}
+    />
+  );
+}
+
+function generateColumns(onEdit, onDelete) {
   const columns = Object.keys(SCHEMA).map((field) => ({
     title: SCHEMA[field].title,
     dataIndex: field,
     key: field,
   }));
 
-  // custimize id column
-  const idCol = columns.find((c) => c.key === "id");
-  idCol.sorter = (a, b) => parseInt(a.id) - parseInt(b.id);
+  // custimize tag column
+  const tagCol = columns.find((c) => c.key === "tag");
+  tagCol.sorter = (a, b) => parseInt(a.tag) - parseInt(b.tag);
 
   // custimize start column
   const startCol = columns.find((c) => c.key === "start");
@@ -44,18 +63,5 @@ export default function MyTable({ data, onEdit, onDelete }) {
 
   columns.push(actionField);
 
-  return (
-    <Table
-      rowKey="id"
-      columns={columns}
-      dataSource={data}
-      pagination={{
-        position: "top",
-        showSizeChanger: true,
-        pageSizeOptions: ["20", "50", "100", "200", "500"],
-        defaultPageSize: 20,
-        locale: { items_per_page: "筆/頁" },
-      }}
-    />
-  );
+  return columns;
 }

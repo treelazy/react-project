@@ -50,7 +50,7 @@ export default function MyForm({ isEditMode, onCancel }) {
       <Row>
         <Col span={8}>
           <MyFormItem
-            name="id"
+            name="tag"
             className="required"
             label="編號"
             labelCol={{ span: 6, offset: 0 }}
@@ -61,6 +61,7 @@ export default function MyForm({ isEditMode, onCancel }) {
                 {...field}
                 addonAfter={`${meta.value?.length}/10`}
                 placeholder="請輸入"
+                disabled={isEditMode}
               />
             )}
           </MyFormItem>

@@ -16,30 +16,34 @@ const openNotification = (type, title, message, delay) => {
   );
 };
 
-// map form data to table data
-const _mapToTable = {
+// map form data to db data
+const _mapFormToDB = {
   start(fStart) {
     return fStart?.format("YYYY-MM-DD HH:mm:ss");
   },
   end(fEnd) {
     return fEnd?.format("YYYY-MM-DD HH:mm:ss");
   },
-  max(fMax) {
-    return fMax.isActive ? fMax.value : null;
+};
+
+const _mapDbToTable = {
+  max(dbMax) {
+    return dbMax.isActive ? dbMax.value : null;
   },
-  color(fColor) {
+  color(dbColor) {
     let tColor = "";
-    if (fColor === "red") {
+    console.log(dbColor);
+    if (dbColor === "red") {
       tColor = "紅色";
-    } else if (fColor === "green") {
+    } else if (dbColor === "green") {
       tColor = "綠色";
-    } else if (fColor === "blue") {
+    } else if (dbColor === "blue") {
       tColor = "藍色";
     }
     return tColor;
   },
-  gender(fGender) {
-    return fGender === "M" ? "男性" : "女性";
+  gender(dbGender) {
+    return dbGender === "M" ? "男性" : "女性";
   },
 };
 
@@ -78,26 +82,35 @@ const _mapToForm = {
   },
 };
 
-const StateFormat = {
+const Mapper = {
   // format Form data before saving into Table(App's state)
-  toTable(formikValues) {
-    const { start, end, max, gender, colors } = formikValues;
+  formToDB(formData) {
+    const { start, end } = formData;
 
-    const tStart = _mapToTable.start(start);
-    const tEnd = _mapToTable.end(end);
-    const tMax = _mapToTable.max(max);
-    const tGender = _mapToTable.gender(gender);
-    const tColors = colors.map(_mapToTable.color);
+    const dStart = _mapFormToDB.start(start);
+    const dEnd = _mapFormToDB.end(end);
 
     return {
-      ...formikValues,
-      start: tStart,
-      end: tEnd,
-      max: tMax,
-      gender: tGender,
-      colors: tColors,
+      ...formData,
+      start: dStart,
+      end: dEnd,
     };
   },
+
+  dbToTable(dbData) {
+    const { max, colors, gender } = dbData;
+    const tMax = _mapDbToTable.max(max);
+    const tcolors = colors.map(_mapDbToTable.color);
+    const tGender = _mapDbToTable.gender(gender);
+
+    return {
+      ...dbData,
+      max: tMax,
+      colors: tcolors,
+      gender: tGender,
+    };
+  },
+
   // format Table'record data/state before saving into Formik's state
   toForm(tableRecord) {
     // actually do nothing for the time being
@@ -120,6 +133,10 @@ const StateFormat = {
     };
   },
 };
+
+// Form to db
+// db to Form
+// db to Table
 
 const isCharFullwidth = function (char) {
   if (char.length > 1) {
@@ -148,10 +165,10 @@ const randomGenerator = (upperbound) => {
   };
 };
 
-const createOneTableRecord = (fields) =>
-  StateFormat.toTable({ ...DEV_INITIAL_VALUE, ...fields });
+const createOneDbRecord = (fields) =>
+  Mapper.formToDB({ ...DEV_INITIAL_VALUE, ...fields });
 
-const createTableRecords = (amount) => {
+const createDbRecords = (amount) => {
   const records = [];
   const uniqNumGen = randomGenerator(amount);
   const priceGen = randomGenerator(5000);
@@ -159,8 +176,8 @@ const createTableRecords = (amount) => {
     const uniqNum = uniqNumGen();
     const uniqStart = moment().subtract({ days: uniqNum, hours: uniqNum });
     const uniqEnd = moment().add({ days: uniqNum, hours: uniqNum });
-    const newRecord = createOneTableRecord({
-      id: uniqNum.toString(),
+    const newRecord = createOneDbRecord({
+      tag: uniqNum.toString(),
       start: uniqStart,
       end: uniqEnd,
       price: priceGen(),
@@ -171,9 +188,9 @@ const createTableRecords = (amount) => {
 };
 
 export {
-  StateFormat,
+  Mapper,
   openNotification,
   isCharFullwidth,
-  createOneTableRecord,
-  createTableRecords,
+  createDbRecords,
+  createOneDbRecord,
 };
