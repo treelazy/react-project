@@ -20,7 +20,7 @@ const SCHEMA = {
     type: "string",
     title: "組織名稱",
     initVal: "",
-    _devVal: "測試用組織名稱",
+    _devVal: "00001",
   },
   weight: { type: "number", title: "重量", initVal: 0, _devVal: 12345 },
   description: {

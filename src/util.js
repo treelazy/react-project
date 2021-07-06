@@ -89,7 +89,6 @@ const StateFormat = {
     const tGender = _mapToTable.gender(gender);
     const tColors = colors.map(_mapToTable.color);
 
-    console.log(formikValues.id);
     return {
       ...formikValues,
       start: tStart,
@@ -128,13 +127,6 @@ const isCharFullwidth = function (char) {
   }
   let charCode = char.charCodeAt(0);
   return isFullwidthCodePoint(charCode);
-};
-
-const serial = {
-  _num: 0,
-  generate: function () {
-    return (this._num++).toString();
-  },
 };
 
 // create a generator that generate non-duplicate numbers from 1 to num
@@ -180,7 +172,6 @@ const createTableRecords = (amount) => {
 
 export {
   StateFormat,
-  serial,
   openNotification,
   isCharFullwidth,
   createOneTableRecord,

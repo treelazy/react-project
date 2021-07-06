@@ -5,15 +5,10 @@ import { Formik } from "formik";
 import MyTable from "./components/MyTable";
 import MyForm from "./components/MyForm/MyForm";
 import Search from "./components/Search";
-import {
-  serial,
-  openNotification,
-  StateFormat,
-  createOneTableRecord,
-  createTableRecords,
-} from "./util";
+import { openNotification, StateFormat, createTableRecords } from "./util";
 import validation from "./components/MyForm/validation/validation";
 import { INITIAL_VALUE } from "./data/const";
+import db from "./data/db";
 
 function App() {
   // data is for table rows
@@ -28,21 +23,22 @@ function App() {
   const [selectedRecordKeys, setSelectedRecordKeys] = useState([]);
 
   function saveData(record) {
+    const index = data.findIndex((d) => {
+      return d.id === record.id;
+    });
     // insert a new record
-    if (record.id == null) {
-      record.id = serial.generate();
+    if (index < 0) {
       setData([...data, record]);
+      db.push(record);
       openNotification("success", "新增資料", "你已經成功新增一筆資料");
     } else {
       // update an existing record
-      const index = data.findIndex((d) => {
-        return d.id === record.id;
-      });
       const newData = [
         ...data.slice(0, index),
         record,
         ...data.slice(index + 1),
       ];
+      db.splice(index, 1, newData);
       setData(newData);
       openNotification("success", "資料更新", "你已經成功更新一筆資料");
     }
@@ -85,7 +81,9 @@ function App() {
         </span>
       ),
       onOk: () => {
-        setData(data.filter((record) => record.id !== id));
+        const removedIdx = data.findIndex((record) => record.id === id);
+        db.splice(removedIdx, 1);
+        setData(data.filter((record, idx) => idx !== removedIdx));
         openNotification("warning", "資料刪除", "你已經成功刪除單筆資料");
       },
     });
@@ -149,7 +147,9 @@ function App() {
         <Col style={{ marginTop: "2rem" }}>
           <Button
             onClick={() => {
-              setData((prevData) => [...prevData, ...createTableRecords(1001)]);
+              const newRecords = createTableRecords(1001);
+              db.push(...newRecords);
+              setData((prevData) => [...prevData, ...newRecords]);
             }}
           >
             快速
