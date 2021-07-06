@@ -1,15 +1,8 @@
 import React from "react";
 import { Table, Divider } from "antd";
 import { SCHEMA } from "../data/const";
-import moment from "moment";
 
-export default function MyTable({
-  data,
-  onEdit,
-  onDelete,
-  onRowSelection,
-  selectedRowKeys,
-}) {
+export default function MyTable({ data, onEdit, onDelete }) {
   const columns = Object.keys(SCHEMA).map((field) => ({
     title: SCHEMA[field].title,
     dataIndex: field,
@@ -51,18 +44,9 @@ export default function MyTable({
 
   columns.push(actionField);
 
-  // rowSelection object indicates the need for row selection
-  const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      onRowSelection(selectedRowKeys);
-    },
-    selectedRowKeys: selectedRowKeys,
-  };
-
   return (
     <Table
       rowKey="id"
-      rowSelection={rowSelection}
       columns={columns}
       dataSource={data}
       pagination={{

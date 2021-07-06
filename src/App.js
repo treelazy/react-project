@@ -89,29 +89,6 @@ function App() {
     });
   }
 
-  function handleDeleteMany() {
-    Modal.confirm({
-      title: "刪除資料",
-      okText: "確定",
-      cancelText: "取消",
-      content: (
-        <span>
-          確定要刪除這幾筆資料{" "}
-          <b>流水號:{`${selectedRecordKeys.toString()}`}</b>？
-        </span>
-      ),
-      onOk: () => {
-        setData(
-          data.filter(
-            (record) => !selectedRecordKeys.some((id) => id === record.id)
-          )
-        );
-        setSelectedRecordKeys([]);
-        openNotification("warning", "資料刪除", "你已經成功刪除多筆資料");
-      },
-    });
-  }
-
   function handleRowSelection(keys) {
     setSelectedRecordKeys(keys);
   }
@@ -133,14 +110,7 @@ function App() {
             borderRadius: "3px",
           }}
         >
-          <MyTable
-            data={data}
-            onDelete={handleDelete}
-            onEdit={handleEdit}
-            isLastOne={data.length === 1}
-            onRowSelection={handleRowSelection}
-            selectedRowKeys={selectedRecordKeys}
-          />
+          <MyTable data={data} onDelete={handleDelete} onEdit={handleEdit} />
         </Col>
       </Row>
       <Row type="flex" justify="center">
@@ -162,14 +132,6 @@ function App() {
           >
             新增
           </Button>
-          {
-            // hide the delete button when no record is selected
-            selectedRecordKeys?.length > 0 && (
-              <Button type="danger" icon="delete" onClick={handleDeleteMany}>
-                刪除
-              </Button>
-            )
-          }
         </Col>
       </Row>
       <Row>
