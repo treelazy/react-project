@@ -4,6 +4,7 @@ import { Button, Modal, Row, Col, Typography } from "antd";
 import { Formik } from "formik";
 import MyTable from "./components/MyTable";
 import MyForm from "./components/MyForm/MyForm";
+import Search from "./components/Search";
 import {
   serial,
   openNotification,
@@ -122,6 +123,8 @@ function App() {
       <Row type="flex" justify="center">
         <Typography.Title>資料列表</Typography.Title>
       </Row>
+      <Search />
+
       <Row type="flex" justify="center">
         <Col
           span={22}
