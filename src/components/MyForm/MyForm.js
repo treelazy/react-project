@@ -23,6 +23,8 @@ import { useChineseCharsCount } from "./hooks/hooks";
 import MyFormItem from "./MyFormItem";
 import MyInputNumber from "./MyInputNumber";
 
+const spaceRight = { marginRight: 10 };
+
 export default function MyForm({ isEditMode, onCancel }) {
   const { values, errors, touched, submitForm, setValues, resetForm } =
     useFormikContext();
@@ -336,24 +338,30 @@ export default function MyForm({ isEditMode, onCancel }) {
           </MyFormItem>
         </Col>
       </Row>
-      <Row>
-        <Col offset={0} span={2}>
+      <Row type="flex" justify="center">
+        <Col>
           <Button
             // a button used for demo only, to save time typing data manually
             onClick={() => {
               setValues({ ...values, ...DEV_INITIAL_VALUE });
             }}
+            style={spaceRight}
           >
             快速
           </Button>
         </Col>
-        <Col span={12}>
+        <Col>
           {!isEditMode && (
-            <Button onClick={() => resetForm({ values: INITIAL_VALUE })}>
+            <Button
+              onClick={() => resetForm({ values: INITIAL_VALUE })}
+              style={spaceRight}
+            >
               重設
             </Button>
           )}
-          <Button onClick={handleCancel}>取消</Button>
+          <Button onClick={handleCancel} style={spaceRight}>
+            取消
+          </Button>
           <Button type="primary" onClick={submitForm}>
             送出
           </Button>

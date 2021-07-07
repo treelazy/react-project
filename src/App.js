@@ -177,6 +177,9 @@ function App() {
                 db.insertBatch(newRecords).then((records) => {
                   const tableRecords = records.map(Mapper.dbToTable);
                   setData((prevData) => [...prevData, ...tableRecords]);
+                  // when new records are added, clean the search inputs and reload all data
+                  cleanSearch();
+                  refresh();
                 });
               }}
             >
