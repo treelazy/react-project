@@ -95,6 +95,7 @@ export default function MyForm({ isEditMode, onCancel }) {
               <MyInputNumber
                 {...field}
                 defaultValue={0}
+                min={0}
                 style={{ width: "55%" }}
                 addonAfter="kg"
               />
@@ -143,7 +144,7 @@ export default function MyForm({ isEditMode, onCancel }) {
         </Col>
         <Col span={8}>
           <Form.Item
-            className="required"
+            className={values?.max?.isActive ? "required" : ""}
             label={"上限"}
             labelCol={{ span: 6, offset: 0 }}
             wrapperCol={{ span: 18 }}
@@ -199,12 +200,12 @@ export default function MyForm({ isEditMode, onCancel }) {
         </Col>
       </Row>
       <Row>
-        <Col span={8}>
+        <Col lg={12} xl={8}>
           <MyFormItem
             name="start"
             type="date"
             label="開始時間"
-            labelCol={{ span: 6, offset: 0 }}
+            labelCol={{ xl: { span: 6, offset: 0 } }}
             wrapperCol={{ span: 18 }}
           >
             {({ field, meta, helpers }) => (
@@ -247,7 +248,7 @@ export default function MyForm({ isEditMode, onCancel }) {
             )}
           </MyFormItem>
         </Col>
-        <Col span={8}>
+        <Col lg={12} xl={8}>
           <MyFormItem
             name="end"
             type="date"
@@ -325,7 +326,12 @@ export default function MyForm({ isEditMode, onCancel }) {
             wrapperCol={{ span: 18 }}
           >
             {({ field }) => (
-              <MyInputNumber {...field} addonAfter={"NTD"} defaultValue={0} />
+              <MyInputNumber
+                {...field}
+                addonAfter={"NTD"}
+                defaultValue={0}
+                min={0}
+              />
             )}
           </MyFormItem>
         </Col>

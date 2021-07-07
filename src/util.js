@@ -144,18 +144,20 @@ const isCharFullwidth = function (char) {
   return isFullwidthCodePoint(charCode);
 };
 
-// create a generator that generate non-duplicate numbers from 1 to num
-const randomGenerator = (upperbound) => {
+// create a function that generates non-duplicate numbers between lowerbound and upperbound
+// lowerbound and upperbound are inclusive
+const randomGenerator = (lowerBound, upperbound) => {
   const exists = [];
   return function () {
-    if (exists.length === upperbound) {
-      console.error("`randomGenerator` has reached it's limit");
-      return exists[exists.length - 1];
+    if (exists.length === upperbound - lowerBound + 1) {
+      throw new Error("`randomGenerator` has reached it's limit");
     }
     let isDuplicate = true;
     let newNum = null;
     while (isDuplicate) {
-      newNum = Math.ceil(upperbound * Math.random());
+      newNum =
+        lowerBound + Math.floor((upperbound - lowerBound + 1) * Math.random());
+      console.log(newNum);
       isDuplicate = exists.includes(newNum);
     }
     exists.push(newNum);
@@ -163,12 +165,14 @@ const randomGenerator = (upperbound) => {
   };
 };
 
+// generate data randomly within a range of number
+let accumulated = 0;
 const createOneDbRecord = (fields) =>
   Mapper.formToDB({ ...DEV_INITIAL_VALUE, ...fields });
-
 const createDbRecords = (amount) => {
   const records = [];
-  const uniqNumGen = randomGenerator(amount);
+  console.log(accumulated, accumulated + amount);
+  const uniqNumGen = randomGenerator(accumulated, accumulated + amount);
   const priceGen = randomGenerator(5000);
   for (let i = 0; i < amount; i++) {
     const uniqNum = uniqNumGen();
@@ -182,8 +186,10 @@ const createDbRecords = (amount) => {
     });
     records.push(newRecord);
   }
+  accumulated += amount;
   return records;
 };
+//
 
 export {
   Mapper,

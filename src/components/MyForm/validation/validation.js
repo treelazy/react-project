@@ -84,6 +84,7 @@ export default Yup.object().shape(
     gender: Yup.string().required("此欄位必填"),
     price: Yup.number()
       .nullable(true)
+      .required("此欄位必填")
       .max(10000, "請輸入整數 0-10000")
       .test("price", "請輸入整數 0-10000", (value) => {
         if (value == null) {

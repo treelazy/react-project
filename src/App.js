@@ -33,7 +33,7 @@ function App() {
     // insert a new record
     if (index < 0) {
       db.insert(record).then((record) => {
-        // when a new record added, clean the search inputs and reload all data
+        // when a new record is added, clean the search inputs and reload all data
         cleanSearch();
         refresh();
         openNotification("success", "新增資料", "你已經成功新增一筆資料");
@@ -134,16 +134,27 @@ function App() {
   }
 
   return (
-    <div style={{ paddingTop: "32px", height: "100vh" }}>
+    <div style={{ paddingTop: "3rem", height: "100vh" }}>
       <Row type="flex" justify="center">
         <Typography.Title>資料列表</Typography.Title>
       </Row>
-      <Search
-        onSearch={handleSearch}
-        onSearchChange={handleSearchChange}
-        searchTerm={searchTerm}
-        onClear={handleSearchClear}
-      />
+      <Row type="flex" justify="center" style={{ marginBottom: "1.5rem" }}>
+        <Col
+          span={10}
+          style={{
+            backgroundColor: "white",
+            padding: "1.5rem 1.5rem 1rem 1.5rem",
+            borderRadius: "3px",
+          }}
+        >
+          <Search
+            onSearch={handleSearch}
+            onSearchChange={handleSearchChange}
+            searchTerm={searchTerm}
+            onClear={handleSearchClear}
+          />
+        </Col>
+      </Row>
       <Row type="flex" justify="center">
         <Col
           span={22}
@@ -154,10 +165,13 @@ function App() {
             borderRadius: "3px",
           }}
         >
-          <Row>
-            <Icon type="info-circle" theme="filled" />
-            <span> 總資料筆數共 {data.length} 筆</span>
+          <Row type="flex" justify="start" align="middle">
+            <div style={{ marginRight: "auto" }}>
+              <Icon type="info-circle" theme="filled" />
+              <span> 總資料筆數共 {data.length} 筆</span>
+            </div>
             <Button
+              style={{ marginRight: 10 }}
               onClick={() => {
                 const newRecords = createDbRecords(1001);
                 db.insertBatch(newRecords).then((records) => {
