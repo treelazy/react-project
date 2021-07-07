@@ -26,7 +26,7 @@ const rgx = {
   noSpace() {
     return /^[^\s]*$/;
   },
-  // 正整數
+  // 正整數, 不可以是零開頭
   positiveInts() {
     return /(^[1-9][0-9]*$)|(^0$)/;
   },

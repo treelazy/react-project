@@ -168,13 +168,12 @@ const randomGenerator = (lowerBound, upperbound) => {
   };
 };
 
-// generate data randomly within a range of number
+// generate data randomly
 let accumulated = 0; // <= to track how many records has been generated
 const createOneDbRecord = (fields) =>
   Mapper.formToDB({ ...DEV_INITIAL_VALUE, ...fields });
 const createDbRecords = (amount) => {
   const records = [];
-  console.log(accumulated, accumulated + amount);
   const uniqNumGen = randomGenerator(accumulated, accumulated + amount);
   const priceGen = randomGenerator(1, amount * 5);
   for (let i = 0; i < amount; i++) {

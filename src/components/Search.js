@@ -21,7 +21,7 @@ export default function Search({
   return (
     <>
       <Row type="flex" justify="center">
-        <Col span={8}>
+        <Col xs={24} md={8} span={8}>
           <Form.Item label="編號" {...itemProps}>
             <Input
               name="tag"
@@ -31,7 +31,7 @@ export default function Search({
             />
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col xs={24} md={8} span={8}>
           <Form.Item label="組織名稱" {...itemProps}>
             <Input
               name="orgName"
@@ -41,7 +41,7 @@ export default function Search({
             />
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col xs={24} md={8} span={8}>
           <Form.Item label="性別" {...itemProps}>
             <Radio.Group name="gender" value={gender} onChange={onSearchChange}>
               {GENDERS.map((g) => (

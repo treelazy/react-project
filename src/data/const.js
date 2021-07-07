@@ -27,7 +27,12 @@ const RANDOM_CHARS = [
 
 // _devVal is fake data, only for demo usage
 const SCHEMA = {
-  tag: { type: "string", title: "編號", initVal: "", _devVal: "" },
+  tag: {
+    type: "string",
+    title: "編號",
+    initVal: "",
+    _devVal: "",
+  },
   orgName: {
     type: "string",
     title: "組織名稱",

@@ -134,13 +134,16 @@ function App() {
   }
 
   return (
-    <div style={{ paddingTop: "3rem", height: "100vh" }}>
+    <div className="app-wrapper" style={{ height: "100vh" }}>
       <Row type="flex" justify="center">
-        <Typography.Title>資料列表</Typography.Title>
+        <Typography.Title className="app-title">資料列表</Typography.Title>
       </Row>
-      <Row type="flex" justify="center" style={{ marginBottom: "1.5rem" }}>
+      <Row className="search-wrapper" type="flex" justify="center">
         <Col
-          span={10}
+          xs={24}
+          lg={20}
+          xl={16}
+          xxl={12}
           style={{
             backgroundColor: "white",
             padding: "1.5rem 1.5rem 1rem 1.5rem",
@@ -165,34 +168,41 @@ function App() {
             borderRadius: "3px",
           }}
         >
-          <Row type="flex" justify="start" align="middle">
-            <div style={{ marginRight: "auto" }}>
+          <Row
+            type="flex"
+            justify="start"
+            align="middle"
+            style={{ marginBottom: 5 }}
+          >
+            <Col style={{ marginRight: "auto" }}>
               <Icon type="info-circle" theme="filled" />
               <span> 總資料筆數共 {data.length} 筆</span>
-            </div>
-            <Button
-              style={{ marginRight: 10 }}
-              onClick={() => {
-                const newRecords = createDbRecords(1001);
-                db.insertBatch(newRecords).then((records) => {
-                  const tableRecords = records.map(Mapper.dbToTable);
-                  setData((prevData) => [...prevData, ...tableRecords]);
-                  // when new records are added, clean the search inputs and reload all data
-                  cleanSearch();
-                  refresh();
-                });
-              }}
-            >
-              快速
-            </Button>
-            <Button
-              style={{ marginRight: "1rem" }}
-              type="primary"
-              icon="form"
-              onClick={handleNew}
-            >
-              新增
-            </Button>
+            </Col>
+            <Col>
+              <Button
+                style={{ marginRight: 5 }}
+                onClick={() => {
+                  const newRecords = createDbRecords(1001);
+                  db.insertBatch(newRecords).then((records) => {
+                    const tableRecords = records.map(Mapper.dbToTable);
+                    setData((prevData) => [...prevData, ...tableRecords]);
+                    // when new records are added, clean the search inputs and reload all data
+                    cleanSearch();
+                    refresh();
+                  });
+                }}
+              >
+                快速
+              </Button>
+              <Button
+                style={{ marginRight: 5 }}
+                type="primary"
+                icon="form"
+                onClick={handleNew}
+              >
+                新增
+              </Button>
+            </Col>
           </Row>
 
           <MyTable data={data} onDelete={handleDelete} onEdit={handleEdit} />

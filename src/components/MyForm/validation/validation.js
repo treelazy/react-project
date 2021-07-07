@@ -12,6 +12,8 @@ export default Yup.object().shape(
       .matches(rgx.positiveIntsZeroPrefix(), "請輸入半形數字")
       .test("tag-unique", "編號重複", (value, context) => {
         const { id } = context?.parent;
+        // find duplicate tag other than the current data itself
+        // 找到自己以外的重複編號
         const foundData = db.data.find((d) => d.id !== id && d.tag === value);
         const isDuplicate = Boolean(foundData);
         return !isDuplicate;

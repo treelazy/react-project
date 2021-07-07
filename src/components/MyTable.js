@@ -16,6 +16,7 @@ export default function MyTable({ data, onEdit, onDelete }) {
         defaultPageSize: 20,
         locale: { items_per_page: "筆/頁" },
       }}
+      scroll={{ x: 1400 }}
     />
   );
 }
@@ -30,6 +31,8 @@ function generateColumns(onEdit, onDelete) {
   // custimize tag column
   const tagCol = columns.find((c) => c.key === "tag");
   tagCol.sorter = (a, b) => parseInt(a.tag) - parseInt(b.tag);
+  tagCol.fixed = "left";
+  tagCol.width = "5rem";
 
   // custimize start column
   const startCol = columns.find((c) => c.key === "start");
@@ -46,11 +49,11 @@ function generateColumns(onEdit, onDelete) {
   // custimize description column
   const dscrpCol = columns.find((c) => c.key === "description");
   dscrpCol.ellipsis = true;
-  dscrpCol.width = "15%";
 
-  const actionField = {
+  const actionCol = {
     title: "選項",
     key: "action",
+    fixed: "right",
     render: (text, record) => (
       <span>
         <a onClick={() => onEdit(record.id)}>修改</a>
@@ -60,7 +63,7 @@ function generateColumns(onEdit, onDelete) {
     ),
   };
 
-  columns.push(actionField);
+  columns.push(actionCol);
 
   return columns;
 }
