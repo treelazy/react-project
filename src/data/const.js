@@ -12,7 +12,20 @@ const GENDERS = [
   { key: 1, name: "女性", value: "F" },
 ];
 
-// _devVal is for demo usage
+const RANDOM_CHARS = [
+  "零",
+  "一",
+  "二",
+  "三",
+  "四",
+  "五",
+  "六",
+  "七",
+  "八",
+  "九",
+];
+
+// _devVal is fake data, only for demo usage
 const SCHEMA = {
   tag: { type: "string", title: "編號", initVal: "", _devVal: "0079" },
   orgName: {
@@ -61,7 +74,7 @@ const INITIAL_VALUE = Object.keys(SCHEMA).reduce((acc, key) => {
   return acc;
 }, {});
 
-// this is used for developing/testing only
+// this is fake data, used for developing/testing only
 const DEV_INITIAL_VALUE = Object.keys(SCHEMA).reduce((acc, key) => {
   acc[key] = SCHEMA[key]._devVal;
   return acc;
@@ -70,6 +83,7 @@ const DEV_INITIAL_VALUE = Object.keys(SCHEMA).reduce((acc, key) => {
 export {
   COLORS,
   GENDERS,
+  RANDOM_CHARS,
   INITIAL_VALUE,
   DEV_INITIAL_VALUE,
   DELAY_TIME,

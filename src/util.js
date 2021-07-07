@@ -1,6 +1,6 @@
 import { notification } from "antd";
 import moment from "moment";
-import { DELAY_TIME, DEV_INITIAL_VALUE } from "./data/const";
+import { DELAY_TIME, DEV_INITIAL_VALUE, RANDOM_CHARS } from "./data/const";
 import isFullwidthCodePoint from "is-fullwidth-code-point";
 
 const openNotification = (type, title, message, delay) => {
@@ -132,10 +132,6 @@ const Mapper = {
   },
 };
 
-// Form to db
-// db to Form
-// db to Table
-
 const isCharFullwidth = function (char) {
   if (char.length > 1) {
     console.warn("isCharFullwidth should be called on a single char");
@@ -144,9 +140,17 @@ const isCharFullwidth = function (char) {
   return isFullwidthCodePoint(charCode);
 };
 
-// create a function that generates non-duplicate numbers between lowerbound and upperbound
-// lowerbound and upperbound are inclusive
+// create a function that generates "non-duplicate" numbers between lowerbound and upperbound
+// lowerbound and upperbound are inclusive in the generated numbers
 const randomGenerator = (lowerBound, upperbound) => {
+  if (lowerBound == null || upperbound == null) {
+    throw new Error(
+      "`lowerBound` and `upperbound` are required for `randomGenerator`"
+    );
+  }
+  if (lowerBound >= upperbound) {
+    throw new Error("`lowerBound` must be smaller than `upperbound`");
+  }
   const exists = [];
   return function () {
     if (exists.length === upperbound - lowerBound + 1) {
@@ -157,7 +161,6 @@ const randomGenerator = (lowerBound, upperbound) => {
     while (isDuplicate) {
       newNum =
         lowerBound + Math.floor((upperbound - lowerBound + 1) * Math.random());
-      console.log(newNum);
       isDuplicate = exists.includes(newNum);
     }
     exists.push(newNum);
@@ -166,23 +169,26 @@ const randomGenerator = (lowerBound, upperbound) => {
 };
 
 // generate data randomly within a range of number
-let accumulated = 0;
+let accumulated = 0; // <= to track how many records has been generated
 const createOneDbRecord = (fields) =>
   Mapper.formToDB({ ...DEV_INITIAL_VALUE, ...fields });
 const createDbRecords = (amount) => {
   const records = [];
   console.log(accumulated, accumulated + amount);
   const uniqNumGen = randomGenerator(accumulated, accumulated + amount);
-  const priceGen = randomGenerator(5000);
+  const priceGen = randomGenerator(1, amount * 5);
   for (let i = 0; i < amount; i++) {
     const uniqNum = uniqNumGen();
     const uniqStart = moment().subtract({ days: uniqNum, hours: uniqNum });
     const uniqEnd = moment().add({ days: uniqNum, hours: uniqNum });
+    const genderNum = randomGenerator(0, 1)(); // generate 0 or 1
     const newRecord = createOneDbRecord({
       tag: uniqNum.toString(),
       start: uniqStart,
       end: uniqEnd,
       price: priceGen(),
+      gender: genderNum === 0 ? "F" : "M",
+      orgName: randomOrgName(),
     });
     records.push(newRecord);
   }
@@ -190,6 +196,18 @@ const createDbRecords = (amount) => {
   return records;
 };
 //
+
+// randomly create a orgName
+function randomOrgName() {
+  const chars = [];
+  const gen = randomGenerator(0, 9);
+  for (let i = 0; i <= 9; i++) {
+    const num = gen();
+    const char = RANDOM_CHARS[num];
+    chars.push(char);
+  }
+  return chars.join("");
+}
 
 export {
   Mapper,
