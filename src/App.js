@@ -1,18 +1,14 @@
 import "./App.css";
 import { useState } from "react";
-import { Button, Modal, Row, Col, Typography } from "antd";
+import { Button, Modal, Row, Col, Typography, Icon } from "antd";
 import { Formik } from "formik";
 import MyTable from "./components/MyTable";
 import MyForm from "./components/MyForm/MyForm";
-import {
-  serial,
-  openNotification,
-  StateFormat,
-  createOneTableRecord,
-  createTableRecords,
-} from "./util";
+import Search from "./components/Search";
+import { openNotification, Mapper, createDbRecords } from "./util";
 import validation from "./components/MyForm/validation/validation";
 import { INITIAL_VALUE } from "./data/const";
+import db from "./data/db";
 
 function App() {
   // data is for table rows
@@ -23,26 +19,38 @@ function App() {
   const [isEditMode, seIsEditMode] = useState(false);
   // selectedRecord is the selected data when editting a record
   const [selectedRecord, setSelectedRecord] = useState(INITIAL_VALUE);
-  // the corresponding records'keys when checkboxes selected
-  const [selectedRecordKeys, setSelectedRecordKeys] = useState([]);
+  // searchTerm is the key wrods for searching data
+  const [searchTerm, setSearchTerm] = useState({
+    tag: "",
+    orgName: "",
+    gender: "",
+  });
 
   function saveData(record) {
+    const index = data.findIndex((d) => {
+      return d.id === record.id;
+    });
     // insert a new record
-    if (record.id == null) {
-      record.id = serial.generate();
-      setData([...data, record]);
-      openNotification("success", "新增資料", "你已經成功新增一筆資料");
+    if (index < 0) {
+      db.insert(record).then((record) => {
+        // when a new record is added, clean the search inputs and reload all data
+        cleanSearch();
+        refresh();
+        openNotification("success", "新增資料", "你已經成功新增一筆資料");
+      });
     } else {
       // update an existing record
-      const index = data.findIndex((d) => {
-        return d.id === record.id;
+      db.update(record).then((record) => {
+        const tableRecord = Mapper.dbToTable(record);
+        setData((prevData) => {
+          const newData = [
+            ...prevData.slice(0, index),
+            tableRecord,
+            ...prevData.slice(index + 1),
+          ];
+          return newData;
+        });
       });
-      const newData = [
-        ...data.slice(0, index),
-        record,
-        ...data.slice(index + 1),
-      ];
-      setData(newData);
       openNotification("success", "資料更新", "你已經成功更新一筆資料");
     }
   }
@@ -66,7 +74,7 @@ function App() {
 
   function handleEdit(id) {
     const tableRecord = data.find((record) => record.id === id);
-    const formData = StateFormat.toForm(tableRecord);
+    const formData = Mapper.toForm(tableRecord);
 
     // select the specific record, send the data to Formik, and then open the modal form
     setSelectedRecord(formData);
@@ -74,53 +82,81 @@ function App() {
   }
 
   function handleDelete(id) {
-    Modal.confirm({
-      title: " 刪除資料",
-      okText: "確定",
-      cancelText: "取消",
-      content: (
-        <span>
-          確定要刪除這幾筆資料 <b>流水號:{`${id}`}</b>?
-        </span>
-      ),
-      onOk: () => {
-        setData(data.filter((record) => record.id !== id));
-        openNotification("warning", "資料刪除", "你已經成功刪除單筆資料");
-      },
+    db.find(id).then((deleteRecord) => {
+      Modal.confirm({
+        title: " 刪除資料",
+        okText: "確定",
+        cancelText: "取消",
+        content: (
+          <span>
+            確定要刪除這筆資料 <b>編號:{`${deleteRecord.tag}`}</b>?
+          </span>
+        ),
+        onOk: () => {
+          db.delete(id).then((id) => {
+            setData((data) => data.filter((record) => record.id !== id));
+          });
+          openNotification("warning", "資料刪除", "你已經成功刪除單筆資料");
+        },
+      });
     });
   }
 
-  function handleDeleteMany() {
-    Modal.confirm({
-      title: "刪除資料",
-      okText: "確定",
-      cancelText: "取消",
-      content: (
-        <span>
-          確定要刪除這幾筆資料{" "}
-          <b>流水號:{`${selectedRecordKeys.toString()}`}</b>？
-        </span>
-      ),
-      onOk: () => {
-        setData(
-          data.filter(
-            (record) => !selectedRecordKeys.some((id) => id === record.id)
-          )
-        );
-        setSelectedRecordKeys([]);
-        openNotification("warning", "資料刪除", "你已經成功刪除多筆資料");
-      },
+  function handleSearch({ tag, orgName, gender }) {
+    const result = db.data.filter((record) => {
+      const { tag: dataTag, orgName: dataOrgName, gender: dataGender } = record;
+      const isContainId = dataTag?.toUpperCase().includes(tag);
+      const isContainOrgName = dataOrgName?.toUpperCase().includes(orgName);
+      const isContainGender = dataGender?.toUpperCase().includes(gender);
+
+      return isContainId && isContainOrgName && isContainGender;
     });
+
+    const tableResult = result.map(Mapper.dbToTable);
+    setData(tableResult);
   }
 
-  function handleRowSelection(keys) {
-    setSelectedRecordKeys(keys);
+  function handleSearchChange({ target: { name, value } }) {
+    setSearchTerm((prevTerm) => ({ ...prevTerm, [name]: value }));
+  }
+
+  function handleSearchClear() {
+    cleanSearch();
+  }
+
+  function refresh() {
+    const allTableRecords = db.data.map(Mapper.dbToTable);
+    setData(allTableRecords);
+  }
+
+  function cleanSearch() {
+    setSearchTerm({ tag: "", orgName: "", gender: "" });
   }
 
   return (
-    <div style={{ paddingTop: "32px", height: "100vh" }}>
+    <div className="app-wrapper" style={{ height: "100vh" }}>
       <Row type="flex" justify="center">
-        <Typography.Title>資料列表</Typography.Title>
+        <Typography.Title className="app-title">資料列表</Typography.Title>
+      </Row>
+      <Row className="search-wrapper" type="flex" justify="center">
+        <Col
+          xs={24}
+          lg={20}
+          xl={16}
+          xxl={12}
+          style={{
+            backgroundColor: "white",
+            padding: "1.5rem 1.5rem 1rem 1.5rem",
+            borderRadius: "3px",
+          }}
+        >
+          <Search
+            onSearch={handleSearch}
+            onSearchChange={handleSearchChange}
+            searchTerm={searchTerm}
+            onClear={handleSearchClear}
+          />
+        </Col>
       </Row>
       <Row type="flex" justify="center">
         <Col
@@ -132,42 +168,48 @@ function App() {
             borderRadius: "3px",
           }}
         >
-          <MyTable
-            data={data}
-            onDelete={handleDelete}
-            onEdit={handleEdit}
-            isLastOne={data.length === 1}
-            onRowSelection={handleRowSelection}
-            selectedRowKeys={selectedRecordKeys}
-          />
+          <Row
+            type="flex"
+            justify="start"
+            align="middle"
+            style={{ marginBottom: 5 }}
+          >
+            <Col style={{ marginRight: "auto" }}>
+              <Icon type="info-circle" theme="filled" />
+              <span> 總資料筆數共 {data.length} 筆</span>
+            </Col>
+            <Col>
+              <Button
+                style={{ marginRight: 5 }}
+                onClick={() => {
+                  const newRecords = createDbRecords(1001);
+                  db.insertBatch(newRecords).then((records) => {
+                    const tableRecords = records.map(Mapper.dbToTable);
+                    setData((prevData) => [...prevData, ...tableRecords]);
+                    // when new records are added, clean the search inputs and reload all data
+                    cleanSearch();
+                    refresh();
+                  });
+                }}
+              >
+                快速
+              </Button>
+              <Button
+                style={{ marginRight: 5 }}
+                type="primary"
+                icon="form"
+                onClick={handleNew}
+              >
+                新增
+              </Button>
+            </Col>
+          </Row>
+
+          <MyTable data={data} onDelete={handleDelete} onEdit={handleEdit} />
         </Col>
       </Row>
       <Row type="flex" justify="center">
-        <Col style={{ marginTop: "2rem" }}>
-          <Button
-            onClick={() => {
-              setData((prevData) => [...prevData, ...createTableRecords(1001)]);
-            }}
-          >
-            快速
-          </Button>
-          <Button
-            style={{ marginRight: "1rem" }}
-            type="primary"
-            icon="form"
-            onClick={handleNew}
-          >
-            新增
-          </Button>
-          {
-            // hide the delete button when no record is selected
-            selectedRecordKeys?.length > 0 && (
-              <Button type="danger" icon="delete" onClick={handleDeleteMany}>
-                刪除
-              </Button>
-            )
-          }
-        </Col>
+        <Col style={{ marginTop: "2rem" }}></Col>
       </Row>
       <Row>
         <Modal
@@ -184,7 +226,7 @@ function App() {
             validateOnBlur
             validationSchema={validation}
             onSubmit={(values) => {
-              saveData(StateFormat.toTable(values));
+              saveData(Mapper.formToDB(values));
               closeModal();
             }}
           >

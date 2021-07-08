@@ -1,6 +1,6 @@
 import { notification } from "antd";
 import moment from "moment";
-import { DELAY_TIME, DEV_INITIAL_VALUE } from "./data/const";
+import { DELAY_TIME, DEV_INITIAL_VALUE, RANDOM_CHARS } from "./data/const";
 import isFullwidthCodePoint from "is-fullwidth-code-point";
 
 const openNotification = (type, title, message, delay) => {
@@ -16,30 +16,33 @@ const openNotification = (type, title, message, delay) => {
   );
 };
 
-// map form data to table data
-const _mapToTable = {
+// map form data to db data
+const _mapFormToDB = {
   start(fStart) {
     return fStart?.format("YYYY-MM-DD HH:mm:ss");
   },
   end(fEnd) {
     return fEnd?.format("YYYY-MM-DD HH:mm:ss");
   },
-  max(fMax) {
-    return fMax.isActive ? fMax.value : null;
+};
+
+const _mapDbToTable = {
+  max(dbMax) {
+    return dbMax.isActive ? dbMax.value : null;
   },
-  color(fColor) {
+  color(dbColor) {
     let tColor = "";
-    if (fColor === "red") {
+    if (dbColor === "red") {
       tColor = "紅色";
-    } else if (fColor === "green") {
+    } else if (dbColor === "green") {
       tColor = "綠色";
-    } else if (fColor === "blue") {
+    } else if (dbColor === "blue") {
       tColor = "藍色";
     }
     return tColor;
   },
-  gender(fGender) {
-    return fGender === "M" ? "男性" : "女性";
+  gender(dbGender) {
+    return dbGender === "M" ? "男性" : "女性";
   },
 };
 
@@ -78,26 +81,35 @@ const _mapToForm = {
   },
 };
 
-const StateFormat = {
+const Mapper = {
   // format Form data before saving into Table(App's state)
-  toTable(formikValues) {
-    const { start, end, max, gender, colors } = formikValues;
+  formToDB(formData) {
+    const { start, end } = formData;
 
-    const tStart = _mapToTable.start(start);
-    const tEnd = _mapToTable.end(end);
-    const tMax = _mapToTable.max(max);
-    const tGender = _mapToTable.gender(gender);
-    const tColors = colors.map(_mapToTable.color);
+    const dStart = _mapFormToDB.start(start);
+    const dEnd = _mapFormToDB.end(end);
 
     return {
-      ...formikValues,
-      start: tStart,
-      end: tEnd,
-      max: tMax,
-      gender: tGender,
-      colors: tColors,
+      ...formData,
+      start: dStart,
+      end: dEnd,
     };
   },
+
+  dbToTable(dbData) {
+    const { max, colors, gender } = dbData;
+    const tMax = _mapDbToTable.max(max);
+    const tcolors = colors.map(_mapDbToTable.color);
+    const tGender = _mapDbToTable.gender(gender);
+
+    return {
+      ...dbData,
+      max: tMax,
+      colors: tcolors,
+      gender: tGender,
+    };
+  },
+
   // format Table'record data/state before saving into Formik's state
   toForm(tableRecord) {
     // actually do nothing for the time being
@@ -128,29 +140,78 @@ const isCharFullwidth = function (char) {
   return isFullwidthCodePoint(charCode);
 };
 
-const serial = {
-  _num: 0,
-  generate: function () {
-    return (this._num++).toString();
-  },
+// create a function that generates "non-duplicate" numbers between lowerbound and upperbound
+// lowerbound and upperbound are inclusive in the generated numbers
+const randomGenerator = (lowerBound, upperbound) => {
+  if (lowerBound == null || upperbound == null) {
+    throw new Error(
+      "`lowerBound` and `upperbound` are required for `randomGenerator`"
+    );
+  }
+  if (lowerBound >= upperbound) {
+    throw new Error("`lowerBound` must be smaller than `upperbound`");
+  }
+  const exists = [];
+  return function () {
+    if (exists.length === upperbound - lowerBound + 1) {
+      throw new Error("`randomGenerator` has reached it's limit");
+    }
+    let isDuplicate = true;
+    let newNum = null;
+    while (isDuplicate) {
+      newNum =
+        lowerBound + Math.floor((upperbound - lowerBound + 1) * Math.random());
+      isDuplicate = exists.includes(newNum);
+    }
+    exists.push(newNum);
+    return newNum;
+  };
 };
 
-const createOneTableRecord = () =>
-  StateFormat.toTable({ ...DEV_INITIAL_VALUE, id: serial.generate() });
-
-const createTableRecords = (amount) => {
+// generate data randomly
+let accumulated = 0; // <= to track how many records has been generated
+const createOneDbRecord = (fields) =>
+  Mapper.formToDB({ ...DEV_INITIAL_VALUE, ...fields });
+const createDbRecords = (amount) => {
   const records = [];
+  const uniqNumGen = randomGenerator(accumulated, accumulated + amount);
+  const priceGen = randomGenerator(1, amount * 5);
   for (let i = 0; i < amount; i++) {
-    records.push(createOneTableRecord());
+    const uniqNum = uniqNumGen();
+    const uniqStart = moment().subtract({ days: uniqNum, hours: uniqNum });
+    const uniqEnd = moment().add({ days: uniqNum, hours: uniqNum });
+    const genderNum = randomGenerator(0, 1)(); // generate 0 or 1
+    const newRecord = createOneDbRecord({
+      tag: uniqNum.toString(),
+      start: uniqStart,
+      end: uniqEnd,
+      price: priceGen(),
+      gender: genderNum === 0 ? "F" : "M",
+      orgName: randomOrgName(),
+    });
+    records.push(newRecord);
   }
+  accumulated += amount;
   return records;
 };
+//
+
+// randomly create a orgName
+function randomOrgName() {
+  const chars = [];
+  const gen = randomGenerator(0, 9);
+  for (let i = 0; i <= 9; i++) {
+    const num = gen();
+    const char = RANDOM_CHARS[num];
+    chars.push(char);
+  }
+  return chars.join("");
+}
 
 export {
-  StateFormat,
-  serial,
+  Mapper,
   openNotification,
   isCharFullwidth,
-  createOneTableRecord,
-  createTableRecords,
+  createDbRecords,
+  createOneDbRecord,
 };
